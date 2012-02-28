@@ -1,0 +1,1 @@
+This directory holds device config data

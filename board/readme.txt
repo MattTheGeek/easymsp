@@ -1,0 +1,1 @@
+This directory holds target board info and pin mappings.
