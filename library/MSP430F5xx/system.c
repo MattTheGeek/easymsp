@@ -17,6 +17,18 @@
 	Handles non-maskable interrupts such as JTAG mailbox operations, and osc faults, and any other errors.
 */
 
+void main(void)
+{
+	/* Do setup tasks here */
+
+	init(); /* Call init() */
+
+	while(EasyMSPExecute == true)
+	{
+		loop();
+	}
+}
+
 void interrupt system_nmi_isr(void)
 {
 

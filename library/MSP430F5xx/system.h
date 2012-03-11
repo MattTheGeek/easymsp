@@ -9,7 +9,21 @@
 	
 */
 
+static volatile unsigned short int EasyMSPExecute = true;
+
 /* Prototypes */
+
+#ifndef NOSETUP
+
+	#ifndef NOINIT
+		void init(void);
+	#endif
+
+	#ifndef NOLOOP
+		void loop(void);
+	#endif
+
+#endif
 
 void interrupt system_nmi_isr(void);
 void interrupt user_nmi_isr(void);
