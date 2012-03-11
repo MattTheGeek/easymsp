@@ -3,11 +3,46 @@
 	Ver 1
 */
 
-#ifndef __MSP430F5510__ && DEVICE
-	#error "Device info file mismatch."
-#endif
+#define SERIES 5
 
-#include <msp430f5510.h>
+#define FLASHSIZE 32768
+#define RAMSIZE 4096
+#define USBRAMSIZE 2048
 
-#include "f5core.h" /* Include standard 5 series libraries. */
+#define USBBOOTLOADER YES
+#define HASUSB YES
+
+#define HASDMA YES
+#define DMACHANNELS 3
+
+#define HASCRC16
+
+#define HASXT2 YES
+#define HASXT1 YES
+
+#define HASPORTA
+#define HASPORTB
+#define HASPORTC
+
+#define HASPORT1
+#define HASPORT2
+#define HASPORT3
+#define HASPORT4
+#define HASPORT5
+#define HASPORT6
+
+#define HASADC10
+#define HASREF
+#define HASCOMPB
+
+#define HASTA0
+#define HASTA1
+#define HASTA2
+
+#define HASTB0
+
+#define HASRTCA
+
+#define HASUSCI0
+#define HASUSCI1
 
