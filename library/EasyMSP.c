@@ -10,6 +10,8 @@
  *
  */
 
+#if SERIES == 2
+
 #ifndef NOSETUP
 
 #ifndef NOINIT
@@ -193,6 +195,40 @@ static __interrupt void nonmask_isr(void)
 
     /* If we get to here, who the hell called this? */
     return;
+}
+
+#endif
+
+#endif
+
+#if SERIES == 5
+
+#ifndef NOINIT
+extern void init(void);
+#endif
+
+#ifndef NOLOOP
+extern void loop(void);
+#endif
+
+static volatile unsigned short int EasyMSPExecute = 1;
+
+void main(void)
+{
+	WDTCTL = WDTPW + WDTHOLD;
+
+	#ifndef NOINIT
+		init();
+	#endif
+
+	#ifndef NOLOOP
+
+		while(EasyMSPExecute)
+		{
+			loop();
+		}
+
+	#endif
 }
 
 #endif

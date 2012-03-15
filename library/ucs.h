@@ -1,3 +1,5 @@
+/*
+
 enum clockSources
 {
 	XT1CLK = 1,
@@ -47,3 +49,4 @@ enum capacitor
 {
 	
 };
+*/

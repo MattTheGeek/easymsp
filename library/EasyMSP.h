@@ -18,24 +18,28 @@
 **
 ** Author: Matthew L. Burmeister
 ** Copyright (c) 2011 All rights reserved.
-** -------------------------------------------------------------------------*/
+** -------------------------------------------------------------------------
+** */
 #ifndef EASYMSP_H
 #define EASYMSP_H
 
-#if __STDC__ != 1
-	#error "EasyMSP is not supported with this compiler. Please use a compiler that has support for ANSI C"
+#ifndef __STDC__
+	# error "EasyMSP is not supported with this compiler. Please use a compiler that has support for ANSI C."
 #endif
 
 #if __STDC_VERSION__ >= 199901L
-	#error "EasyMSP is not supported with this compiler. Please use a compiler that supports C99 C code."
+	# error "EasyMSP is not supported with this compiler. Please use a compiler that supports C99 C code."
 #endif
 
-#define EASYMSPVER 1.0
+#ifndef SKIPGCCCHECK
+	#ifdef __GNUC__
+		# error "EasyMSP is not supported with this gcc. Please define SKIPGCCCHECK if you still want to contiune."
+	#endif
+#endif
+
+#define EASYMSPVER 1_0
 #define EASYMSPVERMINOR 0
 #define EASYMSP
-
-#include <stdint.h>
-#include <stdbool.h>
 
 #ifndef NULL
 	#define NULL 0
@@ -81,42 +85,77 @@
 	#define OFF 0
 #endif
 
-#ifndef PORT1
-	#define PORT1 1
-#endif
+typedef enum clocks
+{
+	MCLK = 1,
+	SMCLK = 2,
+	ACLK = 3,
+	MODOSC = 4,
+	DCOCLK = 5,
+	REFOCLK = 6,
+	XT1CLK = 7,
+	XT2CLK = 8,
+	VLOCLK = 9,
+	XCLK = 10
+} clock;
 
-#ifndef PORT2
-	#define PORT2 2
-#endif
+enum port
+{
+	A,
+	B,
+	C,
+	D,
+	E,
+	F,
+	J
+} port;
 
-#ifndef PORT3
-	#define PORT3 3
-#endif
+enum div
+{
+	by_1,
+	by_2,
+	by_4,
+	by_8,
+	by_16,
+	by_32,
+	by_64,
+	by_512,
+	by_8192,
+	by_32K,
+	by_512K,
+	by_8192K,
+	by_128M,
+	by_2G
 
-/* Flash Settings */
+};
 
-#define FLASH_SETTINGS_BASE         (0x1000 + 64)
+enum pins
+{
+	a0 = 0,
+	a1 = 1,
+	a2 = 2,
+	a3 = 3,
+	a4 = 4,
+	a5 = 5,
+	a6 = 6,
+	a7 = 7,
+	b0, b1, b2, b3, b4, b5, b6, b7,
+	c0, c1, c2, c3, c4, c5, c6, c7,
+	d0, d1, d2, d3, d4, d5, d6, d7,
+	e0, e1, e2, e3, e4, e5, e6, e7,
+	f0, f1, f2, f3, f4, f5, f6, f7,
+	j0, j1, j2, j3, j4, j5, j6, j7
+} pin;
 
-#define FLASH_SETTINGS_SIG          (FLASH_SETTINGS_BASE)
-#define FLASH_SETTINGS_ENABLED      (FLASH_SETTINGS_BASE + 2)
+enum crystalDriveStrength
+{
+	upTo8Mhz = 	1,
+	upTo16Mhz = 2,
+	upTo24Mhz = 3,
+	upTo32Mhz = 4
+};
 
-#define FLASH_SETTINGS_IE1          (FLASH_SETTINGS_BASE + 3)
-#define FLASH_SETTINGS_IE2          (FLASH_SETTINGS_BASE + 4)
 
-#define FLASH_SETTINGS_BCSCTL1      (FLASH_SETTINGS_BASE + 5)
-#define FLASH_SETTINGS_BCSCTL2      (FLASH_SETTINGS_BASE + 6)
-#define FLASH_SETTINGS_BCSCTL3      (FLASH_SETTINGS_BASE + 7)
-
-#define FLASH_SETTINGS_WDTCTL       (FLASH_SETTINGS_BASE + 8)
-
-#define FLASH_SETTINGS_PORT1_DIR    (FLASH_SETTINGS_BASE + 9)
-#define FLASH_SETTINGS_PORT1_OUT    (FLASH_SETTINGS_BASE + 10)
-
-#define FLASH_SETTINGS_PORT2_DIR    (FLASH_SETTINGS_BASE + 11)
-#define FLASH_SETTINGS_PORT2_OUT    (FLASH_SETTINGS_BASE + 12)
-
-#define FLASH_SETTINGS_PORT3_DIR    (FLASH_SETTINGS_BASE + 13)
-#define FLASH_SETTINGS_PORT3_OUT    (FLASH_SETTINGS_BASE + 14)
 
 /*
  *   Start parsing device
@@ -129,59 +168,122 @@
  */
 
 #ifdef MSP430G2553
+	#define SERIES 2
+	#define RAMSIZE 512
+	#define FLASHSIZE 16384
+	#define BSL true
+	
 	#define HASUSCI
 	#define HASADC10
 	#define HASCOMP
 	#define HASTIMER1
-	#define RAMSIZE 512
-	#define FLASHSIZE 16384
-	#define BSL true
+	
+	#define HASPORT1
+	#define HASPORT2
+	#define HASPORT3
+	
 #endif
 
 #ifdef MSP430G2452
-	#define HASUSI
-	#define HASADC10
-	#define HASCOMP
+
+	#define SERIES 2
 	#define RAMSIZE 256
 	#define FLASHSIZE 8192
 	#define BSL false
+	
+	#define HASUSI
+	#define HASADC10
+	#define HASCOMP
+	
+	#define HASPORT1
+	#define HASPORT2
+	
 #endif
 
 #ifdef MSP430G2231
-	#define HASUSI
-	#define HASADC10
+
+	#define SERIES 2
 	#define RAMSIZE 128
 	#define FLASHSIZE 2048
 	#define BSL false
+	
+	#define HASUSI
+	#define HASADC10
+	
+	#define HASPORT1
+	#define HASPORT2
+
 #endif
 
 #ifdef MSP430G2001
-	#define HASCOMP
+
+	#define SERIES 2
 	#define RAMSIZE 128
 	#define FLASHSIZE 512
 	#define BSL false
+	
+	#define HASCOMP
+	
+	#define HASPORT1
+	#define HASPORT2
+	
 #endif
 
 #ifdef MSP430G2211
-	#define HASCOMP
+
+	#define SERIES 2
 	#define FLASHSIZE 1024
 	#define RAMSIZE 128
 	#define BSL false
+	
+	#define HASCOMP
+		
+	#define HASPORT1
+	#define HASPORT2
+	
 #endif
 
 #ifdef MSP430F2013
-#define FLASHSIZE 2048
-#define RAMSIZE 128
-#define BSL false
+
+	#define SERIES 2
+	#define FLASHSIZE 2048
+	#define RAMSIZE 128
+	#define BSL false
+	
+	#define HASSD16
+	
+	#define HASPORT1
+	#define HASPORT2
+	
 #endif
 
-#include <msp430.h>
+#ifdef MSP430F5510
 
-//Start include required files.
-#include "system.h"
+	#define SERIES 5
+	#define FLASHSIZE 32768
+	#define RAMSIZE 4096
+	
+	#define HASPORTA
+	#define HASPORTB
+	#define HASPORTC
+
+#endif
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <msp430.h>
 #include "io.h"
-#include "bcs.h"
-#include "timer0.h"
+#include "system.h"
+
+#if SERIES == 2
+	#include "bcs.h"
+#endif
+
+#if SERIES == 5
+	#include "ucs.h"
+#endif
+
+#include "timer.h"
 #include "watchdog.h"
 #include "flash.h"
 
@@ -212,8 +314,10 @@
 #endif
 
 #ifndef CUSTOM_NMI
-	static __interrupt void nonmask_isr(void);
+	static interrupt void nonmask_isr(void);
 #endif
+
+/*===========================================*/
 
 #include "EasyMSP.c"
 

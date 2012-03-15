@@ -67,12 +67,6 @@
 	External includes
 */
 
-	extern void high(unsigned short int);
-	extern void low(unsigned short int);
-	extern void input(unsigned short int);
-	extern void output(unsigned short int);
-	extern bool read(unsigned short int);
-	
 /*
 	System control functions
 */

@@ -30,6 +30,10 @@
   * It's a good thing to clear the watchdog count register before changing settings, Otherwise, You might end up with a PUC when you do change it.
   */
 
+  #if SERIES == 2
+  
+/*
+
 bool detectWatchdog(void)
 {
     auto unsigned char tempwdt = (unsigned char)WDTCTL;
@@ -46,6 +50,8 @@ bool detectWatchdog(void)
 	}
 }
 
+*/
+
 void holdWatchdog(void)
 {
     auto unsigned short int tempwdt = (unsigned char)WDTCTL;
@@ -53,7 +59,7 @@ void holdWatchdog(void)
 	return;
 }
 
-unsigned short int startWatchdog(unsigned short int clocksource, unsigned short int divider)
+unsigned short int startWatchdog(unsigned short int source, unsigned short int interval)
 {
 	WDTCTL = WDTPW + WDTHOLD;
 	auto unsigned short int watchdogbits = WDTHOLD | WDTCNTCL;
@@ -119,7 +125,7 @@ void holdWatchdogTimer(void)
 	return;
 }
 
-unsigned short int startWatchdogTimer(unsigned short int clocksource, unsigned short int divider, void (*function)())
+unsigned short int startWatchdogTimer(unsigned short int source, unsigned short int interval, void (*function)())
 {
 	WDTCTL = WDTPW + WDTHOLD;
 	auto unsigned short int watchdogbits = WDTTMSEL | WDTCNTCL;
@@ -209,3 +215,80 @@ void resetPinMode(unsigned short int mode, unsigned short int edge)
 			(*watchdogFunctionToCall)();
 	}
 #endif 
+
+#endif
+
+#if SERIES == 5
+
+
+unsigned short int startWatchdog(enum clocks source, enum div interval)
+{
+	WDTCTL = WDTPW + (WDTHOLD | WDTCNTCL);
+	
+	switch (source)
+	{
+		case SMCLK:
+
+		break;
+		
+		case ACLK:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTSSEL_1);
+		break;
+		
+		case VLOCLK:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTSSEL_2);
+		break;
+		
+		case XCLK:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTSSEL_3);
+		break;
+		
+		default:
+			return(1);
+	}
+	
+	switch (interval)
+	{
+		case by_64:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_7);
+		break;
+		
+		case by_512:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_6);
+		break;
+		
+		case by_8192:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_5);
+		break;
+		
+		case by_32K:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_4);
+		break;
+		
+		case by_512K:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_3);
+		break;
+		
+		case by_8192K:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_2);
+		break;
+		
+		case by_128M:
+			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_1);
+		break;
+		
+		case by_2G:
+			/* Do nothing */
+		break;
+		
+		default:
+			return(2);
+	}
+	
+	WDTCTL = WDTPW + (WDTCTL_L & ~WDTHOLD);
+	
+	return (0);
+
+}
+
+#endif

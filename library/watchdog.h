@@ -14,47 +14,15 @@
 #define WATCHDOG_H
 
 #ifndef WDTIS_1
-  #define WDTIS_1 (1 << 0)
+  #define WDTIS_1 BIT0
 #endif
 
 #ifndef WDTIS_2
-  #define WDTIS_2 (1 << 1)
+  #define WDTIS_2 BIT+1
 #endif
 
 #ifndef WDTIS_3
   #define WDTIS_3 BIT0+BIT1
-#endif
-
-#ifndef SMCLK
-	#define SMCLK 2
-#endif
-
-#ifndef ACLK
-	#define ACLK 3
-#endif
-
-#ifndef FALLING_EDGE
-	#define FALLING_EDGE 0
-#endif
-
-#ifndef RISING_EDGE
-	#define RISING_EDGE 1
-#endif
-
-#ifndef RISING
-	#define RISING RISING_EDGE
-#endif
-
-#ifndef FALLING
-	#define FALLING FALLING_EDGE
-#endif
-
-#ifndef NMI
-	#define NMI 2
-#endif
-
-#ifndef RESET
-	#define RESET 1
 #endif
 
 // System Prototypes
@@ -70,8 +38,11 @@ void holdWatchdog(void);
 /// This function does not return any value.
 /// 
 /// /sa stopwd()
-
-unsigned short int startWatchdog(unsigned short int, unsigned short int);
+#if SERIES == 2
+	unsigned short int startWatchdog(unsigned short int, unsigned short int);
+#elif SERIES == 5
+	unsigned short int startWatchdog(enum clocks, enum div);
+#endif
 /// /brief Arms the watchdog with said settings.
 /// /note The watchdog must be cleared periodicly or the MCU will reset.
 /// /detail startWatchdog()

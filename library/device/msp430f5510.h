@@ -3,7 +3,17 @@
 	Ver 1
 */
 
+#ifndef __MSP430F5510__
+	#define __MSP430F5510__
+#endif
+
+#ifndef MSP430_H
+#include <msp430.h>
+#endif
+
 #define SERIES 5
+
+#define SUPPORTEDDEVICE
 
 #define FLASHSIZE 32768
 #define RAMSIZE 4096
