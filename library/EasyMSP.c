@@ -223,10 +223,11 @@ void main(void)
 
 	#ifndef NOLOOP
 
-		while(EasyMSPExecute)
+		do
 		{
 			loop();
 		}
+    while(EasyMSPExecute);
 
 	#endif
 }
