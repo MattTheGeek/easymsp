@@ -33,7 +33,7 @@
 
 #ifndef SKIPGCCCHECK
 	#ifdef __GNUC__
-		# error "EasyMSP is not supported with this gcc. Please define SKIPGCCCHECK if you still want to contiune."
+		# error "EasyMSP is not supported with gcc. Please define SKIPGCCCHECK if you still want to contiune."
 	#endif
 #endif
 
@@ -99,16 +99,6 @@ typedef enum clocks
 	XCLK = 10
 } clock;
 
-enum port
-{
-	A,
-	B,
-	C,
-	D,
-	E,
-	F,
-	J
-} port;
 
 enum div
 {
@@ -129,23 +119,6 @@ enum div
 
 };
 
-enum pins
-{
-	a0 = 0,
-	a1 = 1,
-	a2 = 2,
-	a3 = 3,
-	a4 = 4,
-	a5 = 5,
-	a6 = 6,
-	a7 = 7,
-	b0, b1, b2, b3, b4, b5, b6, b7,
-	c0, c1, c2, c3, c4, c5, c6, c7,
-	d0, d1, d2, d3, d4, d5, d6, d7,
-	e0, e1, e2, e3, e4, e5, e6, e7,
-	f0, f1, f2, f3, f4, f5, f6, f7,
-	j0, j1, j2, j3, j4, j5, j6, j7
-} pin;
 
 enum crystalDriveStrength
 {
@@ -266,6 +239,7 @@ enum crystalDriveStrength
 	#define HASPORTA
 	#define HASPORTB
 	#define HASPORTC
+	#define HASPORTJ
 
 #endif
 
@@ -313,8 +287,12 @@ enum crystalDriveStrength
 	extern void loop(void);
 #endif
 
+#if SERIES == 2
+
 #ifndef CUSTOM_NMI
 	static interrupt void nonmask_isr(void);
+#endif
+
 #endif
 
 /*===========================================*/

@@ -920,7 +920,7 @@ inline void high(unsigned short int pin)
 	
 	#ifdef HASPORTA
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PADIR |= (1 << pin);
@@ -931,13 +931,13 @@ inline void high(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
+
+	pin = pin - 16;
 	
 	#ifdef HASPORTB
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PBDIR |= (1 << pin);
@@ -948,13 +948,13 @@ inline void high(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
+
+	pin = pin - 16;
 	
 	#ifdef HASPORTC
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PCDIR |= (1 << pin);
@@ -965,13 +965,14 @@ inline void high(unsigned short int pin)
 		return;
 	}
 	
+	#endif
+
 	pin = pin - 16;
 	
-	#endif
-	
+
 	#ifdef HASPORTD
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PDDIR |= (1 << pin);
@@ -981,14 +982,13 @@ inline void high(unsigned short int pin)
 		
 		return;
 	}
+	#endif
 	
 	pin = pin - 16;
 	
-	#endif
-	
 	#ifdef HASPORTE
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PEDIR |= (1 << pin);
@@ -999,13 +999,13 @@ inline void high(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
+
+	pin = pin - 16;
 	
 	#ifdef HASPORTF
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PFDIR |= (1 << pin);
@@ -1016,13 +1016,13 @@ inline void high(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
+
+	//pin = pin - 16;
 	
 	#ifdef HASPORTJ
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PJDIR |= (1 << pin);
@@ -1043,7 +1043,7 @@ inline void low(unsigned short int pin)
 	
 	#ifdef HASPORTA
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PADIR |= (1 << pin);
@@ -1053,14 +1053,14 @@ inline void low(unsigned short int pin)
 		
 		return;
 	}
+
+	#endif
 	
 	pin = pin - 16;
 	
-	#endif
-	
 	#ifdef HASPORTB
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PBDIR |= (1 << pin);
@@ -1071,13 +1071,13 @@ inline void low(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
+
+	pin = pin - 16;
 	
 	#ifdef HASPORTC
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PCDIR |= (1 << pin);
@@ -1087,14 +1087,14 @@ inline void low(unsigned short int pin)
 		
 		return;
 	}
-	
-	pin = pin - 16;
-	
+
 	#endif
+
+	pin = pin - 16;
 	
 	#ifdef HASPORTD
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PDDIR |= (1 << pin);
@@ -1105,13 +1105,13 @@ inline void low(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
+
+	pin = pin - 16;
 	
 	#ifdef HASPORTE
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PEDIR |= (1 << pin);
@@ -1122,13 +1122,13 @@ inline void low(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTF
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PFDIR |= (1 << pin);
@@ -1139,13 +1139,13 @@ inline void low(unsigned short int pin)
 		return;
 	}
 	
-	pin = pin - 16;
-	
 	#endif
+
+	pin = pin - 16;
 	
 	#ifdef HASPORTJ
 	
-	if (pin >= 15)
+	if (pin <= 15)
 	{
 		#ifndef FASTIO
 			PJDIR |= (1 << pin);
@@ -1195,7 +1195,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	#ifdef HASPORTA
 	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			if (state == OUTPUT)
 			{
@@ -1211,11 +1211,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	#endif /* HASPORTA */
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTB
 	
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			if (state == OUTPUT)
 			{
@@ -1231,11 +1231,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	#endif /*HASPORTB*/
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTC
 	
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			if (state == OUTPUT)
 			{
@@ -1251,11 +1251,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTD
 	
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			if (state == OUTPUT)
 			{
@@ -1271,11 +1271,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTE
 	
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			if (state == OUTPUT)
 			{
@@ -1291,11 +1291,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTF
 	
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			if (state == OUTPUT)
 			{
@@ -1311,11 +1311,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	#endif
 	
+	//pin = pin - 16;
+
 	#ifdef HASPORTJ
 	
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			if (state == OUTPUT)
 			{
@@ -1325,7 +1325,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 			{
 				PJDIR &= ~(1 << pin);
 			}
-	
+		}
 	#endif
 	
 	return;
@@ -1335,7 +1335,7 @@ inline bool read(unsigned short int pin)
 {
 	#ifdef HASPORTA
 		
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			auto unsigned short int result = PAIN & (1 << pin);
 			
@@ -1352,11 +1352,11 @@ inline bool read(unsigned short int pin)
 		
 	#endif /* HASPORTA */
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTB
-		
-		pin = pin - 16;
 	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			auto unsigned short int result = PBIN & (1 << pin);
 			
@@ -1372,11 +1372,11 @@ inline bool read(unsigned short int pin)
 				
 	#endif /*HASPORTB*/
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTC
 	
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			auto unsigned short int result = PCIN & (1 << pin);
 			
@@ -1392,11 +1392,11 @@ inline bool read(unsigned short int pin)
 		
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTD
 		
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			auto unsigned short int result = PDIN & (1 << pin);
 			
@@ -1412,11 +1412,11 @@ inline bool read(unsigned short int pin)
 		
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTE
 		
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			auto unsigned short int result = PEIN & (1 << pin);
 			
@@ -1432,11 +1432,11 @@ inline bool read(unsigned short int pin)
 		
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTF
-		
-		pin = pin - 16;
 	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			auto unsigned short int result = PFIN & (1 << pin);
 			
@@ -1452,11 +1452,11 @@ inline bool read(unsigned short int pin)
 		
 	#endif
 	
+	pin = pin - 16;
+
 	#ifdef HASPORTJ
 		
-		pin = pin - 16;
-	
-		if (pin >= 15)
+		if (pin <= 15)
 		{
 			auto unsigned short int result = PJIN & (1 << pin);
 			
