@@ -14,19 +14,35 @@
 #define WATCHDOG_H
 
 #ifndef WDTIS_1
-  #define WDTIS_1 BIT0
+#define WDTIS_1 BIT0
 #endif
 
 #ifndef WDTIS_2
-  #define WDTIS_2 BIT+1
+#define WDTIS_2 BIT+1
 #endif
 
 #ifndef WDTIS_3
-  #define WDTIS_3 BIT0+BIT1
+#define WDTIS_3 BIT0+BIT1
+#endif
+
+#ifndef FALLING
+#define FALLING 0
+#endif
+
+#ifndef RISING
+#define RISING 1
+#endif
+
+#ifndef NMI
+#define NMI 1
+#endif
+
+#ifndef RESET
+#define RESET 2
 #endif
 
 // System Prototypes
-bool detectWatchdog(void); 
+bool detectWatchdog(void);
 // User Prototypes
 void holdWatchdog(void);
 /// /brief Stops the watchdog while preserving settings.
@@ -39,9 +55,9 @@ void holdWatchdog(void);
 /// 
 /// /sa stopwd()
 #if SERIES == 2
-	unsigned short int startWatchdog(unsigned short int, unsigned short int);
+unsigned short int startWatchdog(unsigned short int, unsigned short int);
 #elif SERIES == 5
-	unsigned short int startWatchdog(enum clocks, enum div);
+unsigned short int startWatchdog(enum clocks, enum div);
 #endif
 /// /brief Arms the watchdog with said settings.
 /// /note The watchdog must be cleared periodicly or the MCU will reset.
@@ -72,17 +88,16 @@ void resetWatchdog(void);
 void clearWatchdog(void);
 
 void holdWatchdogTimer(void);
-unsigned short int startWatchdogTimer(unsigned short int, unsigned short int, void(*function)(void));
+unsigned short int startWatchdogTimer(unsigned short int, unsigned short int,
+		void(*function)(void));
 void resetWatchdogTimer(void);
 
 void resetPinMode(unsigned short int, unsigned short int);
 
 #ifndef NO_WDT_ISR
-	static __interrupt void watchdog_timer_isr(void);
-	static unsigned short int HardwareTimeCount = NULL;
-	static void (*watchdogFunctionToCall)(void) = NULL;
+static __interrupt void watchdog_timer_isr(void);
+static unsigned short int HardwareTimeCount = NULL;
+static void (*watchdogFunctionToCall)(void) = NULL;
 #endif
-
-#include "watchdog.c"
 
 #endif

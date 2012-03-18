@@ -1,45 +1,82 @@
 /*
- * io.c
- * EasyMSP GPIO Library for MSP430Gxxxx devices.
- * Version 1.0.0
+ * io.C
+ * Version: 1.0.4
+ * Library for accessing ports
  *
+ * Author: Matthew Burmeister
+ * Copyright Matthew Burmeister 2011 - 2012. All Rights Reserved.
  *
- *
+ * Part of the EasyMSP Project.
  *
  */
 
 #ifndef IO_H
 #define IO_H
 
-inline void high(unsigned short int);
-inline void low(unsigned short int);
-inline void digitalWrite(unsigned short int, unsigned short int);
-inline void pinMode(unsigned short int, unsigned short int);
-inline bool read(unsigned short int);
+/* Constants */
 
-#if SERIES == 2
-	
-	#ifndef NO_PORT_ISR
-
-		static void (*PortFunctionVector[15])(void) = {NULL};
-
-		static __interrupt void port1_isr(void);
-		static __interrupt void port2_isr(void);
-	
-		void attachInterrupt(unsigned short int, unsigned short int, void (*)());
-		void removeInterrupt(unsigned short int);
-
-	#endif
-
+#ifndef HIGH_TO_LOW
+#define HIGH_TO_LOW 0
 #endif
+
+#ifndef LOW_TO_HIGH
+#define LOW_TO_HIGH 1
+#endif
+
+#ifndef HIGH
+#define HIGH 1
+#endif
+
+#ifndef LOW
+#define LOW 0
+#endif
+
+#ifndef INPUT
+#define INPUT 0
+#endif
+
+#ifndef OUTPUT
+#define OUTPUT 1
+#endif
+
+/* Public Functions */
+
+inline void digitalWrite(unsigned short int, unsigned short int);
+
+inline void setHigh(unsigned short int);
+inline void setLow(unsigned short int);
+inline void pinToggle(unsigned short int);
+inline void pinMode(unsigned short int, unsigned short int);
+inline bool readPin(unsigned short int);
 
 #if SERIES == 5
-
-	void portWriteByte(unsigned short int, unsigned char);
-	void portWrite(unsigned short int, unsigned short int);
-	
+inline void setDriveStrength(unsigned short int, unsigned short int);
 #endif
 
-#include "io.c"
+inline void setPullUp(unsigned short int);
+inline void setPullDown(unsigned short int);
+inline void setPullOff(unsigned short int);
+
+void attachInterrupt(unsigned short int, unsigned short int, void(*)());
+void removeInterrupt(unsigned short int);
+
+/* Interrupt ISRs */
+
+static interrupt void port1_isr(void);
+static interrupt void port2_isr(void);
+
+/* Pin Interrupt function pointers */
+
+/* User interrupt vectors
+ *
+ * Port1FunctionVector and Port2FunctionVector holds the addresses of user functions to call if a pin triggers a interrupt.
+ * As always, they must be void and return nothing. The shorter the function, the better.
+ */
+
+static void (*Port1FunctionVector[7])(void) =
+{	NULL};
+
+static void (*Port2FunctionVector[7])(void) =
+{	NULL};
 
 #endif

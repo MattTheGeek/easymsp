@@ -15,46 +15,46 @@
  *
  */
 
- /* The WDTCTL register and bitwise operations.
-  * It seems like password protected registers do not like to be ORed, NANDed, and NOTed, As this would change the watchdog password and cause a system reset.
-  * So it is wise to perform bitwise operations before commiting to the WDTCTL register.
-  *
-  * Save WDTCTL data
-  * Since WDTCTL holds more than just a watchdog, We need to be careful not to change any data we don't need to.
-  *
-  * WDTCTL timer interrupt is maskable.
-  * One thing to think about when using the watchdog as a timer is that it's interrupts can be masked.
-  * Make sure to enable global interrupts and set the watchdog interrupt enable bit in the interrupt enable 1 register.
-  *
-  * Clear before Setting
-  * It's a good thing to clear the watchdog count register before changing settings, Otherwise, You might end up with a PUC when you do change it.
-  */
+/* The WDTCTL register and bitwise operations.
+ * It seems like password protected registers do not like to be ORed, NANDed, and NOTed, As this would change the watchdog password and cause a system reset.
+ * So it is wise to perform bitwise operations before commiting to the WDTCTL register.
+ *
+ * Save WDTCTL data
+ * Since WDTCTL holds more than just a watchdog, We need to be careful not to change any data we don't need to.
+ *
+ * WDTCTL timer interrupt is maskable.
+ * One thing to think about when using the watchdog as a timer is that it's interrupts can be masked.
+ * Make sure to enable global interrupts and set the watchdog interrupt enable bit in the interrupt enable 1 register.
+ *
+ * Clear before Setting
+ * It's a good thing to clear the watchdog count register before changing settings, Otherwise, You might end up with a PUC when you do change it.
+ */
 
-  #if SERIES == 2
-  
+#if SERIES == 2
+
 /*
 
-bool detectWatchdog(void)
-{
-    auto unsigned char tempwdt = (unsigned char)WDTCTL;
+ bool detectWatchdog(void)
+ {
+ auto unsigned char tempwdt = (unsigned char)WDTCTL;
 
-	WDTCTL = WDTPW + (tempwdt | WDTHOLD);
+ WDTCTL = WDTPW + (tempwdt | WDTHOLD);
 
-	if((unsigned char)WDTCTL > 0) //Values were stored, So a watchdog must exist.
-	{
-		return(true); //Yes, We do have a watchdog!
-	}
-	else
-	{
-		return(false); //Nope, A watchdog does no exist OR isn't the right watchdog on the MCU
-	}
-}
+ if((unsigned char)WDTCTL > 0) //Values were stored, So a watchdog must exist.
+ {
+ return(true); //Yes, We do have a watchdog!
+ }
+ else
+ {
+ return(false); //Nope, A watchdog does no exist OR isn't the right watchdog on the MCU
+ }
+ }
 
-*/
+ */
 
 void holdWatchdog(void)
 {
-    auto unsigned short int tempwdt = (unsigned char)WDTCTL;
+	auto unsigned short int tempwdt = (unsigned char)WDTCTL;
 	WDTCTL = WDTPW + (tempwdt | WDTHOLD);
 	return;
 }
@@ -64,34 +64,31 @@ unsigned short int startWatchdog(unsigned short int source, unsigned short int i
 	WDTCTL = WDTPW + WDTHOLD;
 	auto unsigned short int watchdogbits = WDTHOLD | WDTCNTCL;
 
-	if(clocksource == ACLK)
+	if(source == ACLK)
 	{
 		watchdogbits |= WDTSSEL;
 	}
 	else
 	{
-		if (clocksource != SMCLK)
+		if (source != SMCLK)
 		{
 			return(1);
 		}
 	}
 
-	switch (divider)
+	switch (interval)
 	{
 		case 64:
 			watchdogbits |= WDTIS_3;
 			break;
 
-
 		case 512:
 			watchdogbits |= WDTIS_2;
 			break;
 
-
 		case 8912:
 			watchdogbits |= WDTIS_1;
 			break;
-
 
 		case 32768:
 			//Do nothing.
@@ -105,7 +102,6 @@ unsigned short int startWatchdog(unsigned short int source, unsigned short int i
 
 	return(0);
 }
-
 
 void resetWatchdog(void)
 {
@@ -130,29 +126,27 @@ unsigned short int startWatchdogTimer(unsigned short int source, unsigned short 
 	WDTCTL = WDTPW + WDTHOLD;
 	auto unsigned short int watchdogbits = WDTTMSEL | WDTCNTCL;
 
-	if(clocksource == ACLK)
+	if(source == ACLK)
 	{
 		watchdogbits |= WDTSSEL;
 	}
 	else
 	{
-		if (clocksource != SMCLK)
+		if (source != SMCLK)
 		{
 			return(1);
 		}
 	}
 
-	switch (divider)
+	switch (interval)
 	{
 		case 64:
 			watchdogbits |= WDTIS_3;
 			break;
 
-
 		case 512:
 			watchdogbits |= WDTIS_2;
 			break;
-
 
 		case 8912:
 			watchdogbits |= WDTIS_1;
@@ -166,11 +160,11 @@ unsigned short int startWatchdogTimer(unsigned short int source, unsigned short 
 			return(2);
 	}
 
-		IE1 |= WDTIE;
+	IE1 |= WDTIE;
 
-	#ifndef NO_WDT_ISR
-		watchdogFunctionToCall = function;
-	#endif
+#ifndef NO_WDT_ISR
+	watchdogFunctionToCall = function;
+#endif
 
 	WDTCTL = WDTPW | watchdogbits; //Start Watchdog timer.
 
@@ -190,7 +184,7 @@ void resetPinMode(unsigned short int mode, unsigned short int edge)
 	{
 		WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTNMI);
 	}
-	else
+	else if (mode == RESET)
 	{
 		WDTCTL = WDTPW + ((unsigned char)WDTCTL & ~WDTNMI);
 	}
@@ -199,7 +193,7 @@ void resetPinMode(unsigned short int mode, unsigned short int edge)
 	{
 		WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTNMIES);
 	}
-	else
+	else if (edge == RISING)
 	{
 		WDTCTL = WDTPW + ((unsigned char)WDTCTL & ~WDTNMIES);
 	}
@@ -209,17 +203,16 @@ void resetPinMode(unsigned short int mode, unsigned short int edge)
 
 //=================
 #ifndef NO_WDT_ISR
-	#pragma vector=WDT_VECTOR
-	static __interrupt void watchdog_timer_isr(void)
-	{
-			(*watchdogFunctionToCall)();
-	}
+#pragma vector=WDT_VECTOR
+static __interrupt void watchdog_timer_isr(void)
+{
+	(*watchdogFunctionToCall)();
+}
 #endif 
 
 #endif
 
 #if SERIES == 5
-
 
 unsigned short int startWatchdog(enum clocks source, enum div interval)
 {
@@ -229,20 +222,20 @@ unsigned short int startWatchdog(enum clocks source, enum div interval)
 	{
 		case SMCLK:
 
-		break;
-		
+			break;
+
 		case ACLK:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTSSEL_1);
-		break;
-		
+			break;
+
 		case VLOCLK:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTSSEL_2);
-		break;
-		
+			break;
+
 		case XCLK:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTSSEL_3);
-		break;
-		
+			break;
+
 		default:
 			return(1);
 	}
@@ -251,36 +244,36 @@ unsigned short int startWatchdog(enum clocks source, enum div interval)
 	{
 		case by_64:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_7);
-		break;
-		
+			break;
+
 		case by_512:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_6);
-		break;
-		
+			break;
+
 		case by_8192:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_5);
-		break;
-		
+			break;
+
 		case by_32K:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_4);
-		break;
-		
+			break;
+
 		case by_512K:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_3);
-		break;
-		
+			break;
+
 		case by_8192K:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_2);
-		break;
-		
+			break;
+
 		case by_128M:
 			WDTCTL = WDTPW + (WDTCTL_L | WDTIS_1);
-		break;
-		
+			break;
+
 		case by_2G:
 			/* Do nothing */
-		break;
-		
+			break;
+
 		default:
 			return(2);
 	}

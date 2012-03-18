@@ -142,6 +142,11 @@ enum crystalDriveStrength
 
 #ifdef MSP430G2553
 	#define SERIES 2
+		
+	#ifndef __MSP430G2553__
+	#define __MSP430G2553__
+	#endif
+	
 	#define RAMSIZE 512
 	#define FLASHSIZE 16384
 	#define BSL true
@@ -160,6 +165,11 @@ enum crystalDriveStrength
 #ifdef MSP430G2452
 
 	#define SERIES 2
+		
+	#ifndef __MSP430G2452__
+	#define __MSP430G2452__
+	#endif
+	
 	#define RAMSIZE 256
 	#define FLASHSIZE 8192
 	#define BSL false
@@ -176,6 +186,11 @@ enum crystalDriveStrength
 #ifdef MSP430G2231
 
 	#define SERIES 2
+	
+	#ifndef __MSP430G2231__
+	#define __MSP430G2231__
+	#endif
+	
 	#define RAMSIZE 128
 	#define FLASHSIZE 2048
 	#define BSL false
@@ -191,6 +206,11 @@ enum crystalDriveStrength
 #ifdef MSP430G2001
 
 	#define SERIES 2
+	
+	#ifndef __MSP430G2001__
+	#define __MSP430G2001__
+	#endif
+	
 	#define RAMSIZE 128
 	#define FLASHSIZE 512
 	#define BSL false
@@ -205,6 +225,11 @@ enum crystalDriveStrength
 #ifdef MSP430G2211
 
 	#define SERIES 2
+	
+	#ifndef __MSP430G2211__
+	#define __MSP430G2211__
+	#endif
+	
 	#define FLASHSIZE 1024
 	#define RAMSIZE 128
 	#define BSL false
@@ -219,6 +244,11 @@ enum crystalDriveStrength
 #ifdef MSP430F2013
 
 	#define SERIES 2
+	
+	#ifndef __MSP430F2013__
+	#define __MSP430F2013__
+	#endif
+	
 	#define FLASHSIZE 2048
 	#define RAMSIZE 128
 	#define BSL false
@@ -231,8 +261,13 @@ enum crystalDriveStrength
 #endif
 
 #ifdef MSP430F5510
-
+	
 	#define SERIES 5
+	
+	#ifndef __MSP430F5510__
+	#define __MSP430F5510__
+	#endif
+	
 	#define FLASHSIZE 32768
 	#define RAMSIZE 4096
 	
@@ -260,6 +295,12 @@ enum crystalDriveStrength
 #include "timer.h"
 #include "watchdog.h"
 #include "flash.h"
+
+#include "io.c"
+#include "system.c"
+#include "timer.c"
+#include "watchdog.c"
+#include "flash.c"
 
 //Do we need other drivers?
 #ifdef HASUSI
