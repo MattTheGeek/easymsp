@@ -20,6 +20,8 @@
  ** Copyright (c) 2011 All rights reserved.
  ** -------------------------------------------------------------------------*/
 
+/* todo: Clean up header */
+
 #ifndef SYSTEM_H
 #define SYSTEM_H
 

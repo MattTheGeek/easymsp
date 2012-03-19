@@ -29,13 +29,13 @@ int main(void)
 {
     WDTCTL = WDTPW + WDTHOLD; //Stop the watchdog from resetting the system.
 
-	#if SERIES == 2
-    	/* Series 2 setup code */
-	#elif SERIES == 5
-    	/* Series 5 setup code */
-	#else
-		#error "No Series defined. Can't Compile"
-	#endif
+	#ifdef OLIMEXINO
+    	P5SEL = (BIT2 | BIT3 | BIT4 | BIT5); /* Set port5 pins 2 to 5 as Clock inputs */
+    	P2REN = 0x01;
+    	P2OUT = 0x01;
+    	UCSCTL6 = XCAP_2;
+    	UCSCTL4 = (SELS_5 | SELM_5);
+    #endif
 
 	#ifndef NOINIT //If the user has declared NOINIT, then do not include and execute init()
 

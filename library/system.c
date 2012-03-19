@@ -5,6 +5,8 @@
  *
  */
 
+
+
 inline void enterAM(void)
 {
 	asm("	bic.w	 #0xF0,	0(SP)");
@@ -78,6 +80,7 @@ void inline delayus(register unsigned short int time)
 	}
 }
 
+/* cleanup */
 void shiftOut(unsigned short int DOUT, unsigned short int SCLK,
 		unsigned short int bitorder, unsigned char data)
 {
@@ -123,7 +126,7 @@ void shiftOut(unsigned short int DOUT, unsigned short int SCLK,
 
 unsigned char shiftIn(unsigned short int DIN, unsigned short int SCLK,
 		unsigned short int bitorder)
-/// todo: Test shiftIn() 
+/* confirm: Test shiftIn() */
 {
 	auto unsigned short int bits = 8;
 	auto unsigned short int data = 0;

@@ -57,8 +57,8 @@ inline void setPullUp(unsigned short int);
 inline void setPullDown(unsigned short int);
 inline void setPullOff(unsigned short int);
 
-void attachInterrupt(unsigned short int, unsigned short int, void(*)());
-void removeInterrupt(unsigned short int);
+inline void attachInterrupt(unsigned short int, unsigned short int, void(*)());
+inline void removeInterrupt(unsigned short int);
 
 /* Interrupt ISRs */
 
@@ -73,10 +73,10 @@ static interrupt void port2_isr(void);
  * As always, they must be void and return nothing. The shorter the function, the better.
  */
 
-static void (*Port1FunctionVector[7])(void) =
+static void (*Port1FunctionVector[8])(void) =
 {	NULL};
 
-static void (*Port2FunctionVector[7])(void) =
+static void (*Port2FunctionVector[8])(void) =
 {	NULL};
 
-#endif
+#endif /* IO_H */
