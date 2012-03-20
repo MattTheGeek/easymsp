@@ -7,10 +7,6 @@
 	#define __MSP430F5510__
 #endif
 
-#ifndef MSP430_H
-#include <msp430.h>
-#endif
-
 #define SERIES 5
 
 #define SUPPORTEDDEVICE

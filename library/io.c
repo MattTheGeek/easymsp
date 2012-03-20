@@ -1,5 +1,5 @@
 /*
- * io.C
+ * io.c
  * Version: 1.0.4
  * Library for accessing ports
  *
@@ -10,9 +10,35 @@
  *
  */
 
-/*
- * todo: Improve source comments.
- * confirm: Interrupt vector and functions.
+/* Info
+ *
+ *	Library merge
+ *		Since the library merge of the 2 series library and the newer 5 series library, the IO library is split up into three sections. The First section is for global functions
+ *		that rely on the lower level functions below.
+ *
+ *		The second section is the 2 series (or just 8-bit port) library functions. and the third is currently the 5 series (16 bit port) library functions.
+ *
+ *		The library will issue a preprocessor error if the device series is not declared or incorrect.
+ *
+ *	Function Name Changes
+ *		Most function names have been changed, as they were quite vague on what they do. A example would be readPin(), since read() could mean anything and the old input() and
+ *		output() functions have been consolidated into one specific function, pinMode(). However, this change does break compatibility with obsolete versions.
+ *
+ *	Inlining
+ *		All functions should created inline, as if the exact code was generated, the code size and processing time would increase substantially and performance will deteriorate.
+ *
+ *	Bitmasks
+ *		EasyMSP generates bitmasks by shifting 1 by x times.
+ *
+ *	Figuring out ports
+ *		The IO library determines what port to operate on by following a simple algorithm.
+ *
+ *		If pin is less than or equal to the (port width - 1)...
+ *			Operate on port and return.
+ *		if pin is higher than the (port width - 1)
+ *			Subtract the port width from pin.
+ *			Goto next port block if it exists, otherwise subtract again and goto the next port block.
+ *
  */
 
 #ifdef IO_H
@@ -44,19 +70,23 @@ inline void digitalWrite(unsigned short int pin, unsigned short int state)
 inline void setHigh(unsigned short int pin)
 {
 
-#ifdef HASPORT1
+#ifdef HASPORT1 /* Does the device has PORT1? */
 	
-	if (pin <= 7)
+	if (pin <= 7) /* If pin is equal or less than 7, then we operate on PORT1 */
 	{
-		P1OUT |= (1 << pin);
+		/* We need to generate a bitmask for P1OUT, we do this by shifting 0x01 by pin. This produces a bitmask that for the desired bit and pin. */
+
+		P1OUT |= (1 << pin); /* OR the generated bit mask to PxOUT to set the bit and make the pin high */
 		return;
 	}
 
-#endif
+#endif /* HASPORT1 */
 	
-	pin = pin - 8;
+	pin = pin - 8; /* Since the value was higher than 8, subtract by 8 and later compare */
 
-#ifdef HASPORT2
+	/* The next code blocks are generally the same as above. */
+
+#ifdef HASPORT2 /* Does the device has PORT2? */
 	
 	if (pin <= 7)
 	{
@@ -64,11 +94,11 @@ inline void setHigh(unsigned short int pin)
 		return;
 	}
 
-#endif
+#endif /* HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef HASPORT3
+#ifdef HASPORT3 /* Does the device has PORT3? */
 	
 	if (pin <= 7)
 	{
@@ -76,10 +106,10 @@ inline void setHigh(unsigned short int pin)
 		return;
 	}
 
-#endif
+#endif /* HASPORT3 */
 	
-#ifdef HASPORT4
-	
+#ifdef HASPORT4 /* Does the device has PORT4? */
+
 	pin = pin - 8;
 
 	if (pin <= 7)
@@ -87,49 +117,56 @@ inline void setHigh(unsigned short int pin)
 		P4OUT |= (1 << pin);
 	}
 
-#endif
+#endif /* HASPORT4 */
 	
-	return;
+	return; /* Return from the last function or the pin was out of range. */
 }
 
 inline void setLow(unsigned short int pin)
 {
 
-#ifdef HASPORT1
+#ifdef HASPORT1 /* Does the device has PORT1? */
 	
-	if (pin <= 7)
+	if (pin <= 7) /* If pin is equal or less than 7, then we operate on PORT1 */
 	{
-		P1OUT &= ~(1 << pin);
-		return;
+		/* We need to generate a bitmask for P1OUT, we do this by shifting 0x01 by pin. This produces a bitmask that for the desired bit and pin. */
+
+		P1OUT &= ~(1 << pin); /* NAND the generated bit mask to PxOUT to clear the bit and set the pin low */
+
+		return; /* Feturn from function */
 	}
 
-#endif
+#endif /* HASPORT1 */
 	
-	pin = pin - 8;
+	pin = pin - 8; /* Since the value was higher than 8, subtract by 8 and later compare */
 
-#ifdef HASPORT2
+	/* The next code blocks are generally the same as above. */
+
+#ifdef HASPORT2  /* Does the device has PORT2? */
 	
 	if (pin <= 7)
 	{
 		P2OUT &= ~(1 << pin);
+
 		return;
 	}
 
-#endif
+#endif /* HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef HASPORT3
+#ifdef HASPORT3  /* Does the device has PORT3? */
 	
 	if (pin <= 7)
 	{
 		P3OUT &= ~(1 << pin);
+
 		return;
 	}
 
-#endif
+#endif /* HASPORT3 */
 	
-#ifdef HASPORT4
+#ifdef HASPORT4  /* Does the device has PORT4? */
 	
 	pin = pin - 8;
 
@@ -138,34 +175,55 @@ inline void setLow(unsigned short int pin)
 		P4OUT &= ~(1 << pin);
 	}
 
-#endif
+#endif /* HASPORT4 */
 	
-	return;
+	return; /* Return from the last function or the pin was out of range. */
 }
 
 inline void pinMode(unsigned short int pin, unsigned short int state)
 {
 
-	if (state > 1)
+	if (state > 1) /* Check for invaild state */
 	{
-		return;
+		return; /* State was higher than 1, return */
+
+		/* Since we have two states
+		 *
+		 * INPUT 0
+		 * OUTPUT 1
+		 *
+		 * we can assume that anything higher is invaild.
+		 *
+		 */
 	}
 
-	if (pin <= 7)
+#ifdef HASPORT1 /* Does the device have PORT1? */
+
+	if (pin <= 7) /* Is pin equal or lower to 7? */
 	{
 		if (state == OUTPUT)
 		{
-			P1DIR |= (1 << pin);
+			/* If the state is output, We need to set the PxDIR bit */
+
+			P1DIR |= (1 << pin); /* Produce bitmask by shifting 1 by pin, and then OR to PxDIR */
 		}
 		else
 		{
-			P1DIR &= ~(1 << pin);
+			/* Otherwise we can assume state is input, So we need to clear the PxDIR bit */
+
+			P1DIR &= ~(1 << pin); /* Produce bitmask by shifting 1 by pin, and then NAND to PxDIR */
 		}
 
-		return;
+		return; /* Return */
 	}
 
-	pin = pin - 8;
+#endif /* HASPORT1 */
+
+	pin = pin - 8; /* Since the pin is higher than 8, subtract by 8 and then compare again. */
+
+	/* The next blocks of code are like the above block */
+
+#ifdef HASPORT2 /* Does the device have PORT2 */
 
 	if (pin <= 7)
 	{
@@ -181,10 +239,12 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#ifdef HASPORT3
-	
+#endif /* HASPORT2 */
+
 	pin = pin - 8;
 
+#ifdef HASPORT3 /* Does the device have PORT3? */
+	
 	if (pin <= 7)
 	{
 		if (state == OUTPUT)
@@ -199,9 +259,9 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#endif
+#endif /* HASPORT3 */
 
-#ifdef HASPORT4
+#ifdef HASPORT4 /* Does the device has PORT4? */
 	
 	pin = pin - 8;
 
@@ -219,7 +279,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#endif
+#endif /* HASPORT4 */
 
 	return;
 }
@@ -229,9 +289,13 @@ inline bool readPin(unsigned short int pin)
 
 #ifdef HASPORT1
 	
-	if (pin <= 7)
+	if (pin <= 7) /* is pin less than or equal to 7? Then operate on PORT1 */
 	{
+		/* We get the state of the pin by doing a bitwise AND between PxIN and the calculated bitmask */
+
 		auto unsigned short int result = P1IN & (1 << pin);
+
+		/* If the value stored in result is not zero, then the bit was set (pin was high). */
 
 		if (result > 0)
 		{
@@ -239,13 +303,17 @@ inline bool readPin(unsigned short int pin)
 		}
 		else
 		{
+			/* Otherwise, if the value stored in result IS zero, than the bit is cleared (pin is low). */
+
 			return(LOW);
 		}
 	}
 
-#endif
+#endif /* HASPORT1 */
+
+	pin = pin - 8; /* Subtract 8 from pin since pin was higher than 8 */
 	
-	pin = pin - 8;
+	/* The next blocks of code are like the above block */
 
 #ifdef HASPORT2
 	
@@ -264,7 +332,7 @@ inline bool readPin(unsigned short int pin)
 
 	}
 
-#endif
+#endif /* HASPORT2 */
 	
 	pin = pin - 8;
 
@@ -284,7 +352,7 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif
+#endif /* HASPORT3 */
 	
 #ifdef HASPORT4
 	
@@ -304,7 +372,9 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif
+#endif /* HASPORT4 */
+
+	/* If we get here, the pin was out of range of the device. Return with the pin state as LOW. */
 	
 	return (LOW);
 }
@@ -314,15 +384,19 @@ inline void toggle(unsigned short int pin)
 
 #ifdef HASPORT1
 	
-	if (pin <= 7)
+	if (pin <= 7) /* Is pin less than or equal to 7? If yes, then operate on port1 */
 	{
-		P1OUT ^= (1 << pin);
+		/* Calculate a bitmask by shifting 1 by pin. */
+
+		P1OUT ^= (1 << pin); /* XOR PxOUT with the bitmask, Which toggles the current state of the bit (and pin). */
 		return;
 	}
 
-#endif
+#endif /* HASPORT1 */
 	
-	pin = pin - 8;
+	pin = pin - 8; /* Since pin was higher than 8, subtract by 8 and compare again next block */
+
+	/* The next blocks of code are like the above block */
 
 #ifdef HASPORT2
 	
@@ -332,7 +406,7 @@ inline void toggle(unsigned short int pin)
 		return;
 	}
 
-#endif
+#endif /* HASPORT2 */
 	
 	pin = pin - 8;
 
@@ -344,7 +418,7 @@ inline void toggle(unsigned short int pin)
 		return;
 	}
 
-#endif
+#endif /* HASPORT3 */
 	
 #ifdef HASPORT4
 	
@@ -355,7 +429,7 @@ inline void toggle(unsigned short int pin)
 		P4OUT ^= (1 << pin);
 	}
 
-#endif
+#endif /* HASPORT4 */
 	
 	return;
 }

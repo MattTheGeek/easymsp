@@ -85,6 +85,10 @@
 	#define OFF 0
 #endif
 
+#define bitSet(data,bit) data |= (1 << bit)
+#define bitClear(data, bit) data &= ~(1 << bit)
+#define testBit(data, bit, result) {if (data & bit){return(1);}else{return(0);}}
+
 typedef enum clocks
 {
 	MCLK = 1,
@@ -128,158 +132,32 @@ enum crystalDriveStrength
 	upTo32Mhz = 4
 };
 
-
-
-/*
- *   Start parsing device
- */
-
-/*
- * Flash and RAM sizes are in bytes.
- * This information can be used to determine if a device is suitable for a feature or not.
- * It can also be used to adjust storage requirements for features.
- */
-
-#ifdef MSP430G2553
-	#define SERIES 2
-		
-	#ifndef __MSP430G2553__
-	#define __MSP430G2553__
-	#endif
-	
-	#define RAMSIZE 512
-	#define FLASHSIZE 16384
-	#define BSL true
-	
-	#define HASUSCI
-	#define HASADC10
-	#define HASCOMP
-	#define HASTIMER1
-	
-	#define HASPORT1
-	#define HASPORT2
-	#define HASPORT3
-	
+/* If a board was declared, include related defines and settings */
+#ifdef OLIMEXINO5510
+#include "board/olimexino-5510.h"
 #endif
 
-#ifdef MSP430G2452
-
-	#define SERIES 2
-		
-	#ifndef __MSP430G2452__
-	#define __MSP430G2452__
-	#endif
-	
-	#define RAMSIZE 256
-	#define FLASHSIZE 8192
-	#define BSL false
-	
-	#define HASUSI
-	#define HASADC10
-	#define HASCOMP
-	
-	#define HASPORT1
-	#define HASPORT2
-	
-#endif
-
-#ifdef MSP430G2231
-
-	#define SERIES 2
-	
-	#ifndef __MSP430G2231__
-	#define __MSP430G2231__
-	#endif
-	
-	#define RAMSIZE 128
-	#define FLASHSIZE 2048
-	#define BSL false
-	
-	#define HASUSI
-	#define HASADC10
-	
-	#define HASPORT1
-	#define HASPORT2
-
-#endif
-
-#ifdef MSP430G2001
-
-	#define SERIES 2
-	
-	#ifndef __MSP430G2001__
-	#define __MSP430G2001__
-	#endif
-	
-	#define RAMSIZE 128
-	#define FLASHSIZE 512
-	#define BSL false
-	
-	#define HASCOMP
-	
-	#define HASPORT1
-	#define HASPORT2
-	
-#endif
-
-#ifdef MSP430G2211
-
-	#define SERIES 2
-	
-	#ifndef __MSP430G2211__
-	#define __MSP430G2211__
-	#endif
-	
-	#define FLASHSIZE 1024
-	#define RAMSIZE 128
-	#define BSL false
-	
-	#define HASCOMP
-		
-	#define HASPORT1
-	#define HASPORT2
-	
-#endif
-
-#ifdef MSP430F2013
-
-	#define SERIES 2
-	
-	#ifndef __MSP430F2013__
-	#define __MSP430F2013__
-	#endif
-	
-	#define FLASHSIZE 2048
-	#define RAMSIZE 128
-	#define BSL false
-	
-	#define HASSD16
-	
-	#define HASPORT1
-	#define HASPORT2
-	
-#endif
+/* Find out what device to include */
 
 #ifdef MSP430F5510
-	
-	#define SERIES 5
-	
-	#ifndef __MSP430F5510__
-	#define __MSP430F5510__
-	#endif
-	
-	#define FLASHSIZE 32768
-	#define RAMSIZE 4096
-	
-	#define HASPORTA
-	#define HASPORTB
-	#define HASPORTC
-	#define HASPORTJ
+	#include "device/msp430f5510.h"
+#endif
 
+#ifndef SUPPORTEDDEVICE
+	#error "EasyMSP is not supported with this device. Please double check your define."
 #endif
 
 #include <stdint.h>
 #include <stdbool.h>
+
+typedef char byte;
+typedef unsigned short int word;
+typedef bool boolean;
+typedef char BYTE;
+typedef unsigned short int WORD;
+typedef bool BOOLEAN;
+
+
 #include <msp430.h>
 #include "io.h"
 #include "system.h"
@@ -326,14 +204,6 @@ enum crystalDriveStrength
 #ifndef NOSETUP
 	extern void init(void);
 	extern void loop(void);
-#endif
-
-#if SERIES == 2
-
-#ifndef CUSTOM_NMI
-	static interrupt void nonmask_isr(void);
-#endif
-
 #endif
 
 /*===========================================*/
