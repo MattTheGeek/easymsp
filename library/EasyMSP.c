@@ -49,7 +49,7 @@ int main(void)
 		{
 			loop(); //Call program loop
 		}
-		while(EasyMSP_Execute);
+		while(EasyMSP_Execute == true);
 
 	#endif
 

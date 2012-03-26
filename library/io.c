@@ -1048,7 +1048,6 @@ inline void setHigh(unsigned short int pin)
 
 		PJOUT |= (1 << pin);
 
-		return;
 	}
 
 #endif
@@ -1138,8 +1137,6 @@ inline void setLow(unsigned short int pin)
 	}
 
 #endif
-	
-	pin = pin - 16;
 
 #ifdef HASPORTJ
 	
@@ -1148,7 +1145,6 @@ inline void setLow(unsigned short int pin)
 
 		PJOUT &= ~(1 << pin);
 
-		return;
 	}
 
 #endif
@@ -1381,8 +1377,6 @@ inline void pinToggle(unsigned short int pin)
 
 #endif /* HASPORTF */
 
-	pin = pin - 16;
-
 #ifdef HASPORTJ
 
 	if (pin <= 15)
@@ -1398,6 +1392,7 @@ inline void pinToggle(unsigned short int pin)
 
 inline bool readPin(unsigned short int pin)
 {
+
 #ifdef HASPORTA
 
 	if (pin <= 15)
@@ -1516,7 +1511,6 @@ inline bool readPin(unsigned short int pin)
 
 #endif /* HASPORTF */
 	
-	pin = pin - 16;
 
 #ifdef HASPORTJ
 
@@ -1664,7 +1658,6 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 
 #endif /* HASPORTF */
 	
-	pin = pin - 16;
 
 #ifdef HASPORTJ
 	
@@ -1767,8 +1760,6 @@ inline void setPullUp(unsigned short int pin)
 
 #ifdef HASPORTJ
 
-	pin = pin - 16;
-
 	if (pin <= 15)
 	{
 		PJREN |= (1 << pin);
@@ -1861,8 +1852,6 @@ inline void setPullDown(unsigned short int pin)
 
 #ifdef HASPORTJ
 
-	pin = pin - 16;
-
 	if (pin <= 15)
 	{
 		PJREN |= (1 << pin);
@@ -1947,8 +1936,6 @@ inline void setPullOff(unsigned short int pin)
 #endif /* HASPORTF */
 
 #ifdef HASPORTJ
-
-	pin = pin - 16;
 
 	if (pin <= 15)
 	{

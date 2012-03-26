@@ -29,6 +29,7 @@
 #define HASPORTA
 #define HASPORTB
 #define HASPORTC
+#define HASPORTJ
 
 #define HASPORT1
 #define HASPORT2
