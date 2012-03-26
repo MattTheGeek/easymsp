@@ -42,59 +42,63 @@
 #define PORTA 'A'
 #define PORTB 'B'
 #define PORTC 'C'
+#define PORTD 'D'
+#define PORTE 'E'
+#define PORTF 'F'
 #define PORTJ 'J'
-
-#ifdef HASPORTA
-#define HASPORT1
-#define HASPORT2
 
 #define PORT1 1
 #define PORT2 2
+#define PORT3 3
+#define PORT4 4
+#define PORT5 5
+#define PORT6 6
+#define PORT7 7
+#define PORT8 8
+#define PORT9 9
+#define PORT10 10
+#define PORT11 11
 
-#endif
+#ifdef HASPORTA
+
+#define HASPORT1
+#define HASPORT2
+
+#endif /* HASPORTA */
 
 #ifdef HASPORTB
+
 #define HASPORT3
 #define HASPORT4
 
-#define PORT3 3
-#define PORT4 4
-
-#endif
+#endif /* HASPORTB */
 
 #ifdef HASPORTC
+
 #define HASPORT5
 #define HASPORT6
 
-#define PORT5 5
-#define PORT6 6
-
-#endif
+#endif /* HASPORTC */
 
 #ifdef HASPORTD
+
 #define HASPORT7
 #define HASPORT8
 
-#define PORT7 7
-#define PORT8 8
-
-#endif
+#endif /* HASPORTD */
 
 #ifdef HASPORTE
+
 #define HASPORT9
 #define HASPORT10
 
-#define PORT9 9
-#define PORT10 10
-
-#endif
+#endif /* HASPORTE */
 
 #ifdef HASPORTF
+
 #define HASPORT11
 
-#define PORT11 11
-
-#endif
+#endif /* HASPORTF */
 
 /* Public Functions */
 #ifndef __GNUC__
