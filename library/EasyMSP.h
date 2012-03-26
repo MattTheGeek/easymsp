@@ -28,7 +28,7 @@
 #endif
 
 #if __STDC_VERSION__ >= 199901L
-	# error "EasyMSP is not supported with this compiler. Please use a compiler that supports C99 C code."
+	# error "EasyMSP is not supported with this compiler. Please use a compiler that supports ANSI C99 C code."
 #endif
 
 #ifndef SKIPGCCCHECK

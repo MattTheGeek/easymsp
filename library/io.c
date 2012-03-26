@@ -46,6 +46,224 @@
 /* Functions for all series */
 #if SERIES == 2 || SERIES == 5
 
+inline void portWrite(unsigned short int port, unsigned char data)
+{
+	switch (port)
+	{
+
+#ifdef HASPORT1
+		case PORT1:
+			P1OUT = data;
+			break;
+#endif /* HASPORT1 */
+
+#ifdef HASPORT2
+		case PORT2:
+			P2OUT = data;
+			break;
+#endif /* HASPORT2 */
+
+#ifdef HASPORT3
+		case PORT3:
+			P3OUT = data;
+			break;
+#endif /* HASPORT3 */
+
+#ifdef HASPORT4
+		case PORT4:
+			P4OUT = data;
+			break;
+#endif /* HASPORT4 */
+
+#ifdef HASPORT5
+		case PORT5:
+			P5OUT = data;
+			break;
+#endif /* HASPORT5 */
+
+#ifdef HASPORT6
+		case PORT6:
+			P6OUT = data;
+			break;
+#endif /* HASPORT6 */
+
+#ifdef HASPORT7
+		case PORT7:
+			P7OUT = data;
+			break;
+#endif /* HASPORT7 */
+
+#ifdef HASPORT8
+		case PORT8:
+			P8OUT = data;
+			break;
+#endif /* HASPORT8 */
+
+#ifdef HASPORT9
+		case PORT9:
+			P9OUT = data;
+			break;
+#endif /* HASPORT9 */
+
+#ifdef HASPORT10
+		case PORT10:
+			P10OUT = data;
+			break;
+#endif /* HASPORT10 */
+
+#ifdef HASPORT11
+		case PORT11:
+			P11OUT = data;
+			break;
+#endif /* HASPORT11 */
+
+		default:
+			_never_executed();
+	}
+}
+
+inline unsigned char portRead(unsigned short int port)
+{
+	switch (port)
+	{
+
+#ifdef HASPORT1
+		case PORT1:
+			return(P1IN);
+#endif /* HASPORT1 */
+
+#ifdef HASPORT2
+		case PORT2:
+			return(P2IN);
+#endif /* HASPORT2 */
+
+#ifdef HASPORT3
+		case PORT3:
+			return(P3IN);
+#endif /* HASPORT3 */
+
+#ifdef HASPORT4
+		case PORT4:
+			return(P4IN);
+#endif /* HASPORT4 */
+
+#ifdef HASPORT5
+		case PORT5:
+			return(P5IN);
+#endif /* HASPORT5 */
+
+#ifdef HASPORT6
+		case PORT6:
+			return(P6IN);
+#endif /* HASPORT6 */
+
+#ifdef HASPORT7
+		case PORT7:
+			return(P7IN);
+#endif /* HASPORT7 */
+
+#ifdef HASPORT8
+		case PORT8:
+			return(P8IN);
+#endif /* HASPORT8 */
+
+#ifdef HASPORT9
+		case PORT9:
+			return(P9IN);
+#endif /* HASPORT9 */
+
+#ifdef HASPORT10
+		case PORT10:
+			return(P10IN);
+#endif /* HASPORT10 */
+
+#ifdef HASPORT11
+		case PORT11:
+			return(P11IN);
+#endif /* HASPORT11 */
+
+		default:
+			return (0);
+
+	}
+}
+
+inline void portWriteDir(unsigned short int port, unsigned char data)
+{
+	switch (port)
+	{
+
+#ifdef HASPORT1
+		case PORT1:
+			P1DIR = data;
+			break;
+#endif /* HASPORT1 */
+
+#ifdef HASPORT2
+		case PORT2:
+			P2DIR = data;
+			break;
+#endif /* HASPORT2 */
+
+#ifdef HASPORT3
+		case PORT3:
+			P3DIR = data;
+			break;
+#endif /* HASPORT3 */
+
+#ifdef HASPORT4
+		case PORT4:
+			P4DIR = data;
+			break;
+#endif /* HASPORT4 */
+
+#ifdef HASPORT5
+		case PORT5:
+			P5DIR = data;
+			break;
+#endif /* HASPORT5 */
+
+#ifdef HASPORT6
+		case PORT6:
+			P6DIR = data;
+			break;
+#endif /* HASPORT6 */
+
+#ifdef HASPORT7
+		case PORT7:
+			P7DIR = data;
+			break;
+#endif /* HASPORT7 */
+
+#ifdef HASPORT8
+		case PORT8:
+			P8DIR = data;
+			break;
+#endif /* HASPORT8 */
+
+#ifdef HASPORT9
+		case PORT9:
+			P9DIR = data;
+			break;
+#endif /* HASPORT9 */
+
+#ifdef HASPORT10
+		case PORT10:
+			P10DIR = data;
+			break;
+#endif /* HASPORT10 */
+
+#ifdef HASPORT11
+		case PORT11:
+			P11DIR = data;
+			break;
+#endif /* HASPORT11 */
+
+		default:
+			_never_executed();
+	}
+}
+
 inline void digitalWrite(unsigned short int pin, unsigned short int state)
 {
 	if (state == HIGH)
@@ -379,7 +597,7 @@ inline bool readPin(unsigned short int pin)
 	return (LOW);
 }
 
-inline void toggle(unsigned short int pin)
+inline void pinToggle(unsigned short int pin)
 {
 
 #ifdef HASPORT1
@@ -1090,7 +1308,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	return;
 }
 
-inline void togglePin(unsigned short int pin)
+inline void pinToggle(unsigned short int pin)
 {
 
 #ifdef HASPORTA
@@ -1740,6 +1958,197 @@ inline void setPullOff(unsigned short int pin)
 #endif /* HASPORTJ */
 
 	return;
+}
+
+inline void portWriteWord(unsigned short int port, unsigned short int data)
+{
+	switch (data)
+	{
+
+#ifdef HASPORTA
+
+		case PORTA:
+			PAOUT = data;
+			break;
+
+#endif /* HASPORTA */
+
+#ifdef HASPORTB
+
+		case PORTB:
+			PBOUT = data;
+			break;
+
+#endif /* HASPORTB */
+
+#ifdef HASPORTC
+
+		case PORTC:
+			PCOUT = data;
+			break;
+
+#endif /* HASPORTC */
+
+#ifdef HASPORTD
+
+		case PORTD:
+			PDOUT = data;
+			break;
+
+#endif /* HASPORTD */
+
+#ifdef HASPORTE
+
+		case PORTE:
+			PEOUT = data;
+			break;
+
+#endif /* HASPORTE */
+
+#ifdef HASPORTF
+
+		case PORTF:
+			PFOUT = data;
+			break;
+
+#endif /* HASPORTF */
+
+#ifdef HASPORTJ
+
+		case PORTJ:
+			PJOUT = data;
+			break;
+
+#endif /* HASPORTJ */
+
+		default:
+			_never_executed();
+	}
+}
+
+inline unsigned short int portReadWord(unsigned short int port)
+{
+	switch (port)
+	{
+
+#ifdef HASPORTA
+
+		case PORTA:
+			return (PAIN);
+
+#endif /* HASPORTA */
+
+#ifdef HASPORTB
+
+		case PORTB:
+			return (PBIN);
+
+#endif /* HASPORTB */
+
+#ifdef HASPORTC
+
+		case PORTC:
+			return (PCIN);
+
+#endif /* HASPORTC */
+
+#ifdef HASPORTD
+
+		case PORTD:
+			return (PDIN);
+
+#endif /* HASPORTD */
+
+#ifdef HASPORTE
+
+		case PORTE:
+			return (PEIN);
+
+#endif /* HASPORTE */
+
+#ifdef HASPORTF
+
+		case PORTF:
+			return (PFIN);
+
+#endif /* HASPORTF */
+
+#ifdef HASPORTJ
+
+		case PORTJ:
+			return (PJIN);
+
+#endif /* HASPORTJ */
+
+		default:
+			return (0); /* Would love to use _never_executed() here, but we have to return something */
+
+	}
+}
+
+inline void portWriteDirWord(unsigned short int port, unsigned short int data)
+{
+	switch (data)
+	{
+
+#ifdef HASPORTA
+
+		case PORTA:
+			PADIR = data;
+			break;
+
+#endif /* HASPORTA */
+
+#ifdef HASPORTB
+
+		case PORTB:
+			PBDIR = data;
+			break;
+
+#endif /* HASPORTB */
+
+#ifdef HASPORTC
+
+		case PORTC:
+			PCDIR = data;
+			break;
+
+#endif /* HASPORTC */
+
+#ifdef HASPORTD
+
+		case PORTD:
+			PDDIR = data;
+			break;
+#endif /* HASPORTD */
+
+#ifdef HASPORTE
+
+		case PORTE:
+			PEDIR = data;
+			break;
+
+#endif /* HASPORTE */
+
+#ifdef HASPORTF
+
+		case PORTF:
+			PFDIR = data;
+			break;
+
+#endif /* HASPORTF */
+
+#ifdef HASPORTJ
+
+		case PORTJ:
+			PJDIR = data;
+			break;
+
+#endif /* HASPORTJ */
+
+		default:
+			_never_executed();
+	}
 }
 
 inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)())

@@ -63,15 +63,16 @@
 
 //Prototypes
 unsigned short int analogRead(unsigned short int); //10Bit analog value
+
+#if SERIES == 5
+
 unsigned char analogReadByte(unsigned short int); //8Bit analog value
+
+#endif
 
 void analogOff(void);
 void analogReference(unsigned short int);
 void analogConfig(unsigned short int, unsigned short int, unsigned short int);
-
-//Vars
-
-#include "adc10.c"
 
 #endif
 

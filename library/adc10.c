@@ -1,3 +1,5 @@
+#if SERIES == 2
+
 unsigned short int analogRead(unsigned short int pin)
 {
 	//Ok, we need to setup the ADC10.
@@ -73,17 +75,6 @@ unsigned short int analogRead(unsigned short int pin)
 	ADC10CTL0 &= ~(ADC10ON | ENC | ADC10SC);
    
 	return (ADC10MEM); //Return the value.
-}
-
-unsigned char analogReadByte(unsigned short int pin)
-{
-
-	/*
-		todo: Need to find a way to get bytewide results.
-	*/
-
-	return (NULL);
-
 }
 
 void analogReference(unsigned short int ref)
@@ -193,3 +184,21 @@ void analogConfig(unsigned short int holdtime, unsigned short int format, unsign
 	
 	return;
 }
+
+#endif /* SERIES 2*/
+
+#if SERIES == 5
+
+unsigned char analogReadByte(unsigned short int pin)
+{
+
+	/*
+		todo: Need to find a way to get bytewide results.
+	*/
+
+	return (NULL);
+
+}
+
+#endif /* SERIES 5 */
+

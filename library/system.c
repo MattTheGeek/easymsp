@@ -53,12 +53,6 @@ inline void shutdown(void)
 	enterLPM4();
 }
 
-inline unsigned short int swapByte(unsigned short int data)
-{
-	_swap_bytes(unsigned short data);
-	return(data);
-}
-
 void inline delaySec(register unsigned short int time)
 {
 	while (time != 0)
