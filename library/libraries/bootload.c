@@ -1,3 +1,5 @@
+/* info: This is currently just a shell for the USB bootloader. */
+
 #define NO_REQUEST 0x00
 #define DEVICE 0x01
 #define BOARD 0x02
@@ -108,7 +110,7 @@ void command(void)
 		break;
 
 		default:
-			break;
+			_never_executed();
 
 	}
 }
