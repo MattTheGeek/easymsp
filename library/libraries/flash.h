@@ -8,7 +8,7 @@
  *
  *
  */
-#ifndef EASYMSP
+#ifndef __EASYMSP__
 	# error "Module flash requires EasyMSP."
 #endif
 

@@ -10,99 +10,134 @@
  *
  */
 
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+ 
+#ifndef SERIES
+#	error "Device series unknown. io.c requires that the device series is declared in SERIES"
+#endif
+
+#ifndef __EASYMSP__
+#	error "io.c requires including the main EasyMSP header file (EasyMSP.h) to operate correctly. Please include EasyMSP.h rather than just incluing this file."
+#endif	
+
 #ifndef IO_H
 #define IO_H
 
-/* Constants */
+/* Define constants */
 
 #ifndef HIGH_TO_LOW
-#define HIGH_TO_LOW 0
+#	define HIGH_TO_LOW 0
 #endif
 
 #ifndef LOW_TO_HIGH
-#define LOW_TO_HIGH 1
+#	define LOW_TO_HIGH 1
 #endif
 
 #ifndef HIGH
-#define HIGH 1
+#	define HIGH 1
 #endif
 
 #ifndef LOW
-#define LOW 0
+#	define LOW 0
 #endif
 
 #ifndef INPUT
-#define INPUT 0
+#	define INPUT 0
 #endif
 
 #ifndef OUTPUT
-#define OUTPUT 1
+#	define OUTPUT 1
 #endif
 
-#define PORTA 'A'
-#define PORTB 'B'
-#define PORTC 'C'
-#define PORTD 'D'
-#define PORTE 'E'
-#define PORTF 'F'
-#define PORTJ 'J'
+/* ============ */
 
-#define PORT1 1
-#define PORT2 2
-#define PORT3 3
-#define PORT4 4
-#define PORT5 5
-#define PORT6 6
-#define PORT7 7
-#define PORT8 8
-#define PORT9 9
-#define PORT10 10
-#define PORT11 11
+/* ============ */
+
+/* If we have 16 bit ports, we also have 8 bit ports as well. */
 
 #ifdef HASPORTA
+#	ifndef	HASPORT1
+#		define HASPORT1
+#	endif
 
-#define HASPORT1
-#define HASPORT2
-
+#	ifndef	HASPORT2
+#		define HASPORT2
+#	endif
 #endif /* HASPORTA */
 
+/* ============ */
+
 #ifdef HASPORTB
+#	ifndef HASPORT3
+#		define HASPORT3
+#	endif
 
-#define HASPORT3
-#define HASPORT4
-
+#	ifndef HASPORT4
+#		define HASPORT4
+#	endif
 #endif /* HASPORTB */
 
+/* ============ */
+
 #ifdef HASPORTC
+#	ifndef HASPORT5
+#		define HASPORT5
+#	endif
 
-#define HASPORT5
-#define HASPORT6
-
+#	ifndef HASPORT6
+#		define HASPORT6
+#	endif
 #endif /* HASPORTC */
 
+/* ============ */
+
 #ifdef HASPORTD
+#	ifndef HASPORT7
+#		define HASPORT7
+#	endif
 
-#define HASPORT7
-#define HASPORT8
-
+#	ifndef HASPORT8
+#		define HASPORT8
+#	endif
 #endif /* HASPORTD */
 
+/* ============ */
+
 #ifdef HASPORTE
+#	ifndef HASPORT9
+#		define HASPORT9
+#	endif
 
-#define HASPORT9
-#define HASPORT10
-
+#	ifndef HASPORT10
+#		define HASPORT10
+#	endif
 #endif /* HASPORTE */
 
+/* ============ */
+
 #ifdef HASPORTF
-
-#define HASPORT11
-
+#	ifndef HASPORT11
+#		define HASPORT11
+#	endif
 #endif /* HASPORTF */
 
-/* Public Functions */
-#ifndef __GNUC__
+/* ============ */
 
+/* Set function level compile options */
 #pragma FUNCTION_OPTIONS (setHigh, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (setLow, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (pinToggle, "--opt_level=4 --opt_for_speed=0" );
@@ -116,8 +151,12 @@
 #pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=4 --opt_for_speed=0" );
+#pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=4 --opt_for_speed=0" );
+#pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=0" );
+#pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=0" );
+#pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=0" );
 
-#endif /* NOT GNUC */
+/* ============ */
 
 inline void digitalWrite(unsigned short int, unsigned short int);
 
@@ -135,32 +174,24 @@ inline void setPullUp(unsigned short int);
 inline void setPullDown(unsigned short int);
 inline void setPullOff(unsigned short int);
 
-#if SERIES == 5
-
-#ifndef __GNUC__
-
-#pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=0" );
-
-#endif /* NOT __GNUC__ */
-
 inline void setDriveStrength(unsigned short int, unsigned short int);
 inline void portWriteWord(unsigned short int, unsigned short int);
 inline void portWriteDirWord(unsigned short int, unsigned short int);
 inline unsigned short int portReadWord(unsigned short int);
-
-#endif
-
 
 inline void attachInterrupt(unsigned short int, unsigned short int, void(*)());
 inline void removeInterrupt(unsigned short int);
 
 /* Interrupt ISRs */
 
-static interrupt void port1_isr(void);
-static interrupt void port2_isr(void);
+#pragma FUNC_EXT_CALLED (port1_isr);
+#pragma INTERRUPT (port1_isr);
+
+#pragma FUNC_EXT_CALLED (port2_isr);
+#pragma INTERRUPT (port2_isr);
+
+interrupt void port1_isr(void);
+interrupt void port2_isr(void);
 
 /* Pin Interrupt function pointers */
 
@@ -170,10 +201,10 @@ static interrupt void port2_isr(void);
  * As always, they must be void and return nothing. The shorter the function, the better.
  */
 
-static void (*Port1FunctionVector[8])(void) =
+void (*Port1FunctionVector[8])(void) =
 {	NULL};
 
-static void (*Port2FunctionVector[8])(void) =
+void (*Port2FunctionVector[8])(void) =
 {	NULL};
 
 #endif /* IO_H */

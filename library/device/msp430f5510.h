@@ -23,6 +23,8 @@
 
 #define HASCRC16
 
+#define HASUCS
+
 #define HASXT2 YES
 #define HASXT1 YES
 

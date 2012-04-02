@@ -1,10 +1,10 @@
 /*	
-	MSP430F5510 Device Info File
+	MSP430G2452 Device Info File
 	Ver 1
 */
 
-#ifndef __MSP430F5510__
-	#define __MSP430F5510__
+#ifndef __MSP430G2452__
+	#define __MSP430G2452__
 #endif
 
 #ifndef MSP430_H
@@ -29,13 +29,11 @@
 
 #define HASPORT1
 #define HASPORT2
-#define HASPORT3
 
 #define HASADC10
 #define HASCOMPA
 
 #define HASTA0
-#define HASTA1
 
 #define HASUSI
 

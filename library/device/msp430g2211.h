@@ -1,10 +1,10 @@
 /*	
-	MSP430G2553 Device Info File
+	MSP430G2211 Device Info File
 	Ver 1
 */
 
-#ifndef __MSP430G2553__
-	#define __MSP430G2553__
+#ifndef __MSP430G2211__
+	#define __MSP430G2211__
 #endif
 
 #ifndef MSP430_H
@@ -15,8 +15,8 @@
 
 #define SUPPORTEDDEVICE
 
-#define FLASHSIZE 16384
-#define RAMSIZE 512
+#define FLASHSIZE 2048
+#define RAMSIZE 128
 #define USBRAMSIZE 0
 
 #define USBBOOTLOADER NO
@@ -29,13 +29,7 @@
 
 #define HASPORT1
 #define HASPORT2
-#define HASPORT3
 
-#define HASADC10
 #define HASCOMPA
 
 #define HASTA0
-#define HASTA1
-
-#define HASUSCI0
-

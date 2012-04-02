@@ -1,13 +1,8 @@
 /*
-	Note: DMA Channel 0 is reserved for system use.
-*/
+ Note: DMA Channel 0 is reserved for system use.
+ */
 
-inline void dmainit(void)
-{	
-	DMACTL4 = DMARMWDIS; /* Let write/read CPU instructions finish before halting for DMA transfer */
-}
-
-unsigned short int memcopy(unsigned short int* source, unsigned short int* dest, unsigned short int count, unsigned short int direction)
+unsigned short int dmaCopy(unsigned long int* source, unsigned long int* dest, unsigned short int count, unsigned short int direction)
 {
 	DMACTL0 &= DMA0TSEL_0; /* Select software trigger */
 	
@@ -27,8 +22,9 @@ unsigned short int memcopy(unsigned short int* source, unsigned short int* dest,
 			return (1);
 	}
 	
-	DMA0SA = source;
-	DMA0DA = dest;
+	_data16_write_addr((unsigned short int) &DMA0SA, (unsigned long int) source);
+	_data16_write_addr((unsigned short int) &DMA0DA, (unsigned long int) dest);
+
 	DMA0SZ = count;
 	
 	DMA0CTL |= DMAREQ | DMAEN; /* Start transfer */

@@ -1,3 +1,5 @@
+#if SERIES == 2
+
 unsigned short int setCPUFreq(unsigned short int speed)
 {
 	switch (speed)
@@ -247,3 +249,4 @@ unsigned short int getCPUFreq(void)
 	return(currentcpuspeed);
 }
 
+#endif

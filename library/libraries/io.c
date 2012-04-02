@@ -10,6 +10,21 @@
  *
  */
 
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /* Info
  *
  *	Library merge
@@ -51,71 +66,93 @@ inline void portWrite(unsigned short int port, unsigned char data)
 	switch (port)
 	{
 
-#ifdef HASPORT1
+#	ifdef HASPORT1
+
 		case PORT1:
 			P1OUT = data;
 			break;
-#endif /* HASPORT1 */
 
-#ifdef HASPORT2
+#	endif /* HASPORT1 */
+
+#	ifdef HASPORT2
+
 		case PORT2:
 			P2OUT = data;
 			break;
-#endif /* HASPORT2 */
 
-#ifdef HASPORT3
+#	endif /* HASPORT2 */
+
+#	ifdef HASPORT3
+
 		case PORT3:
 			P3OUT = data;
 			break;
-#endif /* HASPORT3 */
 
-#ifdef HASPORT4
+#	endif /* HASPORT3 */
+
+#	ifdef HASPORT4
+
 		case PORT4:
 			P4OUT = data;
 			break;
-#endif /* HASPORT4 */
 
-#ifdef HASPORT5
+#	endif /* HASPORT4 */
+
+#	ifdef HASPORT5
+
 		case PORT5:
 			P5OUT = data;
 			break;
-#endif /* HASPORT5 */
 
-#ifdef HASPORT6
+#	endif /* HASPORT5 */
+
+#	ifdef HASPORT6
+
 		case PORT6:
 			P6OUT = data;
 			break;
-#endif /* HASPORT6 */
 
-#ifdef HASPORT7
+#	endif /* HASPORT6 */
+
+#	ifdef HASPORT7
+
 		case PORT7:
 			P7OUT = data;
 			break;
-#endif /* HASPORT7 */
 
-#ifdef HASPORT8
+#	endif /* HASPORT7 */
+
+#	ifdef HASPORT8
+
 		case PORT8:
 			P8OUT = data;
 			break;
-#endif /* HASPORT8 */
 
-#ifdef HASPORT9
+#	endif /* HASPORT8 */
+
+#	ifdef HASPORT9
+
 		case PORT9:
 			P9OUT = data;
 			break;
-#endif /* HASPORT9 */
 
-#ifdef HASPORT10
+#	endif /* HASPORT9 */
+
+#	ifdef HASPORT10
+
 		case PORT10:
 			P10OUT = data;
 			break;
-#endif /* HASPORT10 */
 
-#ifdef HASPORT11
+#	endif /* HASPORT10 */
+
+#	ifdef HASPORT11
+
 		case PORT11:
 			P11OUT = data;
 			break;
-#endif /* HASPORT11 */
+
+#	endif /* HASPORT11 */
 
 		default:
 			_never_executed();
@@ -127,60 +164,82 @@ inline unsigned char portRead(unsigned short int port)
 	switch (port)
 	{
 
-#ifdef HASPORT1
+#	ifdef HASPORT1
+
 		case PORT1:
 			return(P1IN);
-#endif /* HASPORT1 */
 
-#ifdef HASPORT2
+#	endif /* HASPORT1 */
+
+#	ifdef HASPORT2
+
 		case PORT2:
 			return(P2IN);
-#endif /* HASPORT2 */
 
-#ifdef HASPORT3
+#	endif /* HASPORT2 */
+
+#	ifdef HASPORT3
+
 		case PORT3:
 			return(P3IN);
-#endif /* HASPORT3 */
 
-#ifdef HASPORT4
+#	endif /* HASPORT3 */
+
+#	ifdef HASPORT4
+
 		case PORT4:
 			return(P4IN);
-#endif /* HASPORT4 */
 
-#ifdef HASPORT5
+#	endif /* HASPORT4 */
+
+#	ifdef HASPORT5
+
 		case PORT5:
 			return(P5IN);
-#endif /* HASPORT5 */
 
-#ifdef HASPORT6
+#	endif /* HASPORT5 */
+
+#	ifdef HASPORT6
+
 		case PORT6:
 			return(P6IN);
-#endif /* HASPORT6 */
 
-#ifdef HASPORT7
+#	endif /* HASPORT6 */
+
+#	ifdef HASPORT7
+
 		case PORT7:
 			return(P7IN);
-#endif /* HASPORT7 */
 
-#ifdef HASPORT8
+#	endif /* HASPORT7 */
+
+#	ifdef HASPORT8
+
 		case PORT8:
 			return(P8IN);
-#endif /* HASPORT8 */
 
-#ifdef HASPORT9
+#	endif /* HASPORT8 */
+
+#	ifdef HASPORT9
+
 		case PORT9:
 			return(P9IN);
-#endif /* HASPORT9 */
 
-#ifdef HASPORT10
+#	endif /* HASPORT9 */
+
+#	ifdef HASPORT10
+
 		case PORT10:
 			return(P10IN);
-#endif /* HASPORT10 */
 
-#ifdef HASPORT11
+#	endif /* HASPORT10 */
+
+#	ifdef HASPORT11
+
 		case PORT11:
 			return(P11IN);
-#endif /* HASPORT11 */
+
+#	endif /* HASPORT11 */
 
 		default:
 			return (0);
@@ -193,71 +252,71 @@ inline void portWriteDir(unsigned short int port, unsigned char data)
 	switch (port)
 	{
 
-#ifdef HASPORT1
+#	ifdef HASPORT1
 		case PORT1:
 			P1DIR = data;
 			break;
-#endif /* HASPORT1 */
+#	endif /* HASPORT1 */
 
-#ifdef HASPORT2
+#	ifdef HASPORT2
 		case PORT2:
 			P2DIR = data;
 			break;
-#endif /* HASPORT2 */
+#	endif /* HASPORT2 */
 
-#ifdef HASPORT3
+#	ifdef HASPORT3
 		case PORT3:
 			P3DIR = data;
 			break;
-#endif /* HASPORT3 */
+#	endif /* HASPORT3 */
 
-#ifdef HASPORT4
+#	ifdef HASPORT4
 		case PORT4:
 			P4DIR = data;
 			break;
-#endif /* HASPORT4 */
+#	endif /* HASPORT4 */
 
-#ifdef HASPORT5
+#	ifdef HASPORT5
 		case PORT5:
 			P5DIR = data;
 			break;
-#endif /* HASPORT5 */
+#	endif /* HASPORT5 */
 
-#ifdef HASPORT6
+#	ifdef HASPORT6
 		case PORT6:
 			P6DIR = data;
 			break;
-#endif /* HASPORT6 */
+#	endif /* HASPORT6 */
 
-#ifdef HASPORT7
+#	ifdef HASPORT7
 		case PORT7:
 			P7DIR = data;
 			break;
-#endif /* HASPORT7 */
+#	endif /* HASPORT7 */
 
-#ifdef HASPORT8
+#	ifdef HASPORT8
 		case PORT8:
 			P8DIR = data;
 			break;
-#endif /* HASPORT8 */
+#	endif /* HASPORT8 */
 
-#ifdef HASPORT9
+#	ifdef HASPORT9
 		case PORT9:
 			P9DIR = data;
 			break;
-#endif /* HASPORT9 */
+#	endif /* HASPORT9 */
 
-#ifdef HASPORT10
+#	ifdef HASPORT10
 		case PORT10:
 			P10DIR = data;
 			break;
-#endif /* HASPORT10 */
+#	endif /* HASPORT10 */
 
-#ifdef HASPORT11
+#	ifdef HASPORT11
 		case PORT11:
 			P11DIR = data;
 			break;
-#endif /* HASPORT11 */
+#	endif /* HASPORT11 */
 
 		default:
 			_never_executed();
@@ -530,7 +589,7 @@ inline bool readPin(unsigned short int pin)
 #endif /* HASPORT1 */
 
 	pin = pin - 8; /* Subtract 8 from pin since pin was higher than 8 */
-	
+
 	/* The next blocks of code are like the above block */
 
 #ifdef HASPORT2
@@ -593,7 +652,7 @@ inline bool readPin(unsigned short int pin)
 #endif /* HASPORT4 */
 
 	/* If we get here, the pin was out of range of the device. Return with the pin state as LOW. */
-	
+
 	return (LOW);
 }
 
@@ -894,7 +953,7 @@ inline void removeInterrupt(unsigned short int pin)
 
 #pragma INTERRUPT (port1_isr);
 #pragma vector=PORT1_VECTOR //Port 1 Interrupt Service Routine.
-static interrupt void port1_isr(void)
+interrupt void port1_isr(void)
 {
 
 	auto unsigned short int result;
@@ -925,7 +984,7 @@ static interrupt void port1_isr(void)
 
 #pragma INTERRUPT (port2_isr);
 #pragma vector=PORT2_VECTOR //Port2 Interrupt Service Routine.
-static interrupt void port2_isr(void)
+interrupt void port2_isr(void)
 {
 
 	auto unsigned short int result;
@@ -1371,8 +1430,8 @@ inline void pinToggle(unsigned short int pin)
 
 	if (pin <= 15)
 	{
-		PFOUT ^= (1 << pin)
-				return;
+		PFOUT ^= (1 << pin);
+		return;
 	}
 
 #endif /* HASPORTF */
@@ -1511,7 +1570,6 @@ inline bool readPin(unsigned short int pin)
 
 #endif /* HASPORTF */
 	
-
 #ifdef HASPORTJ
 
 	if (pin <= 15)
@@ -1535,6 +1593,9 @@ inline bool readPin(unsigned short int pin)
 
 inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 {
+
+#if SERIES == 5
+
 	if (level > 1)
 	{
 		return;
@@ -1658,7 +1719,6 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 
 #endif /* HASPORTF */
 	
-
 #ifdef HASPORTJ
 	
 	if (pin <= 15)
@@ -1678,6 +1738,12 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 #endif /* HASPORTJ */
 	
 	return;
+
+#else
+
+#	warning "EasyMSP: setDriveStrength() is only compatible with 5 Series devices. Unexpected results may occur."
+
+#endif
 }
 
 inline void setPullUp(unsigned short int pin)
@@ -1949,193 +2015,222 @@ inline void setPullOff(unsigned short int pin)
 
 inline void portWriteWord(unsigned short int port, unsigned short int data)
 {
-	switch (data)
+
+#if SERIES == 5
+
+	switch (port)
 	{
 
-#ifdef HASPORTA
+#	ifdef HASPORTA
 
 		case PORTA:
 			PAOUT = data;
 			break;
 
-#endif /* HASPORTA */
+#	endif /* HASPORTA */
 
-#ifdef HASPORTB
+#	ifdef HASPORTB
 
 		case PORTB:
 			PBOUT = data;
 			break;
 
-#endif /* HASPORTB */
+#	endif /* HASPORTB */
 
-#ifdef HASPORTC
+#	ifdef HASPORTC
 
 		case PORTC:
 			PCOUT = data;
 			break;
 
-#endif /* HASPORTC */
+#	endif /* HASPORTC */
 
-#ifdef HASPORTD
+#	ifdef HASPORTD
 
 		case PORTD:
 			PDOUT = data;
 			break;
 
-#endif /* HASPORTD */
+#	endif /* HASPORTD */
 
-#ifdef HASPORTE
+#	ifdef HASPORTE
 
 		case PORTE:
 			PEOUT = data;
 			break;
 
-#endif /* HASPORTE */
+#	endif /* HASPORTE */
 
-#ifdef HASPORTF
+#	ifdef HASPORTF
 
 		case PORTF:
 			PFOUT = data;
 			break;
 
-#endif /* HASPORTF */
+#	endif /* HASPORTF */
 
-#ifdef HASPORTJ
+#	ifdef HASPORTJ
 
 		case PORTJ:
 			PJOUT = data;
 			break;
 
-#endif /* HASPORTJ */
+#	endif /* HASPORTJ */
 
 		default:
 			_never_executed();
+
 	}
+
+#else
+#	warning "EasyMSP: portWriteWord() is only compatible with 5 Series devices. Unexpected results may occur."
+#endif
 }
 
 inline unsigned short int portReadWord(unsigned short int port)
 {
+
+#if SERIES == 5
+
 	switch (port)
 	{
 
-#ifdef HASPORTA
+#	ifdef HASPORTA
 
 		case PORTA:
 			return (PAIN);
 
-#endif /* HASPORTA */
+#	endif /* HASPORTA */
 
-#ifdef HASPORTB
+#	ifdef HASPORTB
 
 		case PORTB:
 			return (PBIN);
 
-#endif /* HASPORTB */
+#	endif /* HASPORTB */
 
-#ifdef HASPORTC
+#	ifdef HASPORTC
 
 		case PORTC:
 			return (PCIN);
 
-#endif /* HASPORTC */
+#	endif /* HASPORTC */
 
-#ifdef HASPORTD
+#	ifdef HASPORTD
 
 		case PORTD:
 			return (PDIN);
 
-#endif /* HASPORTD */
+#	endif /* HASPORTD */
 
-#ifdef HASPORTE
+#	ifdef HASPORTE
 
 		case PORTE:
 			return (PEIN);
 
-#endif /* HASPORTE */
+#	endif /* HASPORTE */
 
-#ifdef HASPORTF
+#	ifdef HASPORTF
 
 		case PORTF:
 			return (PFIN);
 
-#endif /* HASPORTF */
+#	endif /* HASPORTF */
 
-#ifdef HASPORTJ
+#	ifdef HASPORTJ
 
 		case PORTJ:
 			return (PJIN);
 
-#endif /* HASPORTJ */
+#	endif /* HASPORTJ */
 
 		default:
 			return (0); /* Would love to use _never_executed() here, but we have to return something */
 
 	}
+
+#else
+
+#	warning "EasyMSP: portReadWord() is only compatible with 5 Series devices. Unexpected results may occur."
+	return (0);
+
+#endif
+
 }
 
 inline void portWriteDirWord(unsigned short int port, unsigned short int data)
 {
-	switch (data)
+
+#if SERIES == 5
+
+	switch (port)
 	{
 
-#ifdef HASPORTA
+#	ifdef HASPORTA
 
 		case PORTA:
 			PADIR = data;
 			break;
 
-#endif /* HASPORTA */
+#	endif /* HASPORTA */
 
-#ifdef HASPORTB
+#	ifdef HASPORTB
 
 		case PORTB:
 			PBDIR = data;
 			break;
 
-#endif /* HASPORTB */
+#	endif /* HASPORTB */
 
-#ifdef HASPORTC
+#	ifdef HASPORTC
 
 		case PORTC:
 			PCDIR = data;
 			break;
 
-#endif /* HASPORTC */
+#	endif /* HASPORTC */
 
-#ifdef HASPORTD
+#	ifdef HASPORTD
 
 		case PORTD:
 			PDDIR = data;
 			break;
-#endif /* HASPORTD */
+#	endif /* HASPORTD */
 
-#ifdef HASPORTE
+#	ifdef HASPORTE
 
 		case PORTE:
 			PEDIR = data;
 			break;
 
-#endif /* HASPORTE */
+#	endif /* HASPORTE */
 
-#ifdef HASPORTF
+#	ifdef HASPORTF
 
 		case PORTF:
 			PFDIR = data;
 			break;
 
-#endif /* HASPORTF */
+#	endif /* HASPORTF */
 
-#ifdef HASPORTJ
+#	ifdef HASPORTJ
 
 		case PORTJ:
 			PJDIR = data;
 			break;
 
-#endif /* HASPORTJ */
+#	endif /* HASPORTJ */
 
 		default:
 			_never_executed();
+
 	}
+
+#else
+
+#	warning "EasyMSP: portWriteDirWord() is only compatible with 5 Series devices. Unexpected results may occur."
+
+#endif
 }
 
 inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)())
@@ -2217,44 +2312,43 @@ inline void removeInterrupt(unsigned short int pin)
 	}
 }
 
-#pragma INTERRUPT (port1_isr);
 #pragma vector=PORT1_VECTOR
-static interrupt void port1_isr(void)
+interrupt void port1_isr(void)
 {
-	switch ( P1IV )
+	switch (__even_in_range(P1IV, P1IV_P1IFG7))
 	{
-		case 0:
+		case P1IV_NONE:
 			break;
 
-		case 2:
+		case P1IV_P1IFG0:
 			(*Port1FunctionVector[0])();
 			break;
 
-		case 4:
+		case P1IV_P1IFG1:
 			(*Port1FunctionVector[1])();
 			break;
 
-		case 6:
+		case P1IV_P1IFG2:
 			(*Port1FunctionVector[2])();
 			break;
 
-		case 8:
+		case P1IV_P1IFG3:
 			(*Port1FunctionVector[3])();
 			break;
 
-		case 10:
+		case P1IV_P1IFG4:
 			(*Port1FunctionVector[4])();
 			break;
 
-		case 12:
+		case P1IV_P1IFG5:
 			(*Port1FunctionVector[5])();
 			break;
 
-		case 14:
+		case P1IV_P1IFG6:
 			(*Port1FunctionVector[6])();
 			break;
 
-		case 16:
+		case P1IV_P1IFG7:
 			(*Port1FunctionVector[7])();
 			break;
 
@@ -2264,49 +2358,50 @@ static interrupt void port1_isr(void)
 	}
 }
 
-#pragma INTERRUPT (port2_isr);
-#pragma vector=PORT2_VECTOR
-static interrupt void port2_isr(void)
+
+#pragma vector = PORT2_VECTOR
+interrupt void port2_isr(void)
 {
-	switch ( P2IV )
+	switch (__even_in_range(P2IV, P1IV_P1IFG7))
 	{
-		case 0:
+		case P2IV_NONE:
 			break;
 
-		case 2:
+		case P2IV_P2IFG0:
 			(*Port2FunctionVector[0])();
 			break;
 
-		case 4:
+		case P2IV_P2IFG1:
 			(*Port2FunctionVector[1])();
 			break;
 
-		case 6:
+		case P2IV_P2IFG2:
 			(*Port2FunctionVector[2])();
 			break;
 
-		case 8:
+		case P2IV_P2IFG3:
 			(*Port2FunctionVector[3])();
 			break;
 
-		case 10:
+		case P2IV_P2IFG4:
 			(*Port2FunctionVector[4])();
 			break;
 
-		case 12:
+		case P2IV_P2IFG5:
 			(*Port2FunctionVector[5])();
 			break;
 
-		case 14:
+		case P2IV_P2IFG6:
 			(*Port2FunctionVector[6])();
 			break;
 
-		case 16:
+		case P2IV_P2IFG7:
 			(*Port2FunctionVector[7])();
 			break;
 
 		default:
 			_never_executed();
+
 	}
 
 }
@@ -2314,5 +2409,5 @@ static interrupt void port2_isr(void)
 #endif
 
 #else /* IO_H not defined. */
-#error "Fatal error. Source file (io.c) included before header file (io.h)"
+#	error "Fatal error. Source file (io.c) included before header file (io.h)"
 #endif /* IO_H */
