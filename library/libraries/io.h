@@ -1,6 +1,6 @@
 /*
  * io.C
- * Version: 1.0.4
+ * Version: 1.1.0A
  * Library for accessing ports
  *
  * Author: Matthew Burmeister
@@ -151,10 +151,12 @@
 #pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=4 --opt_for_speed=0" );
+#if SERIES == 5
 #pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=0" );
 #pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=0" );
+#endif
 
 /* ============ */
 

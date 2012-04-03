@@ -10,47 +10,47 @@
 #include "libraries/flash.h"
 
 #ifdef HASBCS
-#include "libraries/bcs.h"
+#	include "libraries/bcs.h"
 #endif
 
 #ifdef HASUCS
-#include "libraries/ucs.h"
+#	include "libraries/ucs.h"
 #endif
 
 #ifdef HASUSI
-#include "libraries/usi.h"
+#	include "libraries/usi.h"
 #endif
 
 #ifdef HASUSCI
-#include "libraries/usci.h"
+#	include "libraries/usci.h"
 #endif
 
 #ifdef HASADC10
-#include "libraries/adc10.h"
+#	include "libraries/adc10.h"
 #endif
 
 #ifdef HASCOMP
-#include "libraries/comp.h"
+#	include "libraries/comp.h"
 #endif
 
 #ifdef HASPMM
-#include "libraries/pmm.h"
+#	include "libraries/pmm.h"
 #endif
 
 #ifdef HASRTC
-#include "libraries/rtc.h"
+#	include "libraries/rtc.h"
 #endif
 
 #ifdef HASCRC16
-#include "libraries/crc16.h"
+#	include "libraries/crc16.h"
 #endif
 
 #ifdef HASDMA
-#include "libraries/dma.h"
+#	include "libraries/dma.h"
 #endif
 
 #ifdef HASUSB
-#include "libraries/usb.h"
+#	include "libraries/usb.h"
 #endif
 
 #include "libraries/io.c"
@@ -60,47 +60,47 @@
 #include "libraries/flash.c"
 
 #ifdef HASBCS
-#include "libraries/bcs.c"
+#	include "libraries/bcs.c"
 #endif
 
 #ifdef HASUCS
-#include "libraries/ucs.c"
+#	include "libraries/ucs.c"
 #endif
 
 #ifdef HASUSI
-#include "libraries/usi.c"
+#	include "libraries/usi.c"
 #endif
 
 #ifdef HASUSCI
-#include "libraries/usci.c"
+#	include "libraries/usci.c"
 #endif
 
 #ifdef HASADC10
-#include "libraries/adc10.c"
+#	include "libraries/adc10.c"
 #endif
 
 #ifdef HASCOMP
-#include "libraries/comp.c"
+#	include "libraries/comp.c"
 #endif
 
 #ifdef HASPMM
-#include "libraries/pmm.c"
+#	include "libraries/pmm.c"
 #endif
 
 #ifdef HASRTC
-#include "libraries/rtc.c"
+#	include "libraries/rtc.c"
 #endif
 
 #ifdef HASCRC16
-#include "libraries/crc16.c"
+#	include "libraries/crc16.c"
 #endif
 
 #ifdef HASDMA
-#include "libraries/dma.c"
+#	include "libraries/dma.c"
 #endif
 
 #ifdef HASUSB
-#include "libraries/usb.c"
+#	include "libraries/usb.c"
 #endif
 
 //#include "thread.h"

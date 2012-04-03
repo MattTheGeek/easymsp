@@ -48,14 +48,6 @@ unsigned short int analogRead(unsigned short int pin)
  			return(0);
 	}
    
-	if (lowPowerMode == true) //Did the user enable low power mode
-	{
-		ADC10CTL0 |= ADC10SR; // enable for low power mode
-	}
-	else
-	{
-		ADC10CTL0 &= ~ADC10SR;	//clear for low power mode
-	}
    
 	if (pin != 0xFF)
 	{

@@ -1,6 +1,6 @@
 /*
  * io.c
- * Version: 1.0.4
+ * Version: 1.1.0A
  * Library for accessing ports
  *
  * Author: Matthew Burmeister
@@ -955,31 +955,26 @@ inline void removeInterrupt(unsigned short int pin)
 #pragma vector=PORT1_VECTOR //Port 1 Interrupt Service Routine.
 interrupt void port1_isr(void)
 {
-
-	auto unsigned short int result;
-	auto unsigned short int count_num = 0; //Dec. version of count.
-	auto unsigned short int count = 0x01;//Bitwise version of count.
+	auto unsigned char count = 0;
 	
-	do
+	while(1)
 	{
-		result = P1IFG & count;
-		count_num++;
-		count = count << 1;
+		if (count > 8)
+		{
+			break;
+		}
+		else if ( (P1IFG & (1 << count) ) > 0 && (P1IE & (1 << count) ) > 0 )
+		{
+			(*Port1FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
+			P1IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
+			break;
+		}
+		else
+		{
+			count++;
+		}
 	}
-	while (result == 0 || count != 0x80); //Exit the loop if the result is not false or if count_num is over 8.
-	
-	if (result == 0)//If count_num is over 8, then there isn't a pin to service.
-	{
-		//If we get here, Who the hell called this ISR? No P1IFG interrupt flags were set.
 		return;//Exit ISR
-	}
-	else //We found a pin to service
-	{
-		(*Port1FunctionVector[count_num])(); //Call a function in array. No offset is needed since this is Port 1.
-		P2IFG &= ~count;//Clear the interrupt flag in P1IFG.
-
-		return;//Exit ISR
-	}
 }
 
 #pragma INTERRUPT (port2_isr);

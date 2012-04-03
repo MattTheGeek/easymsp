@@ -35,11 +35,13 @@
 #define A4 8
 #define A5 9
 
+extern inline void pinMode(unsigned short int, unsigned short int);
 extern inline void _boardInit(void);
 
 inline void _boardInit(void)
 {
 	P5SEL = (BIT2 | BIT3 | BIT4 | BIT5); /* Set port5 pins 2 to 5 as Clock inputs */
+	PJDIR |= (1 << 4);
     P2REN = 0x01;
     P2OUT = 0x01;
     UCSCTL6 = XCAP_2;

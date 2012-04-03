@@ -1,10 +1,12 @@
 /* If a board was declared, include related defines and settings */
-#if defined OLIMEXINO5510 || defined OLIMEXINO_5510 || defined OLIMEXINO-5510
+#if (defined OLIMEXINO5510) == 1 || (defined OLIMEXINO_5510) == 1 || (defined OLIMEXINO-5510) == 1
 #	include "board/olimexino-5510.h"
+#endif
 
-#elif defined MSP430F5510STK
+#ifdef MSP430F5510STK
 #	include "board/msp430f5510stk.h"
+#endif
 
-#elif defined LAUNCHPAD
+#ifdef LAUNCHPAD
 #	include "board/launchpad.h"
 #endif

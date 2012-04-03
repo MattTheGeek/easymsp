@@ -13,6 +13,22 @@
 #ifndef WATCHDOG_H
 #define WATCHDOG_H
 
+#if SERIES == 2
+
+#ifndef WDTIS_1
+#define WDTIS_1 BIT0
+#endif
+
+#ifndef WDTIS_2
+#define WDTIS_2 BIT1
+#endif
+
+#ifndef WDTIS_3
+#define WDTIS_3 (BIT0 | BIT1)
+#endif
+
+#endif
+
 extern inline void stopWatchdog(void);
 extern inline void holdWatchdog(void);
 extern inline void clearWatchdog(void);

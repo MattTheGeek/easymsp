@@ -19,11 +19,7 @@
 #define RAMSIZE 512
 #define USBRAMSIZE 0
 
-#define USBBOOTLOADER NO
-#define HASUSB NO
-
-#define HASDMA NO
-#define DMACHANNELS 0
+#define HASBCS
 
 #define HASXT1 YES
 

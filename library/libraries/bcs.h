@@ -22,7 +22,7 @@
 #ifndef BCS_H
 #define BCS_H
 
-
+/*
 #define M16 16000
 #define M12 12000
 #define M8 8000
@@ -45,49 +45,6 @@
 #define CRYSTAL 3
 #define DIGITALCLK 4
 #define DIGITAL 4
-
-static volatile unsigned short int currentcpuspeed = NULL;
-
-unsigned short int setCPUFreq(unsigned short int speed);
-/**
- \brief Changes the CPU operating frequency
- \detail setCPUFreq() changes the CPU operating frequency/speed. setCPUFreq() will also adjust delay and timing settings to account for the increase or decrease of CPU speed.
-
- \param[in] speed Speed to would like to change the CPU to in Khz.
- \li 16000 - 16Mhz
- \li 12000 - 12Mhz
- \li 8000 - 8Mhz
- \li 6000 - 6Mhz
- \li 4000 - 4Mhz
- \li 2000 - 2Mhz
- \li 1000 - 1Mhz
- \li 500 - 500Khz
- \li 125 - 125Khz
- \li 32 - 32Khz (Requires crystal)
- \li 22 - 22Khz
- \li DAMNSLOW (or 2) - Around 2.2Khz
-
- \note Frequencies above 1Mhz require that the MSP430 have full calibration data in it's info segment. You can use a MSP430 with pre-written data or run a calibration tool.
-
- \return 0 on success
- \return 1 invaild selection
- \return 2 out of range
- \return 3 Calibration data does not exist
-
 */
-unsigned short int setCPUFreq(unsigned short int speed);
-
-unsigned short int setDCOFreq(unsigned short int, unsigned short int, unsigned short int);
-
-unsigned short int setMCLK(unsigned short int, unsigned short int);
-unsigned short int setSMCLK(unsigned short int, unsigned short int);
-unsigned short int setACLK(unsigned short int, unsigned short int);
-
-void disableDCO(void);
-void enableDCO(void);
-
-unsigned short int getCPUFreq(void);
-
-#include "bcs.c"
 
 #endif
