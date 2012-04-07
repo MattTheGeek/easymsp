@@ -944,7 +944,6 @@ inline void removeInterrupt(unsigned short int pin)
 		{
 			P2IE &= ~(1 << pin); //Clear Interrupt Enable Flag
 			
-			return;//Exit
 		}
 
 		return; //If pin does not match anything above, then return. 
@@ -974,39 +973,33 @@ interrupt void port1_isr(void)
 			count++;
 		}
 	}
-		return;//Exit ISR
+	return; //Exit ISR
 }
 
 #pragma INTERRUPT (port2_isr);
 #pragma vector=PORT2_VECTOR //Port2 Interrupt Service Routine.
 interrupt void port2_isr(void)
 {
+	auto unsigned char count = 0;
 
-	auto unsigned short int result;
-	auto unsigned short int count_num = 0; //Dec. version of count.
-	auto unsigned short int count = 0x01;//Bitwise version of count.
-	
-	do//Attempt to find a interrupted pin on P2IFG.
-	{
-		result = P2IFG & count;
-		count_num++;
-		count = count << 1;
-	}
-	while (result == 0 || count != 0x80); //Exit the loop if the result is not false or if count_num is over 8.
-	
-	if (result == 0)//If count_num is over 8, then there isn't a pin to service.
-	{
-		//If we get here, Who the hell called this ISR? No P2IFG interrupt flags were set.
-		return;//Exit ISR
-	}
-	else //We found a pin to service.
-	{
-		(*Port2FunctionVector[count_num])(); //Call a function in a array. Since this is Port2, We need to add a offset to the array index.
-		P2IFG &= ~count;//Clear the interrupt flag bit.
-
-		return;//Exit the ISR.
-	}
-
+		while(1)
+		{
+			if (count > 8)
+			{
+				break;
+			}
+			else if ( (P2IFG & (1 << count) ) > 0 && (P2IE & (1 << count) ) > 0 )
+			{
+				(*Port2FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
+				P2IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
+				break;
+			}
+			else
+			{
+				count++;
+			}
+		}
+			return;//Exit ISR
 }
 
 #endif /* End 2 series function block */

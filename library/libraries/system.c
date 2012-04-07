@@ -63,6 +63,7 @@ extern inline void shutdown(void)
 
 }
 
+
 extern void inline delaySec(register unsigned short int time)
 {
 	/* todo: Write correct delay loop */

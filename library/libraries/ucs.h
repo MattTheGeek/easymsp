@@ -1,52 +1,13 @@
-/*
 
-enum clockSources
-{
-	XT1CLK = 1,
-	VLOCLK = 2,
-	REFOCLK = 3,
-	DCOCLK = 4,
-	XT2CLK = 5
-};
+#ifndef __EASYMSP__
+#	error "The UCS library requires EasyMSP"
+#endif
 
-enum clock
-{
-	MCLK = 1,
-	SMCLK = 2,
-	ACLK = 3,
-	MODOSC = 4
-};
+#ifndef UCS_H
+#define UCS_H
 
-enum divide
-{
-	by_1 = 1,
-	by_2 = 2,
-	by_4 = 4,
-	by_8 = 8,
-	by_16 = 16,
-	by_32 = 32
-};
+inline void setMCLK(const unsigned short int, const unsigned short int);
+inline void setSMCLK(const unsigned short int, const unsigned short int);
+inline void setACLK(const unsigned short int, const unsigned short int);
 
-enum mul
-{
-	by_1 = 1,
-	by_2 = 2,
-	by_4 = 4,
-	by_8 = 8,
-	by_16 = 16,
-	by_32 = 32
-};
-
-enum crystalDriveStrength
-{
-	upTo8Mhz = 1,
-	upTo16Mhz = 2,
-	upTo24Mhz = 3,
-	upTo32Mhz = 4
-};
-	
-enum capacitor
-{
-	
-};
-*/
+#endif

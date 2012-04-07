@@ -30,6 +30,9 @@ void main(void)
 {
 	WDTCTL = WDTPW + WDTHOLD; /* Halt the watchdog before it issues a PUC */
 	
+	P1IFG = 0x00;
+	P2IFG = 0x00;
+
 #ifdef HASDMA /* Does the device have a DMA. If yes, configure it. */
 	DMACTL4 = DMARMWDIS; /* Let write/read CPU instructions finish before halting for DMA transfer */
 #endif /* HASDMA */
