@@ -1,3 +1,5 @@
+asm("	.mmsg	\"Using board: MSP430F5510STK\"");
+
 #ifndef MSP430F5510
 #define MSP430F5510
 #endif

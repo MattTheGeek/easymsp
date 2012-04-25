@@ -39,34 +39,6 @@
 
 /* Define constants */
 
-#ifndef HIGH_TO_LOW
-#	define HIGH_TO_LOW 0
-#endif
-
-#ifndef LOW_TO_HIGH
-#	define LOW_TO_HIGH 1
-#endif
-
-#ifndef HIGH
-#	define HIGH 1
-#endif
-
-#ifndef LOW
-#	define LOW 0
-#endif
-
-#ifndef INPUT
-#	define INPUT 0
-#endif
-
-#ifndef OUTPUT
-#	define OUTPUT 1
-#endif
-
-/* ============ */
-
-/* ============ */
-
 /* If we have 16 bit ports, we also have 8 bit ports as well. */
 
 #ifdef HASPORTA
@@ -138,27 +110,30 @@
 /* ============ */
 
 /* Set function level compile options */
-#pragma FUNCTION_OPTIONS (setHigh, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (setLow, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (pinToggle, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (pinMode, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (readPin, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portWrite, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portWriteDir, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portRead, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (setPullUp, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (setPullDown, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=4 --opt_for_speed=0" );
+#pragma FUNC_NO_GLOBAL_ASG (setHigh);
+#pragma FUNCTION_OPTIONS (setHigh, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (setLow, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinToggle, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinMode, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (readPin, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portWrite, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portWriteDir, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portRead, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (setPullUp, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (setPullDown, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=3 --opt_for_speed=5" );
 #if SERIES == 5
-#pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=0" );
-#pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=0" );
+#pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=5" );
 #endif
 
 /* ============ */
+
+inline void portInit(void);
 
 inline void digitalWrite(unsigned short int, unsigned short int);
 
@@ -168,20 +143,24 @@ inline void pinToggle(unsigned short int);
 inline void pinMode(unsigned short int, unsigned short int);
 inline bool readPin(unsigned short int);
 
-inline void portWrite(unsigned short int, unsigned char);
-inline void portWriteDir(unsigned short int, unsigned char);
-inline unsigned char portRead(unsigned short int);
+inline void portWrite(const unsigned short int, unsigned char);
+inline void portWriteDir(const unsigned short int, unsigned char);
+inline unsigned char portRead(const unsigned short int);
 
 inline void setPullUp(unsigned short int);
 inline void setPullDown(unsigned short int);
 inline void setPullOff(unsigned short int);
 
-inline void setDriveStrength(unsigned short int, unsigned short int);
-inline void portWriteWord(unsigned short int, unsigned short int);
-inline void portWriteDirWord(unsigned short int, unsigned short int);
-inline unsigned short int portReadWord(unsigned short int);
+#if SERIES == 5
 
-inline void attachInterrupt(unsigned short int, unsigned short int, void(*)());
+inline void setDriveStrength(unsigned short int, unsigned short int);
+inline void portWriteWord(const unsigned short int, unsigned short int);
+inline void portWriteDirWord(const unsigned short int, unsigned short int);
+inline unsigned short int portReadWord(const unsigned short int);
+
+#endif
+
+inline void attachInterrupt(unsigned short int, unsigned short int, void(*)(void));
 inline void removeInterrupt(unsigned short int);
 
 /* Interrupt ISRs */

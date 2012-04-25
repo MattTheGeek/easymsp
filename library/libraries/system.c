@@ -63,6 +63,27 @@ extern inline void shutdown(void)
 
 }
 
+extern inline void disableInterrupts(void)
+{
+	_disable_interrupts();
+	_no_operation(); /* Work around for CPU39 bug */
+}
+
+extern inline void enableInterrupts(void)
+{
+	_enable_interrupts();
+}
+
+extern inline void swapBytes(register unsigned short int* data)
+{
+
+#ifdef __MSP430X__
+	asm ("	swpbx.w	@r12	");
+#else
+	asm	("	swpb.w	@r12	");
+#endif
+
+}
 
 extern void inline delaySec(register unsigned short int time)
 {

@@ -6,7 +6,8 @@
 #ifndef __MSP430G2553__
 	#define __MSP430G2553__
 #endif
-
+asm("	.mmsg	\"Device is MSP430G2553\"");
+asm("	.mmsg	\"Series is Value Line\"");
 #ifndef MSP430_H
 #include <msp430.h>
 #endif

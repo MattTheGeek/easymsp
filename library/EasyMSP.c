@@ -24,18 +24,17 @@
 
 #ifndef NOSETUP
 
-static volatile bool EasyMSP_Execute = true;
+static volatile unsigned short int EasyMSP_Execute = true;
 
 void main(void)
 {
 	WDTCTL = WDTPW + WDTHOLD; /* Halt the watchdog before it issues a PUC */
 	
-	P1IFG = 0x00;
-	P2IFG = 0x00;
-
-#ifdef HASDMA /* Does the device have a DMA. If yes, configure it. */
+	portInit();
+	
+#	ifdef HASDMA /* Does the device have a DMA. If yes, configure it. */
 	DMACTL4 = DMARMWDIS; /* Let write/read CPU instructions finish before halting for DMA transfer */
-#endif /* HASDMA */
+#	endif /* HASDMA */
 
 	/*Configure the clock system */
 #if defined HASBCS
@@ -48,16 +47,14 @@ void main(void)
 
 #endif
 
-#ifdef ISBOARD /* Will EasyMSP be running on a board such as a OLIMEXINO or LaunchPad? */
-
-	/* If yes, we call _initBoard() which should be located in the board description header in the directory board. */
+#	ifdef ISBOARD /* Will EasyMSP be running on a board such as a OLIMEXINO or LaunchPad? */
+/* If yes, we call _initBoard() which should be located in the board description header in the directory board. */
 	_boardInit();
+#	endif /* ISBOARD */
 
-#endif /* ISBOARD */
-
-#ifndef NOINIT //If the user has declared NOINIT, then do not include and execute init()
+#	ifndef NOINIT //If the user has declared NOINIT, then do not include and execute init()
 	init(); //Call program init()
-#endif /* NOINIT */
+#	endif /* NOINIT */
 
 #ifndef NOLOOP /* If the user has declared NOLOOP, then do not include and execute loop. Otherwise, include and execute */
 
@@ -133,7 +130,7 @@ void interrupt sys_nmi_isr(void)
 			break;
 
 		case SYSSNIV_VMAIFG:
-
+			SFRIFG1 &= ~VMAIFG; /* Clear VMA flag */
 			break;
 
 		case SYSSNIV_JMBINIFG:

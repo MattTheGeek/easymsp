@@ -80,6 +80,10 @@
 #	define XCLK 11
 #endif
 
+#ifndef CRYSTAL
+#	define CRYSTAL 1
+#endif
+
 /* IO Port constants */
 
 #ifndef PORTA

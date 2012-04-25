@@ -28,7 +28,7 @@
 #endif
 
 #endif
-
+void (*WatchdogFunctionVector)(void) = NULL;
 extern inline void stopWatchdog(void);
 extern inline void holdWatchdog(void);
 extern inline void clearWatchdog(void);
@@ -36,5 +36,10 @@ extern inline void resumeWatchdog(void);
 extern inline void resetWatchdog(void);
 
 extern void startWatchdog(unsigned short int, unsigned short int);
+extern void watchdogTimerStart(unsigned short int, unsigned short int, void (*)());
+
+#pragma FUNC_EXT_CALLED (watchdog_isr);
+#pragma INTERRUPT(watchdog_isr);
+void interrupt watchdog_isr(void);
 
 #endif

@@ -4,7 +4,7 @@
  * Library for accessing ports
  *
  * Author: Matthew Burmeister
- * Copyright Matthew Burmeister 2011 - 2012. All Rights Reserved.
+ * Copyright Matthew Burmeister 2010, 2011, 2012. All Rights Reserved.
  *
  * Part of the EasyMSP Project.
  *
@@ -61,7 +61,77 @@
 /* Functions for all series */
 #if SERIES == 2 || SERIES == 5
 
-inline void portWrite(unsigned short int port, unsigned char data)
+inline void portInit(void)
+{
+#	if SERIES == 2
+	
+#	ifdef HASPORT1
+	P1DIR = 0xFF;
+	P1OUT = 0x00;
+	P1IE = 0x00;
+	P1IFG = 0x00;
+#	endif
+
+#	ifdef HASPORT2
+	P2DIR = 0xFF;
+	P2OUT = 0x00;
+	P2IE = 0x00;
+	P2IFG = 0x00;
+#	endif
+
+#	ifdef HASPORT3
+	P3DIR = 0xFF;
+	P3OUT = 0x00;
+#	endif 
+
+#	ifdef HASPORT4
+	P4DIR = 0xFF;
+	P4OUT = 0x00;
+#	endif
+
+#elif SERIES == 5
+
+#	ifdef HASPORTA
+	PADIR = 0xFFFF;
+	PAOUT = 0x0000;
+	PAIE = 0x0000;
+	PAIFG = 0x0000;
+
+#	endif
+
+#	ifdef HASPORTB
+	PBDIR = 0xFFFF;
+	PBOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTC
+	PCDIR = 0xFFFF;
+	PCOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTD
+	PDDIR = 0xFFFF;
+	PDOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTE
+	PEDIR = 0xFFFF;
+	PEOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTF
+	PFDIR = 0xFFFF;
+	PEOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTJ
+	PJDIR = 0xFFFF;
+	PJOUT = 0x0000;
+#	endif
+#endif
+}
+
+inline void portWrite(const unsigned short int port, unsigned char data)
 {
 	switch (port)
 	{
@@ -159,7 +229,7 @@ inline void portWrite(unsigned short int port, unsigned char data)
 	}
 }
 
-inline unsigned char portRead(unsigned short int port)
+inline unsigned char portRead(const unsigned short int port)
 {
 	switch (port)
 	{
@@ -247,7 +317,7 @@ inline unsigned char portRead(unsigned short int port)
 	}
 }
 
-inline void portWriteDir(unsigned short int port, unsigned char data)
+inline void portWriteDir(const unsigned short int port, unsigned char data)
 {
 	switch (port)
 	{
@@ -354,7 +424,7 @@ inline void setHigh(unsigned short int pin)
 		/* We need to generate a bitmask for P1OUT, we do this by shifting 0x01 by pin. This produces a bitmask that for the desired bit and pin. */
 
 		P1OUT |= (1 << pin); /* OR the generated bit mask to PxOUT to set the bit and make the pin high */
-		return;
+		_never_executed();
 	}
 
 #endif /* HASPORT1 */
@@ -368,7 +438,7 @@ inline void setHigh(unsigned short int pin)
 	if (pin <= 7)
 	{
 		P2OUT |= (1 << pin);
-		return;
+		_never_executed();
 	}
 
 #endif /* HASPORT2 */
@@ -380,7 +450,7 @@ inline void setHigh(unsigned short int pin)
 	if (pin <= 7)
 	{
 		P3OUT |= (1 << pin);
-		return;
+		_never_executed();
 	}
 
 #endif /* HASPORT3 */
@@ -396,7 +466,7 @@ inline void setHigh(unsigned short int pin)
 
 #endif /* HASPORT4 */
 	
-	return; /* Return from the last function or the pin was out of range. */
+	_never_executed();
 }
 
 inline void setLow(unsigned short int pin)
@@ -872,11 +942,15 @@ inline void setPullOff(unsigned short int pin)
 	return;
 }
 
-inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)())
+inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)(void))
 {
+	if ((unsigned short int)function <= 0x01FF) /* Do not allow a function pointer to reference Peripheral module memory */
+	{
+		return;
+	}
+	
 	if (pin <= 7)
 	{
-
 		if (edge == HIGH_TO_LOW)
 		{
 			P1IES |= (1 << pin);
@@ -954,15 +1028,12 @@ inline void removeInterrupt(unsigned short int pin)
 #pragma vector=PORT1_VECTOR //Port 1 Interrupt Service Routine.
 interrupt void port1_isr(void)
 {
-	auto unsigned char count = 0;
+	volatile unsigned char count = 0;
 	
-	while(1)
+	while(count > 8)
 	{
-		if (count > 8)
-		{
-			break;
-		}
-		else if ( (P1IFG & (1 << count) ) > 0 && (P1IE & (1 << count) ) > 0 )
+
+		if ( ((P1IFG & (1 << count) ) > 0) && ((P1IE & (1 << count) ) > 0 ))
 		{
 			(*Port1FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
 			P1IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
@@ -973,6 +1044,7 @@ interrupt void port1_isr(void)
 			count++;
 		}
 	}
+
 	return; //Exit ISR
 }
 
@@ -980,15 +1052,11 @@ interrupt void port1_isr(void)
 #pragma vector=PORT2_VECTOR //Port2 Interrupt Service Routine.
 interrupt void port2_isr(void)
 {
-	auto unsigned char count = 0;
+	volatile unsigned char count = 0;
 
-		while(1)
+		while(count > 8)
 		{
-			if (count > 8)
-			{
-				break;
-			}
-			else if ( (P2IFG & (1 << count) ) > 0 && (P2IE & (1 << count) ) > 0 )
+			if ( ((P2IFG & (1 << count) ) > 0) && ((P2IE & (1 << count) ) > 0 ))
 			{
 				(*Port2FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
 				P2IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
@@ -2001,7 +2069,7 @@ inline void setPullOff(unsigned short int pin)
 	return;
 }
 
-inline void portWriteWord(unsigned short int port, unsigned short int data)
+inline void portWriteWord(const unsigned short int port, unsigned short int data)
 {
 
 #if SERIES == 5
@@ -2075,7 +2143,7 @@ inline void portWriteWord(unsigned short int port, unsigned short int data)
 #endif
 }
 
-inline unsigned short int portReadWord(unsigned short int port)
+inline unsigned short int portReadWord(const unsigned short int port)
 {
 
 #if SERIES == 5
@@ -2146,7 +2214,7 @@ inline unsigned short int portReadWord(unsigned short int port)
 
 }
 
-inline void portWriteDirWord(unsigned short int port, unsigned short int data)
+inline void portWriteDirWord(const unsigned short int port, unsigned short int data)
 {
 
 #if SERIES == 5
@@ -2221,11 +2289,10 @@ inline void portWriteDirWord(unsigned short int port, unsigned short int data)
 #endif
 }
 
-inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)())
+inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)(void))
 {
 	if (pin <= 7)
 	{
-
 		if (edge == HIGH_TO_LOW)
 		{
 			P1IES |= (1 << pin);
