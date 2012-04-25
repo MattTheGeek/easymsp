@@ -42,7 +42,7 @@ void blink(void); /* Prototype for our blink function */
 
 void init(void)
 {
-	setACLK(VLOCLK, 2); /* Set ACLK to source the internal VLO and divide it by 2 */
+	setACLK(VLOCLK, by_2); /* Set ACLK to source the internal VLO and divide it by 2 */
 	pinMode(REDLED, OUTPUT); /* Set the REDLED (P1.0) to become a output */
 	pinMode(GREENLED, OUTPUT); /* Set the GREENLED (P1.6) to become a output */
 	setHigh(REDLED); /* Turn on the REDLED(P1.0) */
