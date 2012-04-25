@@ -27,8 +27,8 @@
 
 #pragma FUNC_IS_PURE (makeWordPinMask);
 #pragma FUNCTION_OPTIONS (makeWordPinMask, "--opt_level=4 --opt_for_speed=5")
-inline unsigned short int makeWordPinMask(unsigned short int pin)
+inline unsigned short int makeWordPinMask(unsigned short int pin);
 
 #pragma FUNC_IS_PURE (makePinMask);
 #pragma FUNCTION_OPTIONS (makePinMask, "--opt_level=4 --opt_for_speed=5")
-inline unsigned char makePinMask(unsigned short int pin)
+inline unsigned char makePinMask(unsigned short int pin);

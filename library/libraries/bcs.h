@@ -22,6 +22,10 @@
 #ifndef BCS_H
 #define BCS_H
 
+inline void setMCLK(unsigned short int, unsigned short int);
+inline void setSMCLK(unsigned short int, unsigned short int);
+inline void setACLK(unsigned short int, unsigned short int);
+
 /*
 #define M16 16000
 #define M12 12000

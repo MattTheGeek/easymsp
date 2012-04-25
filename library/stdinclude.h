@@ -8,14 +8,16 @@
 #include "libraries/timer.h"
 #include "libraries/watchdog.h"
 #include "libraries/flash.h"
+#include "libraries/util.h"
 
-#ifdef HASBCS
+#if (defined HASBCS)
 #	include "libraries/bcs.h"
+#elif (defined HASUCS)
+#	include "libraries/ucs.h"
+#else
+#	error "No clock system specified in device header"
 #endif
 
-#ifdef HASUCS
-#	include "libraries/ucs.h"
-#endif
 
 #ifdef HASUSI
 #	include "libraries/usi.h"
@@ -58,13 +60,14 @@
 #include "libraries/timer.c"
 #include "libraries/watchdog.c"
 #include "libraries/flash.c"
+#include "libraries/util.c"
 
-#ifdef HASBCS
+#if (defined HASBCS)
 #	include "libraries/bcs.c"
-#endif
-
-#ifdef HASUCS
+#elif (defined HASUCS)
 #	include "libraries/ucs.c"
+#else
+#	error "No clock system specified in device header"
 #endif
 
 #ifdef HASUSI

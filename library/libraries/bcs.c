@@ -1,4 +1,4 @@
-void setMCLK(unsigned short int source, unsigned short int div)
+inline void setMCLK(unsigned short int source, unsigned short int div)
 {
 	switch (source)
 	{
@@ -48,7 +48,7 @@ void setMCLK(unsigned short int source, unsigned short int div)
 	}
 }
 
-void setSMCLK(unsigned short int source, unsigned short int div)
+inline void setSMCLK(unsigned short int source, unsigned short int div)
 {
 	switch (source)
 	{
@@ -97,7 +97,7 @@ void setSMCLK(unsigned short int source, unsigned short int div)
 	}
 }
 
-void setACLK(unsigned short int source, unsigned short int div)
+inline void setACLK(unsigned short int source, unsigned short int div)
 {
 	switch (source)
 	{
@@ -122,19 +122,19 @@ void setACLK(unsigned short int source, unsigned short int div)
 			
 			break;
 			
-		case 1:
+		case by_1:
 			BCSCTL1 &= ~DIVA_3;
 			break;
 			
-		case 2:
+		case by_2:
 			BCSCTL1 |= DIVA_1;
 			break;
 			
-		case 4:
+		case by_4:
 			BCSCTL1 |= DIVA_2;
 			break;
 			
-		case 8:
+		case by_8:
 			BCSCTL1 |= DIVA_3;
 			break;
 	}
