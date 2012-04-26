@@ -85,6 +85,25 @@ extern inline void swapBytes(register unsigned short int* data)
 
 }
 
+#pragma RETAIN ( delayCycles );
+extern void delayCycles(volatile register unsigned short int cycles)
+{
+
+	asm("	sub		#26,	r12		");
+	asm("delay_cycles_loop:			");
+	asm("	sub.w	#4,	r12			");
+	asm("	nop						");
+	asm("	jc	delay_cycles_loop	");
+	asm("	inv		r12				");
+	asm("	rla		r12				");
+	asm("	add.w	r12, PC			");
+	asm("	nop						");
+	asm("	nop						");
+	asm("	nop						");
+
+	return;
+}
+
 extern void inline delaySec(register unsigned short int time)
 {
 	/* todo: Write correct delay loop */
@@ -97,5 +116,11 @@ extern void inline delayms(register unsigned short int time)
 
 extern void inline delayus(register unsigned short int time)
 {
-	/* todo: Write correct delay loop */
+	register unsigned short int i = 0;
+
+	do
+	{
+
+	}
+	while (i != 0);
 }

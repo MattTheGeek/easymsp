@@ -165,10 +165,10 @@ inline void removeInterrupt(unsigned short int);
 
 /* Interrupt ISRs */
 
-#pragma FUNC_EXT_CALLED (port1_isr);
+/* #pragma FUNC_EXT_CALLED (port1_isr); */
 #pragma INTERRUPT (port1_isr);
 
-#pragma FUNC_EXT_CALLED (port2_isr);
+/* #pragma FUNC_EXT_CALLED (port2_isr); */
 #pragma INTERRUPT (port2_isr);
 
 interrupt void port1_isr(void);
