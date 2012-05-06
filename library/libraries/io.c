@@ -63,6 +63,7 @@
 
 inline void portInit(void)
 {
+
 #	if SERIES == 2
 	
 #	ifdef HASPORT1
@@ -129,6 +130,87 @@ inline void portInit(void)
 	PJOUT = 0x0000;
 #	endif
 #endif
+
+}
+
+void shiftConfig(unsigned short int order, unsigned short int pol)
+{
+	if (order == LSBFIRST)
+	{
+		shiftConfigBits |= BIT0;
+	}
+	else
+	{
+		shiftConfigBits &= ~BIT0;
+	}
+
+	if (pol)
+	{
+		shiftConfigBits |= BIT1;
+	}
+	else
+	{
+		shiftConfigBits &= ~BIT1;
+	}
+}
+
+void shiftOut(unsigned short int sdat, unsigned short int sclk, unsigned char data)
+{
+	auto unsigned short int bits = 8;
+
+	do
+	{
+		if ( (shiftConfigBits & BIT0) > 0)
+		{
+			if ( (data & 0x01) > 0)
+			{
+				setHigh(sdat);
+			}
+			else
+			{
+				setLow(sdat);
+			}
+
+			data >>= 1;
+		}
+		else
+		{
+			if ( (data & 0x80) > 0)
+
+			{
+				setHigh(sdat);
+			}
+			else
+			{
+				setLow(sdat);
+			}
+
+			data <<= 1;
+		}
+
+		if ( (shiftConfigBits & BIT1) > 0)
+		{
+			setLow(sclk);
+		}
+		else
+		{
+			setHigh(sclk);
+		}
+
+		bits--;
+
+		if ( (shiftConfigBits & BIT1) > 0)
+		{
+			setHigh(sclk);
+		}
+		else
+		{
+			setLow(sclk);
+		}
+	}
+	while (bits > 0);
+
+	return;
 }
 
 inline void portWrite(const unsigned short int port, unsigned char data)
@@ -948,7 +1030,7 @@ inline void attachInterrupt(unsigned short int pin, unsigned short int edge, voi
 	{
 		return;
 	}
-	
+
 	if (pin <= 7)
 	{
 		if (edge == HIGH_TO_LOW)
@@ -1029,8 +1111,8 @@ inline void removeInterrupt(unsigned short int pin)
 interrupt void port1_isr(void)
 {
 	volatile unsigned char count = 0;
-	
-	while(count > 8)
+
+	while(count < 8)
 	{
 
 		if ( ((P1IFG & (1 << count) ) > 0) && ((P1IE & (1 << count) ) > 0 ))
@@ -1054,20 +1136,20 @@ interrupt void port2_isr(void)
 {
 	volatile unsigned char count = 0;
 
-		while(count > 8)
+	while(count < 8)
+	{
+		if ( ((P2IFG & (1 << count) ) > 0) && ((P2IE & (1 << count) ) > 0 ))
 		{
-			if ( ((P2IFG & (1 << count) ) > 0) && ((P2IE & (1 << count) ) > 0 ))
-			{
-				(*Port2FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
-				P2IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
-				break;
-			}
-			else
-			{
-				count++;
-			}
+			(*Port2FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
+			P2IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
+			break;
 		}
-			return;//Exit ISR
+		else
+		{
+			count++;
+		}
+	}
+	return; //Exit ISR
 }
 
 #endif /* End 2 series function block */
@@ -2412,7 +2494,6 @@ interrupt void port1_isr(void)
 
 	}
 }
-
 
 #pragma vector = PORT2_VECTOR
 interrupt void port2_isr(void)

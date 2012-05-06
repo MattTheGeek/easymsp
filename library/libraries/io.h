@@ -134,6 +134,10 @@
 /* ============ */
 
 inline void portInit(void);
+void shiftConfig(unsigned short int, unsigned short int);
+void shiftOut(unsigned short int, unsigned short int, unsigned char);
+
+static unsigned char shiftConfigBits = NULL;
 
 inline void digitalWrite(unsigned short int, unsigned short int);
 

@@ -384,12 +384,11 @@
 #ifndef VOLTAGE_CHANGE
 #	define VOLTAGE_CHANGE 5
 #endif
+	
+/* ADC10 constants */
 
-typedef char byte;
-typedef unsigned short int word;
-typedef bool boolean;
-typedef char BYTE;
-typedef unsigned short int WORD;
-typedef bool BOOLEAN;
-
+#ifndef TEMPSENSE
+#	define TEMPSENSE 0xFF
+#endif
+	
 #endif /* DEFINE_H */

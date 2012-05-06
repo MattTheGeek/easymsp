@@ -34,9 +34,14 @@ extern inline void powerMode(unsigned short int mode)
 	}
 }
 
-extern inline void powerModeOff(void)
+inline void exitPowerMode(void)
 {
-	_low_power_mode_off_on_exit();
+	asm("	BIC.W #0xF0, 0(SP)");
+}
+
+inline void powerModeOff(void)
+{
+	asm("	BIC.W #0xF0, 0(SP)");
 }
 
 extern inline void reset(void)
@@ -86,9 +91,10 @@ extern inline void swapBytes(register unsigned short int* data)
 }
 
 #pragma RETAIN ( delayCycles );
-extern void delayCycles(volatile register unsigned short int cycles)
+extern void delayCycles(register volatile unsigned short int cycles)
 {
 
+#ifndef __MSP430X__
 	asm("	sub		#26,	r12		");
 	asm("delay_cycles_loop:			");
 	asm("	sub.w	#4,	r12			");
@@ -100,7 +106,20 @@ extern void delayCycles(volatile register unsigned short int cycles)
 	asm("	nop						");
 	asm("	nop						");
 	asm("	nop						");
-
+#else
+	/* TODO: Write cycle adjusted code for CPUX MSP430s */
+	asm("	sub		#26,	r12		");
+	asm("delay_cycles_loop:			");
+	asm("	sub.w	#4,	r12			");
+	asm("	nop						");
+	asm("	jc	delay_cycles_loop	");
+	asm("	inv		r12				");
+	asm("	rla		r12				");
+	asm("	add.w	r12, PC			");
+	asm("	nop						");
+	asm("	nop						");
+	asm("	nop						");
+#endif
 	return;
 }
 
@@ -116,11 +135,10 @@ extern void inline delayms(register unsigned short int time)
 
 extern void inline delayus(register unsigned short int time)
 {
-	register unsigned short int i = 0;
-
 	do
 	{
-
+		delayCycles(16);
+		time--;
 	}
-	while (i != 0);
+	while (time);
 }

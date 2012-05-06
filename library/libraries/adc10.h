@@ -74,5 +74,9 @@ void analogOff(void);
 void analogReference(unsigned short int);
 void analogConfig(unsigned short int, unsigned short int, unsigned short int);
 
+#pragma INTERRUPT(adc10_isr);
+
+interrupt void adc10_isr(void);
+
 #endif
 
