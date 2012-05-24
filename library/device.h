@@ -37,7 +37,7 @@
 #	endif
 		
 #else
-#	error "EasyMSP is not supported with this device. Please double check your define."
+#	error "EasyMSP is not supported with this device. Please double check your config."
 #endif
 
 #if (VERBOSE == YES)
@@ -45,7 +45,7 @@
 #	if (SERIES == 1)
 		asm("	.mmsg	\"Series is F1xx line. \"");
 #	elif (SERIES == 2)
-		asm("	.mmsg	\"Series is F2xx line OR G2xx Value Line. \"");
+		asm("	.mmsg	\"Series is F2xx line \"");
 #	elif (SERIES == 3)
 		asm("	.mmsg	\"Series is F3xx line. \"");
 #	elif (SERIES == 4)
@@ -54,10 +54,14 @@
 		asm("	.mmsg	\"Series is F5xx Performance line. \"");
 #	elif (SERIES == 6)
 		asm("	.mmsg	\"Series is F6xx Performance line. \"");
-#	elif (SERIES == 'FRAM')
+#	elif (SERIES == 'F')
 		asm("	.mmsg	\"Series is FRAM Line \"");
-#	elif (SERIES == 'VOLVERINE')
+#	elif (SERIES == 'C')
+		asm("	.mmsg	\"Series is CC430 RF SoC \"");
+#	elif (SERIES == 'W')
 		asm("	.mmsg	\"Series is VOLVERINE \"");
+#	elif (SERIES == 'V')
+		asm("	.mmsg	\"Series is G2xx Value Line. \""); 
 #	endif
 
 #	ifdef __MSP430X__

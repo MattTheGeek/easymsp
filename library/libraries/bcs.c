@@ -116,16 +116,10 @@ inline void setACLK(unsigned short int source, unsigned short int div)
 			
 	}
 	
+	BCSCTL1 &= ~DIVA_3;
+	
 	switch (div)
 	{
-		default:
-			
-			break;
-			
-		case by_1:
-			BCSCTL1 &= ~DIVA_3;
-			break;
-			
 		case by_2:
 			BCSCTL1 |= DIVA_1;
 			break;
@@ -137,5 +131,12 @@ inline void setACLK(unsigned short int source, unsigned short int div)
 		case by_8:
 			BCSCTL1 |= DIVA_3;
 			break;
+			
+		default:
+		case by_1:
+			_never_executed();
+
 	}
+	
+	return;
 }

@@ -62,17 +62,29 @@
 #endif
 
 //Prototypes
-unsigned short int analogRead(unsigned short int); //10Bit analog value
+extern unsigned short int analogRead(unsigned short int); //10Bit analog value
 
 #if SERIES == 5
 
-unsigned char analogReadByte(unsigned short int); //8Bit analog value
+extern unsigned char analogReadByte(unsigned short int); //8Bit analog value
 
 #endif
 
-void analogOff(void);
-void analogReference(unsigned short int);
-void analogConfig(unsigned short int, unsigned short int, unsigned short int);
+extern inline void analogOff(void);
+extern void analogReference(unsigned short int);
+extern void analogConfig(unsigned short int, unsigned short int, unsigned short int);
+
+enum adc10ConfigBit
+{
+	Inverted = BIT0,
+	DataFormat = BIT1,
+	ClockSourceL = BIT2,
+	ClockSourceH = BIT3,
+	HoldTimeL = BIT4,
+	HoldTimeH = BIT5
+};
+
+static unsigned short int adc10ConfigBits = NULL;
 
 #pragma INTERRUPT(adc10_isr);
 

@@ -31,14 +31,17 @@ void main(void)
 	WDTCTL = WDTPW + WDTHOLD; /* Halt the watchdog before it issues a PUC */
 	
 	portInit();
-	
-#	ifdef HASDMA /* Does the device have a DMA. If yes, configure it. */
-	DMACTL4 = DMARMWDIS; /* Let write/read CPU instructions finish before halting for DMA transfer */
-#	endif /* HASDMA */
-
 	/*Configure the clock system */
-#if defined HASBCS
-	/* Configure the Basic clock system */
+#if defined HASBCS	/* Configure the Basic clock system */
+
+#if (SERIES == 'V')
+	BCSCTL1 &= ~(XT2OFF | XTS | DIVA_3); /* Clear all settings but RSEL (Range Select) */
+	BCSCTL2 = 0; /* Set BCSCTL2 to default state. */
+	BCSCTL3 = LFXT1S_2; /* Use VLO clock on default */
+#else
+
+#endif
+
 #elif defined HASUCS
 	/* Configure the unified clock system */
 #else
@@ -46,6 +49,12 @@ void main(void)
 #	error "The device clock system type is unknown and EasyMSP cannot continue to build. Please define the correct clock system type."
 
 #endif
+
+#	ifdef HASDMA /* Does the device have a DMA. If yes, configure it. */
+	DMACTL4 = DMARMWDIS; /* Let write/read CPU instructions finish before halting for DMA transfer */
+#	endif /* HASDMA */
+
+
 
 #	ifdef ISBOARD /* Will EasyMSP be running on a board such as a OLIMEXINO or LaunchPad? */
 /* If yes, we call _initBoard() which should be located in the board description header in the directory board. */
@@ -69,7 +78,7 @@ void main(void)
 	_low_power_mode_4();
 }
 
-#if SERIES == 2
+#if (SERIES == 2) || (SERIES == 'V')
 
 #pragma vector=NMI_VECTOR
 void interrupt nmi_isr(void)
@@ -102,7 +111,7 @@ void interrupt nmi_isr(void)
 	return;
 }
 
-#elif SERIES == 5
+#elif (SERIES == 5)
 
 #pragma vector=SYSNMI_VECTOR
 void interrupt sys_nmi_isr(void)

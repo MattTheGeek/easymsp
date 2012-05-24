@@ -110,25 +110,26 @@
 /* ============ */
 
 /* Set function level compile options */
-#pragma FUNC_NO_GLOBAL_ASG (setHigh);
-#pragma FUNCTION_OPTIONS (setHigh, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (setLow, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (pinToggle, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (pinMode, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (readPin, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (portWrite, "--opt_level=4 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (portWriteDir, "--opt_level=4 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (portRead, "--opt_level=4 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (setPullUp, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (setPullDown, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=3 --opt_for_speed=5" );
-#if SERIES == 5
-#pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=3 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=5" );
-#pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=5" );
+#if (SERIES == 2) || (SERIES == 'V')
+#	pragma FUNC_NO_GLOBAL_ASG (setHigh);
+#	pragma FUNCTION_OPTIONS (setHigh, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (setLow, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (pinToggle, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (pinMode, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (readPin, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (portWrite, "--opt_level=4 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (portWriteDir, "--opt_level=4 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (portRead, "--opt_level=4 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (setPullUp, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (setPullDown, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=3 --opt_for_speed=5" );
+#elif (SERIES == 5)
+#	pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=3 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=5" );
+#	pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=5" );
 #endif
 
 /* ============ */
@@ -155,13 +156,11 @@ inline void setPullUp(unsigned short int);
 inline void setPullDown(unsigned short int);
 inline void setPullOff(unsigned short int);
 
-#if SERIES == 5
-
-inline void setDriveStrength(unsigned short int, unsigned short int);
-inline void portWriteWord(const unsigned short int, unsigned short int);
-inline void portWriteDirWord(const unsigned short int, unsigned short int);
-inline unsigned short int portReadWord(const unsigned short int);
-
+#if (SERIES == 5)
+	inline void setDriveStrength(unsigned short int, unsigned short int);
+	inline void portWriteWord(const unsigned short int, unsigned short int);
+	inline void portWriteDirWord(const unsigned short int, unsigned short int);
+	inline unsigned short int portReadWord(const unsigned short int);
 #endif
 
 inline void attachInterrupt(unsigned short int, unsigned short int, void(*)(void));
@@ -174,7 +173,7 @@ inline void removeInterrupt(unsigned short int);
 
 /* #pragma FUNC_EXT_CALLED (port2_isr); */
 #pragma INTERRUPT (port2_isr);
-
+	
 interrupt void port1_isr(void);
 interrupt void port2_isr(void);
 
@@ -186,10 +185,12 @@ interrupt void port2_isr(void);
  * As always, they must be void and return nothing. The shorter the function, the better.
  */
 
-void (*Port1FunctionVector[8])(void) =
-{	NULL};
-
-void (*Port2FunctionVector[8])(void) =
-{	NULL};
+#if (PREINIT_VECTORS == YES)
+	void (*Port1FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+	void (*Port2FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+#else
+	void (*Port1FunctionVector[8])(void);
+	void (*Port2FunctionVector[8])(void);
+#endif /* PREINIT_VECTORS */
 
 #endif /* IO_H */
