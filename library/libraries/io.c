@@ -59,12 +59,12 @@
 #ifdef IO_H
 
 /* Functions for all series */
-#if SERIES == 2 || SERIES == 5
+#if defined (SERIES)
 
 inline void portInit(void)
 {
 
-#	if SERIES == 2
+#	if (SERIES == 2) || (SERIES == 'V')
 	
 #	ifdef HASPORT1
 	P1DIR = 0xFF;
@@ -90,7 +90,7 @@ inline void portInit(void)
 	P4OUT = 0x00;
 #	endif
 
-#elif SERIES == 5
+#elif (SERIES == 5) || (SERIES == 6)
 
 #	ifdef HASPORTA
 	PADIR = 0xFFFF;
@@ -493,8 +493,8 @@ inline void digitalWrite(unsigned short int pin, unsigned short int state)
 
 #endif /* End All device block */
 
-/* Functions for 2 Series Devices */
-#if SERIES == 2
+/* Functions for F2 and G2 Series Devices */
+#if (SERIES == 2) || (SERIES == 'V')
 
 inline void setHigh(unsigned short int pin)
 {
@@ -506,7 +506,7 @@ inline void setHigh(unsigned short int pin)
 		/* We need to generate a bitmask for P1OUT, we do this by shifting 0x01 by pin. This produces a bitmask that for the desired bit and pin. */
 
 		P1OUT |= (1 << pin); /* OR the generated bit mask to PxOUT to set the bit and make the pin high */
-		_never_executed();
+		
 	}
 
 #endif /* HASPORT1 */
@@ -520,7 +520,7 @@ inline void setHigh(unsigned short int pin)
 	if (pin <= 7)
 	{
 		P2OUT |= (1 << pin);
-		_never_executed();
+		
 	}
 
 #endif /* HASPORT2 */
@@ -532,7 +532,7 @@ inline void setHigh(unsigned short int pin)
 	if (pin <= 7)
 	{
 		P3OUT |= (1 << pin);
-		_never_executed();
+		
 	}
 
 #endif /* HASPORT3 */
@@ -548,7 +548,7 @@ inline void setHigh(unsigned short int pin)
 
 #endif /* HASPORT4 */
 	
-	_never_executed();
+	return;
 }
 
 inline void setLow(unsigned short int pin)
@@ -1154,8 +1154,8 @@ interrupt void port2_isr(void)
 
 #endif /* End 2 series function block */
 
-/* Begin 5 Series functions */
-#if SERIES == 5
+/* Begin F5/F6 Series functions */
+#if (SERIES == 5) || (SERIES == 6)
 
 inline void setHigh(unsigned short int pin)
 {
@@ -1732,7 +1732,7 @@ inline bool readPin(unsigned short int pin)
 inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 {
 
-#if SERIES == 5
+#if (SERIES == 5) || (SERIES == 6)
 
 	if (level > 1)
 	{
@@ -2154,7 +2154,7 @@ inline void setPullOff(unsigned short int pin)
 inline void portWriteWord(const unsigned short int port, unsigned short int data)
 {
 
-#if SERIES == 5
+#if (SERIES == 5) || (SERIES == 6)
 
 	switch (port)
 	{
@@ -2228,7 +2228,7 @@ inline void portWriteWord(const unsigned short int port, unsigned short int data
 inline unsigned short int portReadWord(const unsigned short int port)
 {
 
-#if SERIES == 5
+#if (SERIES == 5) || (SERIES == 6)
 
 	switch (port)
 	{
@@ -2289,7 +2289,7 @@ inline unsigned short int portReadWord(const unsigned short int port)
 
 #else
 
-#	warning "EasyMSP: portReadWord() is only compatible with 5 Series devices. Unexpected results may occur."
+#	warning "EasyMSP: portReadWord() is only compatible with the F5 and F6 Series devices. Unexpected results may occur."
 	return (0);
 
 #endif
@@ -2299,7 +2299,7 @@ inline unsigned short int portReadWord(const unsigned short int port)
 inline void portWriteDirWord(const unsigned short int port, unsigned short int data)
 {
 
-#if SERIES == 5
+#if (SERIES == 5) || (SERIES == 6)
 
 	switch (port)
 	{

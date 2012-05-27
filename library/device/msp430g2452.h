@@ -11,7 +11,7 @@
 #include <msp430.h>
 #endif
 
-#define SERIES 2
+#define SERIES 'V'
 
 #define SUPPORTEDDEVICE
 

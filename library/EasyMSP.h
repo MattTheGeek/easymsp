@@ -96,13 +96,13 @@ extern inline void _boardInit(void);
 #	endif
 #endif
 
-#if (SERIES == 2)
+#if (SERIES == 2) || (SERIES == 'V')
 #		pragma INTERRUPT (nmi_isr);
 #		pragma FUNC_EXT_CALLED (nmi_isr);
 
 void interrupt nmi_isr(void);
 
-#elif (SERIES == 5)
+#elif (SERIES == 5) || (SERIES == 6)
 #		pragma INTERRUPT (user_nmi_isr);
 #		pragma INTERRUPT (sys_nmi_isr);
 #		pragma FUNC_EXT_CALLED (user_nmi_isr);

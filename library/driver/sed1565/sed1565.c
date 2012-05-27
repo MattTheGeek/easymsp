@@ -1,70 +1,135 @@
+static short int (*pins)[7];
 
-static unsigned char pins = {0, 9, 13, 11, 10, 8, 12};
-
-void lcdInit(unsigned char* setup)
+static const unsigned char lcdInitCommands[11] =
 {
-	//pins = setup;
-	
-	pinMode(*pins[LCD_ON], OUTPUT);
-	pinMode(*pins[LCD_BL], OUTPUT);
-	
-	high(*pins[LCD_ON]);
-	high(*pins[LCD_BL]);
-	
-	_delay_cycles(1600000);
-	
-	write(0xA7, LCD_COMMAND);
-	write(0xA3, LCD_COMMAND);
-	write(0xA1, LCD_COMMAND);
-	write(0x0C, LCD_COMMAND);
-	write( (0x20 | 2), LCD_COMMAND);
-	writE(0x81, LCD_COMMAND);
-	write(0x2E, LCD_COMMAND);
-	write(0x2F, LCD_COMMAND);
-	write(0x40, LCD_COMMAND);
-	write(0xAF, LCD_COMMAND);
-	
-	write(0xA5, LCD_COMMAND);
-	_delay_cycles(2000000);
-	write(0xA4, LCD_COMMAND);
+	0xA7,
+	0xA3,
+	0xA1,
+	0x0C,
+	(0x20 | 2),
+	0x81,
+	0x2E,
+	0x2F,
+	0x40,
+	0xAF,
+	0xA5,
+};
+
+void lcdInit(const unsigned short int* setup)
+{
+	register volatile unsigned short int count = 0;
+
+	pins = setup;
+
+	do
+	{
+		pinMode( (*pins)[count], OUTPUT);
+		count++;
+	}
+	while (count != 7);
+
+	/* The above do while loop replaces the below code.
+	 *
+	 *	pinMode(*pins[sedPins.CS], OUTPUT);
+	 *	pinMode(*pins[sedPins.DC], OUTPUT);
+	 *	pinMode(*pins[sedPins.SDAT], OUTPUT);
+	 *	pinMode(*pins[sedPins.SCLK], OUTPUT);
+	 *	pinMode(*pins[sedPins.RST], OUTPUT);
+	 *	pinMode(*pins[sedPins.PWR], OUTPUT);
+	 *	pinMode(*pins[sedPins.BL], OUTPUT);
+	 */
+
+	setHigh( (*pins)[_PWR] );
+	setHigh( (*pins)[_BL] );
+
+	delayCycles(1600000);
+
+	lcdSetup();
+
+	//write(0xA5, LCD_COMMAND);
+	//_delay_cycles(2000000);
+	//write(0xA4, LCD_COMMAND);
 }
 
-
-static void write(unsigned char data, unsigned short int type)
+static void lcdSetup(void)
 {
-	volatile unsigned short int bit = 8;
+	register volatile unsigned short int count = 0;
 	
-	low (LCD_CS);
-	
-	if (type == LCD_COMMAND)
+	setLow( (*pins)[_RST] );
+	delayCycles(1000);
+	setHigh( (*pins)[_RST] );
+
+	do
 	{
-		low (LCD_DC);
+		write(lcdInitCommands[count], _COMMAND);
+		count++;
+	}
+	while (count != sizeof lcdInitCommands + 1);
+
+
+/*
+		write(0xA7, _COMMAND);
+		write(0xA3, _COMMAND);
+		write(0xA1, _COMMAND);
+		write(0x0C, _COMMAND);
+		write( (0x20 | 2), _COMMAND);
+		writE(0x81, _COMMAND);
+		write(0x2E, _COMMAND);
+		write(0x2F, _COMMAND);
+		write(0x40, _COMMAND);
+		write(0xAF, _COMMAND);
+		*/
+}
+
+extern inline void lcdBackLight(unsigned short int state)
+{
+	if (state == ON)
+	{
+		setLow( (*pins)[_BL] );
+	}
+	else if (state == OFF)
+	{
+		setHigh( (*pins)[_BL] );
 	}
 	else
 	{
-		high (LCD_DC);
+		return;
 	}
-	
-	while (bit != 0)
+}
+
+extern inline void lcdClear(void)
+{
+	lcdSetup();
+}
+
+
+static void write(unsigned char data, const unsigned short int type)
+{
+	if(type == _COMMAND)
 	{
-		if ( ( data & BIT7 ) > 0)
-		{
-			high (LCD_SDATA);
-		}
-		else
-		{
-			low (LCD_SDATA);
-		}
-		
-		high (LCD_SCLK);
-		low(LCD_SCLK);
-		
-		data <<= 1;
-		c--;
+		setLow( (*pins)[_DC] );
 	}
-	
-	high(LCD_CS);
-	
+	else if (type == _DATA)
+	{
+		setHigh( (*pins)[_DC]) ;
+	}
+	else
+	{
+		return;
+	}
+
+	setLow( (*pins)[_CS] );
+
+	shiftOut( (*pins)[_SDAT], (*pins)[_SCLK], data);
+
+	setHigh( (*pins)[_CS] );
+
 	return;
 }
+
+extern inline void lcdCommand(unsigned char data)
+{
+	write(data, _COMMAND);
+}
+
 

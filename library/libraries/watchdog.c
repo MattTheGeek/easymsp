@@ -23,9 +23,9 @@ extern inline void stopWatchdog(void)
 extern inline void holdWatchdog(void)
 {
 
-#if SERIES == 2
+#if (SERIES == 2) || (SERIES == 'V')
 	WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTHOLD);
-#elif SERIES == 5
+#elif (SERIES == 5) || (SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L | WDTHOLD);
 #endif
 
@@ -34,9 +34,9 @@ extern inline void holdWatchdog(void)
 extern inline void clearWatchdog(void)
 {
 
-#if SERIES == 2
+#if (SERIES == 2) || (SERIES == 'V')
 	WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTCNTCL);
-#elif SERIES == 5
+#elif (SERIES == 5) || (SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L | WDTCNTCL);
 #endif
 
@@ -45,9 +45,9 @@ extern inline void clearWatchdog(void)
 extern inline void resumeWatchdog(void)
 {
 
-#if SERIES == 2
+#if (SERIES == 2) || (SERIES == 'V')
 	WDTCTL = WDTPW + ((unsigned char)WDTCTL & ~WDTHOLD);
-#elif SERIES == 5
+#elif (SERIES == 5) || (SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L & ~WDTHOLD);
 #endif
 
@@ -64,7 +64,7 @@ extern void watchdogStart(unsigned short int source, unsigned short int interval
 
 	WDTCTL = WDTPW + (WDTHOLD | WDTCNTCL);
 
-#if SERIES == 2
+#if (SERIES == 2) || (SERIES == 'V')
 
 	switch (source)
 	{
@@ -96,7 +96,7 @@ extern void watchdogStart(unsigned short int source, unsigned short int interval
 			_never_executed();
 	}
 	
-#elif SERIES == 5
+#elif (SERIES == 5) || (SERIES == 6)
 
 	switch (source)
 	{
@@ -165,7 +165,7 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 
 	WDTCTL = WDTPW + (WDTHOLD | WDTCNTCL);
 
-#if SERIES == 2
+#if (SERIES == 2) || (SERIES == 'V')
 
 	switch (source)
 	{
@@ -197,7 +197,7 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 			_never_executed();
 	}
 	
-#elif SERIES == 5
+#elif (SERIES == 5) || (SERIES == 6)
 
 	switch (source)
 	{
@@ -257,10 +257,10 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 
 	WatchdogFunctionVector = function;
 
-#if SERIES == 2
+#if (SERIES == 2) || (SERIES == 'V')
 	IFG1 &= ~WDTIFG;
 	IE1 |= WDTIE;
-#elif SERIES == 5
+#elif (SERIES == 5) || (SERIES == 6)
 	SFRIFG1 &= ~WDTIFG;
 	SFRIE1 |= WDTIE;
 #endif

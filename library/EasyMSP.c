@@ -111,7 +111,7 @@ void interrupt nmi_isr(void)
 	return;
 }
 
-#elif (SERIES == 5)
+#elif (SERIES == 5) || (SERIES == 6)
 
 #pragma vector=SYSNMI_VECTOR
 void interrupt sys_nmi_isr(void)

@@ -125,7 +125,9 @@
 #	pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=3 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=3 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=3 --opt_for_speed=5" );
-#elif (SERIES == 5)
+#endif
+
+#if (SERIES == 5) || (SERIES == 6)
 #	pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=3 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=5" );
@@ -156,7 +158,7 @@ inline void setPullUp(unsigned short int);
 inline void setPullDown(unsigned short int);
 inline void setPullOff(unsigned short int);
 
-#if (SERIES == 5)
+#if (SERIES == 5) || (SERIES == 6)
 	inline void setDriveStrength(unsigned short int, unsigned short int);
 	inline void portWriteWord(const unsigned short int, unsigned short int);
 	inline void portWriteDirWord(const unsigned short int, unsigned short int);

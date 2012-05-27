@@ -75,3 +75,5 @@
 */
 
 #		define PREINIT_VECTORS NO
+
+#		define SOFTWARE_DELAY NO
