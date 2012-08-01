@@ -24,7 +24,7 @@
 		With FASTIO turned off, EasyMSP will take care of setting direction and other
 		option bits as required, and pinMode() would be omitted.
 */	
-#		define FASTIO YES 
+#		define _EM_FASTIO YES 
 /*
 		YES - Turn on message output
 		NO - Turn off message output
@@ -40,7 +40,7 @@
      | _|  / _ \ \__ \ \ V / | |\/| |\__ \|  _/
      |___|/_/ \_\|___/  |_|  |_|  |_||___/|_|  
 */
-#		define ASCII_LOGO YES
+#		define _EM_ASCII_LOGO YES
 /*
 		YES - Turn on logo
 		NO - Turn off logo
@@ -52,7 +52,7 @@
 	VERBOSE
 		Show EasyMSP messages.
 */
-#		define VERBOSE YES
+#		define _EM_VERBOSE YES
 /*
 		YES - Turn on message output
 		NO - Turn off message output
@@ -67,13 +67,13 @@
  		e.g.
 			word could be used instead of unsigned short int, byte instead of unsigned char, and boolean instead of bool.
 */
-#		define EASYTYPES YES
+#		define _EM_EASYTYPES YES
 /*
 		YES - Enable friendly type names.
 		NO - Disable friendly type names.
 	-----------------------------------------
 */
 
-#		define PREINIT_VECTORS NO
+#		define _EM_PREINIT_VECTORS NO
 
-#		define SOFTWARE_DELAY NO
+#		define _EM_SOFTWARE_DELAY NO

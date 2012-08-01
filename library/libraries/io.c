@@ -56,445 +56,7 @@
  *
  */
 
-#ifdef IO_H
-
-/* Functions for all series */
-#if defined (SERIES)
-
-inline void portInit(void)
-{
-
-#	if (SERIES == 2) || (SERIES == 'V')
-	
-#	ifdef HASPORT1
-	P1DIR = 0xFF;
-	P1OUT = 0x00;
-	P1IE = 0x00;
-	P1IFG = 0x00;
-#	endif
-
-#	ifdef HASPORT2
-	P2DIR = 0xFF;
-	P2OUT = 0x00;
-	P2IE = 0x00;
-	P2IFG = 0x00;
-#	endif
-
-#	ifdef HASPORT3
-	P3DIR = 0xFF;
-	P3OUT = 0x00;
-#	endif 
-
-#	ifdef HASPORT4
-	P4DIR = 0xFF;
-	P4OUT = 0x00;
-#	endif
-
-#elif (SERIES == 5) || (SERIES == 6)
-
-#	ifdef HASPORTA
-	PADIR = 0xFFFF;
-	PAOUT = 0x0000;
-	PAIE = 0x0000;
-	PAIFG = 0x0000;
-
-#	endif
-
-#	ifdef HASPORTB
-	PBDIR = 0xFFFF;
-	PBOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTC
-	PCDIR = 0xFFFF;
-	PCOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTD
-	PDDIR = 0xFFFF;
-	PDOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTE
-	PEDIR = 0xFFFF;
-	PEOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTF
-	PFDIR = 0xFFFF;
-	PEOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTJ
-	PJDIR = 0xFFFF;
-	PJOUT = 0x0000;
-#	endif
-#endif
-
-}
-
-void shiftConfig(unsigned short int order, unsigned short int pol)
-{
-	if (order == LSBFIRST)
-	{
-		shiftConfigBits |= BIT0;
-	}
-	else
-	{
-		shiftConfigBits &= ~BIT0;
-	}
-
-	if (pol)
-	{
-		shiftConfigBits |= BIT1;
-	}
-	else
-	{
-		shiftConfigBits &= ~BIT1;
-	}
-}
-
-void shiftOut(unsigned short int sdat, unsigned short int sclk, unsigned char data)
-{
-	auto unsigned short int bits = 8;
-
-	do
-	{
-		if ( (shiftConfigBits & BIT0) > 0)
-		{
-			if ( (data & 0x01) > 0)
-			{
-				setHigh(sdat);
-			}
-			else
-			{
-				setLow(sdat);
-			}
-
-			data >>= 1;
-		}
-		else
-		{
-			if ( (data & 0x80) > 0)
-
-			{
-				setHigh(sdat);
-			}
-			else
-			{
-				setLow(sdat);
-			}
-
-			data <<= 1;
-		}
-
-		if ( (shiftConfigBits & BIT1) > 0)
-		{
-			setLow(sclk);
-		}
-		else
-		{
-			setHigh(sclk);
-		}
-
-		bits--;
-
-		if ( (shiftConfigBits & BIT1) > 0)
-		{
-			setHigh(sclk);
-		}
-		else
-		{
-			setLow(sclk);
-		}
-	}
-	while (bits > 0);
-
-	return;
-}
-
-inline void portWrite(const unsigned short int port, unsigned char data)
-{
-	switch (port)
-	{
-
-#	ifdef HASPORT1
-
-		case PORT1:
-			P1OUT = data;
-			break;
-
-#	endif /* HASPORT1 */
-
-#	ifdef HASPORT2
-
-		case PORT2:
-			P2OUT = data;
-			break;
-
-#	endif /* HASPORT2 */
-
-#	ifdef HASPORT3
-
-		case PORT3:
-			P3OUT = data;
-			break;
-
-#	endif /* HASPORT3 */
-
-#	ifdef HASPORT4
-
-		case PORT4:
-			P4OUT = data;
-			break;
-
-#	endif /* HASPORT4 */
-
-#	ifdef HASPORT5
-
-		case PORT5:
-			P5OUT = data;
-			break;
-
-#	endif /* HASPORT5 */
-
-#	ifdef HASPORT6
-
-		case PORT6:
-			P6OUT = data;
-			break;
-
-#	endif /* HASPORT6 */
-
-#	ifdef HASPORT7
-
-		case PORT7:
-			P7OUT = data;
-			break;
-
-#	endif /* HASPORT7 */
-
-#	ifdef HASPORT8
-
-		case PORT8:
-			P8OUT = data;
-			break;
-
-#	endif /* HASPORT8 */
-
-#	ifdef HASPORT9
-
-		case PORT9:
-			P9OUT = data;
-			break;
-
-#	endif /* HASPORT9 */
-
-#	ifdef HASPORT10
-
-		case PORT10:
-			P10OUT = data;
-			break;
-
-#	endif /* HASPORT10 */
-
-#	ifdef HASPORT11
-
-		case PORT11:
-			P11OUT = data;
-			break;
-
-#	endif /* HASPORT11 */
-
-		default:
-			_never_executed();
-	}
-}
-
-inline unsigned char portRead(const unsigned short int port)
-{
-	switch (port)
-	{
-
-#	ifdef HASPORT1
-
-		case PORT1:
-			return(P1IN);
-
-#	endif /* HASPORT1 */
-
-#	ifdef HASPORT2
-
-		case PORT2:
-			return(P2IN);
-
-#	endif /* HASPORT2 */
-
-#	ifdef HASPORT3
-
-		case PORT3:
-			return(P3IN);
-
-#	endif /* HASPORT3 */
-
-#	ifdef HASPORT4
-
-		case PORT4:
-			return(P4IN);
-
-#	endif /* HASPORT4 */
-
-#	ifdef HASPORT5
-
-		case PORT5:
-			return(P5IN);
-
-#	endif /* HASPORT5 */
-
-#	ifdef HASPORT6
-
-		case PORT6:
-			return(P6IN);
-
-#	endif /* HASPORT6 */
-
-#	ifdef HASPORT7
-
-		case PORT7:
-			return(P7IN);
-
-#	endif /* HASPORT7 */
-
-#	ifdef HASPORT8
-
-		case PORT8:
-			return(P8IN);
-
-#	endif /* HASPORT8 */
-
-#	ifdef HASPORT9
-
-		case PORT9:
-			return(P9IN);
-
-#	endif /* HASPORT9 */
-
-#	ifdef HASPORT10
-
-		case PORT10:
-			return(P10IN);
-
-#	endif /* HASPORT10 */
-
-#	ifdef HASPORT11
-
-		case PORT11:
-			return(P11IN);
-
-#	endif /* HASPORT11 */
-
-		default:
-			return (0);
-
-	}
-}
-
-inline void portWriteDir(const unsigned short int port, unsigned char data)
-{
-	switch (port)
-	{
-
-#	ifdef HASPORT1
-		case PORT1:
-			P1DIR = data;
-			break;
-#	endif /* HASPORT1 */
-
-#	ifdef HASPORT2
-		case PORT2:
-			P2DIR = data;
-			break;
-#	endif /* HASPORT2 */
-
-#	ifdef HASPORT3
-		case PORT3:
-			P3DIR = data;
-			break;
-#	endif /* HASPORT3 */
-
-#	ifdef HASPORT4
-		case PORT4:
-			P4DIR = data;
-			break;
-#	endif /* HASPORT4 */
-
-#	ifdef HASPORT5
-		case PORT5:
-			P5DIR = data;
-			break;
-#	endif /* HASPORT5 */
-
-#	ifdef HASPORT6
-		case PORT6:
-			P6DIR = data;
-			break;
-#	endif /* HASPORT6 */
-
-#	ifdef HASPORT7
-		case PORT7:
-			P7DIR = data;
-			break;
-#	endif /* HASPORT7 */
-
-#	ifdef HASPORT8
-		case PORT8:
-			P8DIR = data;
-			break;
-#	endif /* HASPORT8 */
-
-#	ifdef HASPORT9
-		case PORT9:
-			P9DIR = data;
-			break;
-#	endif /* HASPORT9 */
-
-#	ifdef HASPORT10
-		case PORT10:
-			P10DIR = data;
-			break;
-#	endif /* HASPORT10 */
-
-#	ifdef HASPORT11
-		case PORT11:
-			P11DIR = data;
-			break;
-#	endif /* HASPORT11 */
-
-		default:
-			_never_executed();
-	}
-}
-
-inline void digitalWrite(unsigned short int pin, unsigned short int state)
-{
-	if (state == HIGH)
-	{
-		setHigh(pin);
-	}
-	else if (state == LOW)
-	{
-		setLow(pin);
-	}
-	else
-	{
-		return;
-	}
-}
-
-#endif /* End All device block */
-
-/* Functions for F2 and G2 Series Devices */
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 
 inline void setHigh(unsigned short int pin)
 {
@@ -1152,10 +714,7 @@ interrupt void port2_isr(void)
 	return; //Exit ISR
 }
 
-#endif /* End 2 series function block */
-
-/* Begin F5/F6 Series functions */
-#if (SERIES == 5) || (SERIES == 6)
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 inline void setHigh(unsigned short int pin)
 {
@@ -1732,7 +1291,7 @@ inline bool readPin(unsigned short int pin)
 inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 {
 
-#if (SERIES == 5) || (SERIES == 6)
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 	if (level > 1)
 	{
@@ -2154,7 +1713,7 @@ inline void setPullOff(unsigned short int pin)
 inline void portWriteWord(const unsigned short int port, unsigned short int data)
 {
 
-#if (SERIES == 5) || (SERIES == 6)
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 	switch (port)
 	{
@@ -2228,7 +1787,7 @@ inline void portWriteWord(const unsigned short int port, unsigned short int data
 inline unsigned short int portReadWord(const unsigned short int port)
 {
 
-#if (SERIES == 5) || (SERIES == 6)
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 	switch (port)
 	{
@@ -2299,7 +1858,7 @@ inline unsigned short int portReadWord(const unsigned short int port)
 inline void portWriteDirWord(const unsigned short int port, unsigned short int data)
 {
 
-#if (SERIES == 5) || (SERIES == 6)
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 	switch (port)
 	{
@@ -2542,8 +2101,438 @@ interrupt void port2_isr(void)
 
 }
 
+#endif 
+
+#ifdef _EM_SERIES
+
+inline void portInit(void)
+{
+
+#	if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
+	
+#	ifdef HASPORT1
+	P1DIR = 0xFF;
+	P1OUT = 0x00;
+	P1IE = 0x00;
+	P1IFG = 0x00;
+#	endif
+
+#	ifdef HASPORT2
+	P2DIR = 0xFF;
+	P2OUT = 0x00;
+	P2IE = 0x00;
+	P2IFG = 0x00;
+#	endif
+
+#	ifdef HASPORT3
+	P3DIR = 0xFF;
+	P3OUT = 0x00;
+#	endif 
+
+#	ifdef HASPORT4
+	P4DIR = 0xFF;
+	P4OUT = 0x00;
+#	endif
+
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
+
+#	ifdef HASPORTA
+	PADIR = 0xFFFF;
+	PAOUT = 0x0000;
+	PAIE = 0x0000;
+	PAIFG = 0x0000;
+
+#	endif
+
+#	ifdef HASPORTB
+	PBDIR = 0xFFFF;
+	PBOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTC
+	PCDIR = 0xFFFF;
+	PCOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTD
+	PDDIR = 0xFFFF;
+	PDOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTE
+	PEDIR = 0xFFFF;
+	PEOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTF
+	PFDIR = 0xFFFF;
+	PEOUT = 0x0000;
+#	endif
+
+#	ifdef HASPORTJ
+	PJDIR = 0xFFFF;
+	PJOUT = 0x0000;
+#	endif
 #endif
 
-#else /* IO_H not defined. */
-#	error "Fatal error. Source file (io.c) included before header file (io.h)"
-#endif /* IO_H */
+}
+
+void shiftConfig(unsigned short int order, unsigned short int pol)
+{
+	if (order == LSBFIRST)
+	{
+		shiftConfigBits |= BIT0;
+	}
+	else
+	{
+		shiftConfigBits &= ~BIT0;
+	}
+
+	if (pol)
+	{
+		shiftConfigBits |= BIT1;
+	}
+	else
+	{
+		shiftConfigBits &= ~BIT1;
+	}
+}
+
+void shiftOut(unsigned short int sdat, unsigned short int sclk, unsigned char data)
+{
+	auto unsigned short int bits = 8;
+
+	do
+	{
+		if ( (shiftConfigBits & BIT0) > 0)
+		{
+			if ( (data & 0x01) > 0)
+			{
+				setHigh(sdat);
+			}
+			else
+			{
+				setLow(sdat);
+			}
+
+			data >>= 1;
+		}
+		else
+		{
+			if ( (data & 0x80) > 0)
+
+			{
+				setHigh(sdat);
+			}
+			else
+			{
+				setLow(sdat);
+			}
+
+			data <<= 1;
+		}
+
+		if ( (shiftConfigBits & BIT1) > 0)
+		{
+			setLow(sclk);
+		}
+		else
+		{
+			setHigh(sclk);
+		}
+
+		bits--;
+
+		if ( (shiftConfigBits & BIT1) > 0)
+		{
+			setHigh(sclk);
+		}
+		else
+		{
+			setLow(sclk);
+		}
+	}
+	while (bits > 0);
+
+	return;
+}
+
+inline void portWrite(const unsigned short int port, unsigned char data)
+{
+	switch (port)
+	{
+
+#	ifdef HASPORT1
+
+		case PORT1:
+			P1OUT = data;
+			break;
+
+#	endif /* HASPORT1 */
+
+#	ifdef HASPORT2
+
+		case PORT2:
+			P2OUT = data;
+			break;
+
+#	endif /* HASPORT2 */
+
+#	ifdef HASPORT3
+
+		case PORT3:
+			P3OUT = data;
+			break;
+
+#	endif /* HASPORT3 */
+
+#	ifdef HASPORT4
+
+		case PORT4:
+			P4OUT = data;
+			break;
+
+#	endif /* HASPORT4 */
+
+#	ifdef HASPORT5
+
+		case PORT5:
+			P5OUT = data;
+			break;
+
+#	endif /* HASPORT5 */
+
+#	ifdef HASPORT6
+
+		case PORT6:
+			P6OUT = data;
+			break;
+
+#	endif /* HASPORT6 */
+
+#	ifdef HASPORT7
+
+		case PORT7:
+			P7OUT = data;
+			break;
+
+#	endif /* HASPORT7 */
+
+#	ifdef HASPORT8
+
+		case PORT8:
+			P8OUT = data;
+			break;
+
+#	endif /* HASPORT8 */
+
+#	ifdef HASPORT9
+
+		case PORT9:
+			P9OUT = data;
+			break;
+
+#	endif /* HASPORT9 */
+
+#	ifdef HASPORT10
+
+		case PORT10:
+			P10OUT = data;
+			break;
+
+#	endif /* HASPORT10 */
+
+#	ifdef HASPORT11
+
+		case PORT11:
+			P11OUT = data;
+			break;
+
+#	endif /* HASPORT11 */
+
+		default:
+			_never_executed();
+	}
+}
+
+inline unsigned char portRead(const unsigned short int port)
+{
+	switch (port)
+	{
+
+#	ifdef HASPORT1
+
+		case PORT1:
+			return(P1IN);
+
+#	endif /* HASPORT1 */
+
+#	ifdef HASPORT2
+
+		case PORT2:
+			return(P2IN);
+
+#	endif /* HASPORT2 */
+
+#	ifdef HASPORT3
+
+		case PORT3:
+			return(P3IN);
+
+#	endif /* HASPORT3 */
+
+#	ifdef HASPORT4
+
+		case PORT4:
+			return(P4IN);
+
+#	endif /* HASPORT4 */
+
+#	ifdef HASPORT5
+
+		case PORT5:
+			return(P5IN);
+
+#	endif /* HASPORT5 */
+
+#	ifdef HASPORT6
+
+		case PORT6:
+			return(P6IN);
+
+#	endif /* HASPORT6 */
+
+#	ifdef HASPORT7
+
+		case PORT7:
+			return(P7IN);
+
+#	endif /* HASPORT7 */
+
+#	ifdef HASPORT8
+
+		case PORT8:
+			return(P8IN);
+
+#	endif /* HASPORT8 */
+
+#	ifdef HASPORT9
+
+		case PORT9:
+			return(P9IN);
+
+#	endif /* HASPORT9 */
+
+#	ifdef HASPORT10
+
+		case PORT10:
+			return(P10IN);
+
+#	endif /* HASPORT10 */
+
+#	ifdef HASPORT11
+
+		case PORT11:
+			return(P11IN);
+
+#	endif /* HASPORT11 */
+
+		default:
+			return (0);
+
+	}
+}
+
+inline void portWriteDir(const unsigned short int port, unsigned char data)
+{
+	switch (port)
+	{
+
+#	ifdef HASPORT1
+		case PORT1:
+			P1DIR = data;
+			return;
+#	endif /* HASPORT1 */
+
+#	ifdef HASPORT2
+		case PORT2:
+			P2DIR = data;
+			return;
+#	endif /* HASPORT2 */
+
+#	ifdef HASPORT3
+		case PORT3:
+			P3DIR = data;
+			return;
+#	endif /* HASPORT3 */
+
+#	ifdef HASPORT4
+		case PORT4:
+			P4DIR = data;
+			return;
+#	endif /* HASPORT4 */
+
+#	ifdef HASPORT5
+		case PORT5:
+			P5DIR = data;
+			return;
+#	endif /* HASPORT5 */
+
+#	ifdef HASPORT6
+		case PORT6:
+			P6DIR = data;
+			return;
+#	endif /* HASPORT6 */
+
+#	ifdef HASPORT7
+		case PORT7:
+			P7DIR = data;
+			return;
+#	endif /* HASPORT7 */
+
+#	ifdef HASPORT8
+		case PORT8:
+			P8DIR = data;
+			return;
+#	endif /* HASPORT8 */
+
+#	ifdef HASPORT9
+		case PORT9:
+			P9DIR = data;
+			return;
+#	endif /* HASPORT9 */
+
+#	ifdef HASPORT10
+		case PORT10:
+			P10DIR = data;
+			return;
+#	endif /* HASPORT10 */
+
+#	ifdef HASPORT11
+		case PORT11:
+			P11DIR = data;
+			return;
+#	endif /* HASPORT11 */
+
+		default:
+			return;
+	}
+}
+
+inline void digitalWrite(unsigned short int pin, unsigned short int state)
+{
+	if (state == HIGH)
+	{
+		setHigh(pin);
+	}
+	else if (state == LOW)
+	{
+		setLow(pin);
+	}
+	else
+	{
+		return;
+	}
+}
+
+#endif /* End All device block */

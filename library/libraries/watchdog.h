@@ -13,7 +13,7 @@
 #ifndef WATCHDOG_H
 #define WATCHDOG_H
 
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 #	ifndef WDTIS_1
 #		define WDTIS_1 BIT0
 #	endif
@@ -26,6 +26,7 @@
 #endif
  
 void (*WatchdogFunctionVector)(void) = NULL;
+extern inline void disableWatchdog(void);
 extern inline void stopWatchdog(void);
 extern inline void holdWatchdog(void);
 extern inline void clearWatchdog(void);

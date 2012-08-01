@@ -3,19 +3,17 @@ inline void analogOff(void)
 	
 }
 
-#if SERIES == 2
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 
 unsigned short int analogRead(unsigned short int pin)
 {
-	/* todo: Rewrite ADC10 code */
 	
 	if (pin > 7) 
 	{
-		/* Return if pin number is out of range. */
-		return (NULL);
+		return (NULL); /* Return if pin number is out of range. */
 	}
 
-	ADC10CTL1 &= ~INCH_15; /* Clear the current analog channel selection */
+	ADC10CTL1 &= ~INCH_15; /* We can't clear the whole ADC10CTL1 register, so just NAND bits 11 to 8 */
 	ADC10CTL1 |= (pin << 12);	/*  Set the analog channel to pin. By shifting pin by 12 bits*/
 	ADC10AE0 = (1 << pin); /* Set the analog channel enable */
 	
@@ -23,7 +21,8 @@ unsigned short int analogRead(unsigned short int pin)
 
 }
 
-#elif SERIES == 5
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
+/* The F5/F6 family MSP430s have a different ADC10 features */
 
 unsigned short int analogRead(unsigned short int pin)
 {

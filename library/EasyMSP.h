@@ -40,80 +40,46 @@
 #	warning "This compiler may not be compatible with EasyMSP. Exercise caution, as unexpected, surprising, and or dangerous code may be generated."
 #endif
 
-#include "define.h"
-
-#include "config.h"
-
-#if (ASCII_LOGO == YES) && (VERBOSE == YES)
-/* EasyMSP ASCII art logo */
-asm("   .mmsg   \" ___    _    ___ __   __ __  __  ___  ___  \"");
-asm("   .mmsg   \"| __|  /_\\  / __|\\ \\ / /|  \\/  |/ __|| _ \\ \"");
-asm("   .mmsg   \"| _|  / _ \\ \\__ \\ \\ V / | |\\/| |\\__ \\|  _/ \"");
-asm("	.mmsg	\"|___|/_/ \\_\\|___/  |_|  |_|  |_||___/|_|   \"");
-#else
-asm("	.mmsg	\"EasyMSP\"");
-#endif
-
-#if (VERBOSE == YES)
-asm("	.mmsg	\"Copyright (c) 2010 - 2012 Matthew L. Burmeister. All Rights Reserved\"");
-asm("	.mmsg	\"EasyMSP is compiling...\"");
-#endif
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-
-#if (EASYTYPES == YES)
-typedef char byte;
-typedef unsigned short int word;
-typedef bool boolean;
-typedef char BYTE;
-typedef unsigned short int WORD;
-typedef bool BOOLEAN;
-#endif
-
+#include "define.h"
+#include "config.h"
 #include "board.h"
 #include "device.h" /* Find out what device to include */
 #include "stdinclude.h"
 
-#ifndef NOSETUP
-#	pragma FUNC_NEVER_RETURNS ( main );
+#if (_EM_BITMASK_LOOKUP == YES)
+#	include "core/lookup.c"
+#endif /* _EM_BITMASK_LOOKUP */
 
-#	ifndef NOINIT
-extern void init(void);
-#	endif
+#if (_EM_EASYTYPES == YES)
+#	include "core/easytypes.c"
+#endif /* _EM_EASYTYPES */
+	
+#include "core/splash.c" /* Include EasyMSP console splash */
 
-#	ifndef NOLOOP
-extern void loop(void);
-#	endif
-
-#	ifdef ISBOARD
-extern inline void _boardInit(void);
-#	endif
+/* Decide if we need to declare function prototypes for runtime functions */
+#if !(defined NOSETUP) /*Is NOSETUP not declared? */
+	static void _init(void);	
+#	ifdef NOINIT
+		asm("	.mmsg	\"EasyMSP Runtime setup is disabled. init() and loop() functions excluded \"");
+#	else
+		extern void init(void);
+#	endif /* NOINIT */
+#	ifdef NOLOOP
+		asm("	.mmsg	\"Excluding init() function	\"");
+#	else
+		extern void loop(void);
+#	endif /* NOLOOP */
 #else
-#	if (VERBOSE == YES)
-		asm("	.mmsg	\"EasyMSP is not doing runtime setup\"");
-#	endif
-#endif
-
-#if (SERIES == 2) || (SERIES == 'V')
-#		pragma INTERRUPT (nmi_isr);
-#		pragma FUNC_EXT_CALLED (nmi_isr);
-
-void interrupt nmi_isr(void);
-
-#elif (SERIES == 5) || (SERIES == 6)
-#		pragma INTERRUPT (user_nmi_isr);
-#		pragma INTERRUPT (sys_nmi_isr);
-#		pragma FUNC_EXT_CALLED (user_nmi_isr);
-#		pragma FUNC_EXT_CALLED (sys_nmi_isr);
-
-void interrupt user_nmi_isr(void);
-void interrupt sys_nmi_isr(void);
-#endif
-
-/*===========================================*/
-
-#include "EasyMSP.c"
+	asm("	.mmsg	\"Excluding loop() and loop logic \"");
+#endif /* NOSETUP */
+				
+#ifdef _EM_IS_BOARD
+	extern inline void _boardInit(void);
+#endif /* _EM_IS_BOARD */
+	
+#include "core/EasyMSP.c"
 
 #endif

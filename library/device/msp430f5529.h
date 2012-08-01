@@ -3,8 +3,8 @@
 	Ver 2
 */
 
-#ifndef __MSP430F5510__
-	#define __MSP430F5510__
+#ifndef __MSP430F5529__
+	#define __MSP430F5529__
 #endif
 
 #ifndef MSP430_H

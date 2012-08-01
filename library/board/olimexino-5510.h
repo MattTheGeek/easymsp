@@ -1,3 +1,4 @@
+
 asm("	.mmsg	\"Using board: OLIMEXINO-5510\"");
 
 #ifndef MSP430F5510
@@ -10,7 +11,7 @@ asm("	.mmsg	\"Using board: OLIMEXINO-5510\"");
 
 #include <msp430.h>
 
-#define ISBOARD
+#define _EM_IS_BOARD
 
 #define LED 83
 #define BUTTON 8

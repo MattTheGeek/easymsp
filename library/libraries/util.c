@@ -25,11 +25,59 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+inline unsigned char getBitMask(unsigned short int bit)
+{
+	if (bit < 8)
+	{
+#if (_EM_BITMASK_LOOKUP == YES)
+		return ( bitmaskLookup[bit] );
+#else
+		return ( (1 << bit) );
+#endif
+	}
+	else
+	{
+		return ( NULL );
+	}
+}
+
+
+inline unsigned short int getWordBitMask(unsigned short int bit)
+{
+#if (_EM_BITMASK_LOOKUP == YES)	/* Is generating bitmasks through a lookup table enabled? */
+
+	if (bit < 8)
+	{
+		return ( bitmaskLookup[bit] );
+	}
+	else if (bit < 16)
+	{
+		return ( ( (bitmaskLoopup[bit]) << 8 ) );
+	}
+	else
+	{
+		return;
+	}
+	
+#else
+	
+	if (bit < 16)
+	{
+		return ( 1 << bit );
+	}
+	else
+	{
+		return;
+	}
+	
+#endif
+}
+
 inline unsigned char makePinMask(unsigned short int pin)
 {
 	if (pin > 88)
 	{
-		return (0x00);
+		return (NULL);
 	}
 	else
 	{

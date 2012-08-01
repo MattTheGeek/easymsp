@@ -26,11 +26,9 @@
  *
  */
  
-#ifndef SERIES
+#if !(defined _EM_SERIES)
 #	error "Device series unknown. io.c requires that the device series is declared in SERIES"
-#endif
-
-#ifndef __EASYMSP__
+#elif !(defined _EM_EASYMSP)
 #	error "io.c requires including the main EasyMSP header file (EasyMSP.h) to operate correctly. Please include EasyMSP.h rather than just incluing this file."
 #endif	
 
@@ -110,7 +108,7 @@
 /* ============ */
 
 /* Set function level compile options */
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 #	pragma FUNC_NO_GLOBAL_ASG (setHigh);
 #	pragma FUNCTION_OPTIONS (setHigh, "--opt_level=3 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (setLow, "--opt_level=3 --opt_for_speed=5" );
@@ -127,7 +125,7 @@
 #	pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=3 --opt_for_speed=5" );
 #endif
 
-#if (SERIES == 5) || (SERIES == 6)
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
 #	pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=3 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=5" );
@@ -158,7 +156,7 @@ inline void setPullUp(unsigned short int);
 inline void setPullDown(unsigned short int);
 inline void setPullOff(unsigned short int);
 
-#if (SERIES == 5) || (SERIES == 6)
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	inline void setDriveStrength(unsigned short int, unsigned short int);
 	inline void portWriteWord(const unsigned short int, unsigned short int);
 	inline void portWriteDirWord(const unsigned short int, unsigned short int);
@@ -187,7 +185,7 @@ interrupt void port2_isr(void);
  * As always, they must be void and return nothing. The shorter the function, the better.
  */
 
-#if (PREINIT_VECTORS == YES)
+#if (_EM_PREINIT_VECTORS == YES)
 	void (*Port1FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 	void (*Port2FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 #else

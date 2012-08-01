@@ -1,142 +1,108 @@
-inline void setMCLK(unsigned short int source, unsigned short int div)
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V') || (defined _EM_HASBCS)
+
+
+extern unsigned short int setMCLK(unsigned short int source, unsigned short int divider)
 {
-	switch (source)
-	{
-		case DCOCLK:
-			BCSCTL2 &= ~SELM_3;
-			break;
-			
-		case VLOCLK:
-			BCSCTL1 &= ~XTS; // low freq mode.
-			BCSCTL3 |= LFXT1S_2; //Set LFXT1S to source the VLO
-			BCSCTL2 |= SELM_3; //Set to VLO Clock
-			break;
-			
-		case CRYSTAL:
-			BCSCTL1 &= ~XTS;
-			BCSCTL3 &= ~LFXT1S_3; //Clear LFXTS.
-			BCSCTL2 |= SELM_3;
-			break;
-			
-		default:
-			_never_executed();
-	}
 	
-	switch (div)
-	{
-		case by_1:
-			BCSCTL2 &= ~DIVM_3;
-			break;
-			
-		case by_2:
-			BCSCTL2 &= ~DIVM_3;
-			BCSCTL2 |= DIVM_1;
-			break;
-			
-		case by_4:
-			BCSCTL2 &= ~DIVM_3;
-			BCSCTL2 |= DIVM_2;
-			break;
-			
-		case by_8:
-			BCSCTL2 &= ~DIVM_3;
-			BCSCTL2 |= DIVM_3;
-			break;
-			
-		default:
-			_never_executed();
-	}
 }
 
-inline void setSMCLK(unsigned short int source, unsigned short int div)
+extern unsigned short int setSMCLK(unsigned short int source, unsigned short int divider)
 {
-	switch (source)
-	{
-		case VLOCLK:
-			BCSCTL3 |= LFXT1S_2;
-			BCSCTL2 |= SELS;
-			break;
-			
-		case DCOCLK:
-			BCSCTL2 &= ~SELS;
-			break;
-			
-		case CRYSTAL:
-			BCSCTL1 &= ~XTS;
-			BCSCTL3 |= LFXT1S_0 | XCAP_3;
-			BCSCTL2 |= SELS;
-			break;
-			
-		default:
-			_never_executed();
-	}
 	
-	switch (div)
-	{
-		case by_1:
-			BCSCTL2 &= ~DIVS_3; //clear divider setting
-			BCSCTL2 |= DIVS_0;
-			break;
-			
-		case by_2:
-			BCSCTL2 &= ~DIVS_3; //clear divider setting
-			BCSCTL2 |= DIVS_1;
-			break;
-			
-		case by_4:
-			BCSCTL2 &= ~DIVS_3; //clear divider setting
-			BCSCTL2 |= DIVS_2;
-			break;
-			
-		case by_8:
-			BCSCTL2 |= DIVS_3;
-			break;
-			
-		default:
-			_never_executed();
-	}
 }
 
-inline void setACLK(unsigned short int source, unsigned short int div)
+extern unsigned short int setACLK(unsigned short int source, unsigned short int divider)
 {
-	switch (source)
-	{
-		default:
-			
-			break;
-			
-		case CRYSTAL:
-			BCSCTL1 &= ~XTS;
-			BCSCTL3 |= LFXT1S_0 | XCAP_3;
-			break;
-			
-		case VLOCLK:
-			BCSCTL3 |= LFXT1S_2;
-			break;
-			
-	}
 	
-	BCSCTL1 &= ~DIVA_3;
-	
-	switch (div)
-	{
-		case by_2:
-			BCSCTL1 |= DIVA_1;
-			break;
-			
-		case by_4:
-			BCSCTL1 |= DIVA_2;
-			break;
-			
-		case by_8:
-			BCSCTL1 |= DIVA_3;
-			break;
-			
-		default:
-		case by_1:
-			_never_executed();
-
-	}
-	
-	return;
 }
+
+extern unsigned short int setDCO(unsigned short int mode)
+{
+	switch (mode)
+	{
+		case OFF:
+			_bic_SR_register(SCG0);
+			break;
+			
+		case ON:
+			_bis_SR_register(SCG0);
+			break;
+			
+		case M1:
+			
+#if (defined CALBC1_1MHZ) && (defined CALDCO_1MHZ) 
+			if ( (CALBC1_1MHZ != 0xFFFF) && (CALDCO_1MHZ != 0xFFFF) )
+			{
+				DCOCTL = NULL;
+
+				BCSCTL1 = CALBC1_1MHZ;
+				DCOCTL = CALDCO_1MHZ;
+			}
+			else
+			{
+				return(MISSING_DCOCAL);
+			}
+#endif
+			break;
+			
+		case M8:
+			
+#if (defined CALBC1_8MHZ) && (defined CALDCO_8MHZ) 
+			if ( (CALBC1_8MHZ != 0xFFFF) && (CALDCO_8MHZ != 0xFFFF) )
+			{
+				DCOCTL = NULL;
+
+				BCSCTL1 = CALBC1_8MHZ;
+				DCOCTL = CALDCO_8MHZ;
+			}
+			else
+			{
+				return(MISSING_DCOCAL);
+			}
+#endif
+			break;
+			
+		case M12:
+			
+#if (defined CALBC1_12MHZ) && (defined CALDCO_12MHZ) 
+			if ( (CALBC1_12MHZ != 0xFFFF) && (CALDCO_12MHZ != 0xFFFF) )
+			{
+				DCOCTL = NULL;
+
+				BCSCTL1 = CALBC1_12MHZ;
+				DCOCTL = CALDCO_12MHZ;
+			}
+			else
+			{
+				return(MISSING_DCOCAL);
+			}
+#endif
+			break;
+			
+		case M16:
+			
+#if (defined CALBC1_16MHZ) && (defined CALDCO_16MHZ) 
+			if ( (CALBC1_16MHZ != 0xFFFF) && (CALDCO_16MHZ != 0xFFFF) )
+			{
+				DCOCTL = NULL;
+
+				BCSCTL1 = CALBC1_16MHZ;
+				DCOCTL = CALDCO_16MHZ;
+			}
+			else
+			{
+				return(MISSING_DCOCAL);
+			}
+#endif
+			break;
+
+		default:
+			return (FAILURE);
+	}
+	
+	return (SUCCESS);
+}
+
+#else
+
+#endif

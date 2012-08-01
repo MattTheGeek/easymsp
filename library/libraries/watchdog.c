@@ -15,6 +15,11 @@
  *
  */
 
+extern inline void disableWatchdog(void)
+{
+	stopWatchdog();
+}
+ 
 extern inline void stopWatchdog(void)
 {
 	WDTCTL = WDTPW + WDTHOLD;

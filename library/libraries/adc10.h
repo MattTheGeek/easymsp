@@ -64,7 +64,7 @@
 //Prototypes
 extern unsigned short int analogRead(unsigned short int); //10Bit analog value
 
-#if SERIES == 5
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 extern unsigned char analogReadByte(unsigned short int); //8Bit analog value
 

@@ -5,12 +5,20 @@
 #	define __EASYMSP__
 #endif
 
-#ifndef EASYMSPVER
-#	define EASYMSPVER 1
+#ifndef _EM_EASYMSP
+#	define _EM_EASYMSP
 #endif
 
-#ifndef EASYMSPVERMINOR
-#	define EASYMSPVERMINOR 0
+#ifndef _EM_EASYMSPVER
+#	define _EM_EASYMSPVER 1
+#endif
+
+#ifndef _EM_EASYMSPVERMINOR
+#	define _EM_EASYMSPVERMINOR 0
+#endif
+
+#ifndef _EM_EXECUTE
+#	define _EM_EXECUTE BIT0
 #endif
 
 #ifndef NULL
@@ -322,6 +330,21 @@
 #	define	upTo32Mhz 4
 #endif
 
+#define M16 14
+#define M12 13
+#define M8 12
+#define M6 11
+#define M4 10
+#define M3 9
+#define M2 8
+#define M1 7
+#define K500 6
+#define K125 5
+#define K32	4
+#define K22 3
+#define K2	2
+#define DAMNSLOW 1	
+	
 /* Flash constants */
 
 
@@ -383,10 +406,18 @@
 
 #ifndef VOLTAGE_CHANGE
 #	define VOLTAGE_CHANGE 5
+#endif	
+	
+#ifndef FLASH_BUSY
+#	define FLASH_BUSY 6
 #endif
 	
 /* ADC10 constants */
 
+#ifndef MISSING_DCOCAL
+#	define MISSING_DCOCAL 2
+#endif
+	
 #ifndef TEMPSENSE
 #	define TEMPSENSE 0xFF
 #endif
