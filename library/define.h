@@ -17,6 +17,10 @@
 #	define _EM_EASYMSPVERMINOR 0
 #endif
 
+#ifndef _EM_EASYMSPVERBUILD
+#	define _EM_EASYMSPVERBUILD 2
+#endif
+
 #ifndef _EM_EXECUTE
 #	define _EM_EXECUTE 0x01
 #endif

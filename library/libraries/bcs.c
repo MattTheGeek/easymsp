@@ -39,7 +39,6 @@ extern unsigned short int setACLK(unsigned short int source, unsigned short int 
 {
 	switch (source)
 	{
-		case UNCHANGED:
 		
 		default:
 			return (BAD_ARGUMENT);

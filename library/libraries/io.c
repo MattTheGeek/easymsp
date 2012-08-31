@@ -70,6 +70,8 @@
 		void (*Port1FunctionVector[8])(void);
 		void (*Port2FunctionVector[8])(void);
 #	endif /* PREINIT_VECTORS */
+		
+	static unsigned char _shiftConfigBits = NULL;	
 #endif /* _EM_SERIES */
 	
 #if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
@@ -2147,6 +2149,7 @@ interrupt void port2_isr(void)
 
 void shiftConfig(unsigned short int order, unsigned short int pol)
 {
+
 	if (order == LSBFIRST)
 	{
 		_shiftConfigBits |= BIT0;

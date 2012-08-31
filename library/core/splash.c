@@ -10,7 +10,7 @@
 #	endif /* _EM_ASCII_LOGO */
 #	if (_EM_VERBOSE == YES)
 		asm("	.mmsg	\"Copyright (c) 2010 - 2012 Matthew L. Burmeister. All Rights Reserved\"");
-		asm("	.mmsg 	\"Version 1.0.0.RC	\"");
+		asm("	.mmsg 	\"Version 1.0.2	\"");
 		asm("	.mmsg	\"EasyMSP is compiling...\"");
 #	endif /* _EM_VERBOSE */
 #endif /* __EASYMSP__ */
