@@ -1,4 +1,5 @@
-const unsigned char bitmaskLookup[8] = 
+#pragma RETAIN (bitmaskLookup);
+extern const unsigned char bitmaskLookup[8] = 
 {
 		0x01,
 		0x02,

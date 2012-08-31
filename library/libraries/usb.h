@@ -8,7 +8,9 @@
 #ifndef USB_H_
 #define USB_H_
 
-
+#pragna INTERRUPT(usbIsr);
+ 
+interrupt void usbIsr(void);
 
 
 #endif /* USB_H_ */

@@ -37,160 +37,65 @@
 
 /* Define constants */
 
-/* If we have 16 bit ports, we also have 8 bit ports as well. */
+/* PRAGMAs */
+#pragma INTERRUPT (port_isr);
+#pragma RETAIN (Port1FunctionVector);
+#pragma RETAIN (Port2FunctionVector);
+#pragma FUNCTION_OPTIONS (pinHigh, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinLow, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinToggle, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinMode, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinRead, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portWrite, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portWriteDir, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (portRead, "--opt_level=4 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinPullUp, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinPullDown, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (pinPullOff, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=3 --opt_for_speed=5" );
+#pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=3 --opt_for_speed=5" );
 
-#ifdef HASPORTA
-#	ifndef	HASPORT1
-#		define HASPORT1
-#	endif
-
-#	ifndef	HASPORT2
-#		define HASPORT2
-#	endif
-#endif /* HASPORTA */
-
-/* ============ */
-
-#ifdef HASPORTB
-#	ifndef HASPORT3
-#		define HASPORT3
-#	endif
-
-#	ifndef HASPORT4
-#		define HASPORT4
-#	endif
-#endif /* HASPORTB */
-
-/* ============ */
-
-#ifdef HASPORTC
-#	ifndef HASPORT5
-#		define HASPORT5
-#	endif
-
-#	ifndef HASPORT6
-#		define HASPORT6
-#	endif
-#endif /* HASPORTC */
-
-/* ============ */
-
-#ifdef HASPORTD
-#	ifndef HASPORT7
-#		define HASPORT7
-#	endif
-
-#	ifndef HASPORT8
-#		define HASPORT8
-#	endif
-#endif /* HASPORTD */
-
-/* ============ */
-
-#ifdef HASPORTE
-#	ifndef HASPORT9
-#		define HASPORT9
-#	endif
-
-#	ifndef HASPORT10
-#		define HASPORT10
-#	endif
-#endif /* HASPORTE */
-
-/* ============ */
-
-#ifdef HASPORTF
-#	ifndef HASPORT11
-#		define HASPORT11
-#	endif
-#endif /* HASPORTF */
-
-/* ============ */
-
-/* Set function level compile options */
-#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
-#	pragma FUNC_NO_GLOBAL_ASG (setHigh);
-#	pragma FUNCTION_OPTIONS (setHigh, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (setLow, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (pinToggle, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (pinMode, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (readPin, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (portWrite, "--opt_level=4 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (portWriteDir, "--opt_level=4 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (portRead, "--opt_level=4 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (setPullUp, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (setPullDown, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (setPullOff, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (attachInterrupt, "--opt_level=3 --opt_for_speed=5" );
-#	pragma FUNCTION_OPTIONS (removeInterrupt, "--opt_level=3 --opt_for_speed=5" );
-#endif
-
-#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
-#	pragma FUNCTION_OPTIONS (setDriveStrength, "--opt_level=3 --opt_for_speed=5" );
+#if (_EM_SERIES != 5) || (_EM_SERIES != 6)
+#	pragma FUNC_IS_PURE (pinDriveStrength);
+#	pragma FUNC_IS_PURE (portWriteWord);
+#	pragma FUNC_IS_PURE (portWriteDirWord);
+#	pragma FUNC_IS_PURE (portReadWord);
+#else
+#	pragma FUNCTION_OPTIONS (pinDriveStrength, "--opt_level=3 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (portWriteWord, "--opt_level=4 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (portWriteDirWord, "--opt_level=4 --opt_for_speed=5" );
 #	pragma FUNCTION_OPTIONS (portReadWord, "--opt_level=4 --opt_for_speed=5" );
-#endif
+#endif 
 
-/* ============ */
+/* Prototypes */
 
-inline void portInit(void);
-void shiftConfig(unsigned short int, unsigned short int);
-void shiftOut(unsigned short int, unsigned short int, unsigned char);
+extern void digitalWrite(unsigned short int, unsigned short int);
 
-static unsigned char shiftConfigBits = NULL;
+extern void pinHigh(unsigned short int);
+extern void pinLow(unsigned short int);
+extern void pinToggle(unsigned short int);
+extern void pinMode(unsigned short int, unsigned short int);
+extern bool pinRead(unsigned short int);
+extern void pinDriveStrength(unsigned short int, unsigned short int);
 
-inline void digitalWrite(unsigned short int, unsigned short int);
+extern void pinPullUp(unsigned short int);
+extern void pinPullDown(unsigned short int);
+extern void pinPullOff(unsigned short int);
 
-inline void setHigh(unsigned short int);
-inline void setLow(unsigned short int);
-inline void pinToggle(unsigned short int);
-inline void pinMode(unsigned short int, unsigned short int);
-inline bool readPin(unsigned short int);
+extern void portWrite(const unsigned short int, unsigned char);
+extern void portWriteDir(const unsigned short int, unsigned char);
+extern unsigned char portRead(const unsigned short int);
 
-inline void portWrite(const unsigned short int, unsigned char);
-inline void portWriteDir(const unsigned short int, unsigned char);
-inline unsigned char portRead(const unsigned short int);
+extern void portWriteWord(const unsigned short int, unsigned short int);
+extern void portWriteDirWord(const unsigned short int, unsigned short int);
+extern unsigned short int portReadWord(const unsigned short int);
 
-inline void setPullUp(unsigned short int);
-inline void setPullDown(unsigned short int);
-inline void setPullOff(unsigned short int);
+interrupt void port_isr(void);
 
-#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
-	inline void setDriveStrength(unsigned short int, unsigned short int);
-	inline void portWriteWord(const unsigned short int, unsigned short int);
-	inline void portWriteDirWord(const unsigned short int, unsigned short int);
-	inline unsigned short int portReadWord(const unsigned short int);
-#endif
+extern void attachInterrupt(unsigned short int, unsigned short int, void(*)(void));
+extern void removeInterrupt(unsigned short int);
 
-inline void attachInterrupt(unsigned short int, unsigned short int, void(*)(void));
-inline void removeInterrupt(unsigned short int);
-
-/* Interrupt ISRs */
-
-/* #pragma FUNC_EXT_CALLED (port1_isr); */
-#pragma INTERRUPT (port1_isr);
-
-/* #pragma FUNC_EXT_CALLED (port2_isr); */
-#pragma INTERRUPT (port2_isr);
-	
-interrupt void port1_isr(void);
-interrupt void port2_isr(void);
-
-/* Pin Interrupt function pointers */
-
-/* User interrupt vectors
- *
- * Port1FunctionVector and Port2FunctionVector holds the addresses of user functions to call if a pin triggers a interrupt.
- * As always, they must be void and return nothing. The shorter the function, the better.
- */
-
-#if (_EM_PREINIT_VECTORS == YES)
-	void (*Port1FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-	void (*Port2FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-#else
-	void (*Port1FunctionVector[8])(void);
-	void (*Port2FunctionVector[8])(void);
-#endif /* PREINIT_VECTORS */
+extern void shiftConfig(unsigned short int, unsigned short int);
+extern void shiftOut(unsigned short int, unsigned short int, unsigned char);
 
 #endif /* IO_H */

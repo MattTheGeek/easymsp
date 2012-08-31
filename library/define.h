@@ -18,7 +18,7 @@
 #endif
 
 #ifndef _EM_EXECUTE
-#	define _EM_EXECUTE BIT0
+#	define _EM_EXECUTE 0x01
 #endif
 
 #ifndef NULL
@@ -39,6 +39,14 @@
 
 #ifndef FAILURE
 #	define FAILURE 1
+#endif
+
+#ifndef BADARG
+#	define BADARG 2
+#endif
+
+#ifndef BAD_ARGUMENT
+#	define BAD_ARGUMENT 2
 #endif
 
 

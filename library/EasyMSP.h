@@ -45,41 +45,48 @@
 #include <stddef.h>
 #include "define.h"
 #include "config.h"
-#include "board.h"
-#include "device.h" /* Find out what device to include */
-#include "stdinclude.h"
 
 #if (_EM_BITMASK_LOOKUP == YES)
 #	include "core/lookup.c"
+	extern const unsigned char bitmaskLookup[8];
 #endif /* _EM_BITMASK_LOOKUP */
 
 #if (_EM_EASYTYPES == YES)
 #	include "core/easytypes.c"
 #endif /* _EM_EASYTYPES */
-	
+
+#include "board.h"
+#include "device.h" /* Find out what device to include */
+#include "stdinclude.h"
 #include "core/splash.c" /* Include EasyMSP console splash */
 
 /* Decide if we need to declare function prototypes for runtime functions */
-#if !(defined NOSETUP) /*Is NOSETUP not declared? */
-	static void _init(void);	
-#	ifdef NOINIT
+#if (defined NO_SETUP) /*Is NOSETUP not declared? */
+	asm("	.mmsg	\"Excluding loop() and loop logic \"");
+#else
+#	pragma FUNC_NEVER_RETURNS (main);
+#	ifdef NO_INIT
 		asm("	.mmsg	\"EasyMSP Runtime setup is disabled. init() and loop() functions excluded \"");
 #	else
+#		pragma RETAIN (init);
+#		pragma FUNC_EXT_CALLED (init);
 		extern void init(void);
 #	endif /* NOINIT */
-#	ifdef NOLOOP
+#	ifdef NO_LOOP
 		asm("	.mmsg	\"Excluding init() function	\"");
 #	else
-		extern void loop(void);
-#	endif /* NOLOOP */
-#else
-	asm("	.mmsg	\"Excluding loop() and loop logic \"");
+#		pragma RETAIN (loop);
+#		pragma FUNC_EXT_CALLED (loop);
+		void loop(void);
+#	endif /* NOLOOP */			
+#	ifdef _EM_IS_BOARD
+#		pragma RETAIN (_boardInit);
+#		pragma FUNC_EXT_CALLED (_boardInit);
+		extern inline void _boardInit(void);
+#	endif /* _EM_IS_BOARD */
+		
+		#include "core/EasyMSP.c"
+		
 #endif /* NOSETUP */
-				
-#ifdef _EM_IS_BOARD
-	extern inline void _boardInit(void);
-#endif /* _EM_IS_BOARD */
-	
-#include "core/EasyMSP.c"
 
 #endif

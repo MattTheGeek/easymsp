@@ -17,7 +17,7 @@
 
 extern inline void disableWatchdog(void)
 {
-	stopWatchdog();
+	WDTCTL = WDTPW + WDTHOLD;
 }
  
 extern inline void stopWatchdog(void)
@@ -28,9 +28,9 @@ extern inline void stopWatchdog(void)
 extern inline void holdWatchdog(void)
 {
 
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 	WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTHOLD);
-#elif (SERIES == 5) || (SERIES == 6)
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L | WDTHOLD);
 #endif
 
@@ -39,9 +39,9 @@ extern inline void holdWatchdog(void)
 extern inline void clearWatchdog(void)
 {
 
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 	WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTCNTCL);
-#elif (SERIES == 5) || (SERIES == 6)
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L | WDTCNTCL);
 #endif
 
@@ -50,9 +50,9 @@ extern inline void clearWatchdog(void)
 extern inline void resumeWatchdog(void)
 {
 
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 	WDTCTL = WDTPW + ((unsigned char)WDTCTL & ~WDTHOLD);
-#elif (SERIES == 5) || (SERIES == 6)
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L & ~WDTHOLD);
 #endif
 
@@ -69,7 +69,7 @@ extern void watchdogStart(unsigned short int source, unsigned short int interval
 
 	WDTCTL = WDTPW + (WDTHOLD | WDTCNTCL);
 
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 
 	switch (source)
 	{
@@ -79,7 +79,7 @@ extern void watchdogStart(unsigned short int source, unsigned short int interval
 
 		case SMCLK:
 		default:
-			_never_executed();
+			break;
 	}
 
 	switch (interval)
@@ -98,10 +98,10 @@ extern void watchdogStart(unsigned short int source, unsigned short int interval
 
 		case by_32768:
 		default:
-			_never_executed();
+			break;
 	}
 	
-#elif (SERIES == 5) || (SERIES == 6)
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 	switch (source)
 	{
@@ -119,7 +119,7 @@ extern void watchdogStart(unsigned short int source, unsigned short int interval
 
 		case SMCLK:
 		default:
-			_never_executed();
+			break;
 	}
 	
 	switch (interval)
@@ -154,7 +154,7 @@ extern void watchdogStart(unsigned short int source, unsigned short int interval
 
 		case by_2g:
 		default:
-			_never_executed();
+			break;
 	}
 	
 #endif
@@ -170,7 +170,7 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 
 	WDTCTL = WDTPW + (WDTHOLD | WDTCNTCL);
 
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 
 	switch (source)
 	{
@@ -180,7 +180,7 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 
 		case SMCLK:
 		default:
-			_never_executed();
+			break;
 	}
 
 	switch (interval)
@@ -199,10 +199,10 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 
 		case by_32768:
 		default:
-			_never_executed();
+			break;
 	}
 	
-#elif (SERIES == 5) || (SERIES == 6)
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
 	switch (source)
 	{
@@ -220,7 +220,7 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 
 		case SMCLK:
 		default:
-			_never_executed();
+			break;
 	}
 	
 	switch (interval)
@@ -255,17 +255,17 @@ extern void watchdogTimerStart(unsigned short int source, unsigned short int int
 
 		case by_2g:
 		default:
-			_never_executed();
+			break;
 	}
 	
 #endif
 
 	WatchdogFunctionVector = function;
 
-#if (SERIES == 2) || (SERIES == 'V')
+#if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 	IFG1 &= ~WDTIFG;
 	IE1 |= WDTIE;
-#elif (SERIES == 5) || (SERIES == 6)
+#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	SFRIFG1 &= ~WDTIFG;
 	SFRIE1 |= WDTIE;
 #endif

@@ -22,38 +22,36 @@
  *
  */
  
-#ifndef NOSETUP
+#ifndef NO_SETUP
 
-static inline void _clockinit(void);
-static inline void _portinit(void);
-static inline void _preinit(void);
-static inline void _dmainit(void);
+#include "preinit.c"
+#include "nmiisr.c"
 
-volatile unsigned short int _EM_Status = _EM_EXECUTE;
+volatile unsigned char _EM_Status = _EM_EXECUTE;
 
 void main(void)
 {
 	WDTCTL = WDTPW + WDTHOLD; /* Halt the watchdog before it issues a PUC */
-	
 	/* Configure system before passing control to user init() */
 	_preinit();	
 		
-#ifndef NOINIT
+#ifndef NO_INIT
 	init();
 #endif /* NOINIT */
 
-#ifndef NOLOOP
+#ifndef NO_LOOP
 	
-	while ((_EM_Status & _EM_EXECUTE) > 0)
+	do
 	{
 		loop();
 	}
+	while ((_EM_Status & _EM_EXECUTE) > 0);
 	
 #endif /* NOLOOP */
 
-	return; /* End execution */
+	disableInterrupts();
+	_low_power_mode_4();
 }
 
-#include "preinit.c"
 
 #endif /* NOSETUP */

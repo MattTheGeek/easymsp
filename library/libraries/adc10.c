@@ -38,5 +38,5 @@ unsigned short int analogRead(unsigned short int pin)
 #pragma vector = ADC10_VECTOR;
 interrupt void adc10_isr(void)
 {
-	powerModeOff();
+	return;
 }

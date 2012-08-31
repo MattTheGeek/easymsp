@@ -2,6 +2,8 @@
  Note: DMA Channel 0 is reserved for system use.
  */
 
+unsigned short int dma 
+ 
 unsigned short int dmaCopy(unsigned long int* source, unsigned long int* dest, unsigned short int count, unsigned short int direction)
 {
 	DMACTL0 &= DMA0TSEL_0; /* Select software trigger */
@@ -32,4 +34,9 @@ unsigned short int dmaCopy(unsigned long int* source, unsigned long int* dest, u
 	DMA0CTL = NULL;
 	
 	return (0);
+}
+
+interrupt void dmaIsr(void)
+{
+	switch (DMAIV)
 }

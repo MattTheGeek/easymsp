@@ -8,6 +8,8 @@
  */
 #ifndef ADC10_H
 #define ADC10_H 
+
+#define ADC10_CONFIGURED_FLAG (1 << 1)
  
 #ifndef INVERTED
 	#define INVERTED 0
@@ -74,21 +76,10 @@ extern inline void analogOff(void);
 extern void analogReference(unsigned short int);
 extern void analogConfig(unsigned short int, unsigned short int, unsigned short int);
 
-enum adc10ConfigBit
-{
-	Inverted = BIT0,
-	DataFormat = BIT1,
-	ClockSourceL = BIT2,
-	ClockSourceH = BIT3,
-	HoldTimeL = BIT4,
-	HoldTimeH = BIT5
-};
-
 static unsigned short int adc10ConfigBits = NULL;
 
 #pragma INTERRUPT(adc10_isr);
-
 interrupt void adc10_isr(void);
 
-#endif
+#endif /* ADC10_H */
 

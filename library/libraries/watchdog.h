@@ -36,7 +36,6 @@ extern inline void resetWatchdog(void);
 extern void startWatchdog(unsigned short int, unsigned short int);
 extern void watchdogTimerStart(unsigned short int, unsigned short int, void (*)());
 
-#pragma FUNC_EXT_CALLED (watchdog_isr);
 #pragma INTERRUPT(watchdog_isr);
 void interrupt watchdog_isr(void);
 

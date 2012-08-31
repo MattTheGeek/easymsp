@@ -3,8 +3,8 @@
 #ifndef STDINCLUDE_H
 #define STDINCLUDE_H
 
-#include "libraries/io.h"
 #include "libraries/system.h"
+#include "libraries/io.h"
 #include "libraries/timer.h"
 #include "libraries/watchdog.h"
 #include "libraries/flash.h"

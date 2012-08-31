@@ -7,11 +7,14 @@
 #	if (_EM_VERBOSE == YES)
 		asm("	.mmsg	\"Device is MSP430F5510\"");
 #	endif
+
 #elif (defined MSP430F5529) || (defined __MSP430F5529__) || (defined __MSP430F5529)
 	#include "device/msp430f5529.h"
+
 #	if (_EM_VERBOSE == YES)
 		asm("	.mmsg 	\"Device is MSP430F5529	\"");
 #	endif
+
 #elif (defined MSP430G2553) || (defined __MSP430G2553__) || (defined __MSP430G2553) 
 #	include "device/msp430g2553.h"
 		
@@ -77,6 +80,18 @@
 		
 #include <msp430.h>
 		
+
+#ifdef __MSP430_HAS_PORTA_R__  
+#	define _EM_HASPORTA 
+#endif 
+
+#ifdef __MSP430_HAS_PORTB_R__ 
+#	define _EM_HASPORTB
+#endif
+		
+#ifdef __MSP430_HAS_PORTC_R__
+#	define _EM_HASPORTC
+#endif
 
 #ifdef __MSP430_HAS_PORT1_R__  
 #	define _EM_HASPORT1  

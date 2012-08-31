@@ -3,17 +3,55 @@
 
 extern unsigned short int setMCLK(unsigned short int source, unsigned short int divider)
 {
+	switch (source)
+	{
+		default:
+			return (BAD_ARGUMENT);
+	}
 	
+	switch (divider)
+	{
+		default:
+			return (BAD_ARGUMENT);
+	}
+	
+	return (SUCCESS);
 }
 
 extern unsigned short int setSMCLK(unsigned short int source, unsigned short int divider)
 {
+	switch (source)
+	{
+		default:
+			return (BAD_ARGUMENT);
+	}
 	
+	switch (divider)
+	{
+		default:
+			return (BAD_ARGUMENT);
+	}
+	
+	return (SUCCESS);
 }
 
 extern unsigned short int setACLK(unsigned short int source, unsigned short int divider)
 {
+	switch (source)
+	{
+		case UNCHANGED:
+		
+		default:
+			return (BAD_ARGUMENT);
+	}
 	
+	switch (divider)
+	{
+		default:
+			return (BAD_ARGUMENT);
+	}
+	
+	return (SUCCESS);
 }
 
 extern unsigned short int setDCO(unsigned short int mode)
@@ -37,13 +75,16 @@ extern unsigned short int setDCO(unsigned short int mode)
 
 				BCSCTL1 = CALBC1_1MHZ;
 				DCOCTL = CALDCO_1MHZ;
+				break;
 			}
 			else
 			{
 				return(MISSING_DCOCAL);
 			}
+#else
+			break;		
 #endif
-			break;
+			
 			
 		case M8:
 			
@@ -54,14 +95,15 @@ extern unsigned short int setDCO(unsigned short int mode)
 
 				BCSCTL1 = CALBC1_8MHZ;
 				DCOCTL = CALDCO_8MHZ;
+				break;
 			}
 			else
 			{
 				return(MISSING_DCOCAL);
 			}
-#endif
+#else			
 			break;
-			
+#endif
 		case M12:
 			
 #if (defined CALBC1_12MHZ) && (defined CALDCO_12MHZ) 
@@ -71,13 +113,15 @@ extern unsigned short int setDCO(unsigned short int mode)
 
 				BCSCTL1 = CALBC1_12MHZ;
 				DCOCTL = CALDCO_12MHZ;
+				break;
 			}
 			else
 			{
 				return(MISSING_DCOCAL);
 			}
-#endif
+#else
 			break;
+#endif
 			
 		case M16:
 			
@@ -88,14 +132,15 @@ extern unsigned short int setDCO(unsigned short int mode)
 
 				BCSCTL1 = CALBC1_16MHZ;
 				DCOCTL = CALDCO_16MHZ;
+				break;
 			}
 			else
 			{
 				return(MISSING_DCOCAL);
 			}
-#endif
+#else
 			break;
-
+#endif
 		default:
 			return (FAILURE);
 	}

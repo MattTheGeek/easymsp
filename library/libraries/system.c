@@ -5,7 +5,7 @@
  *
  */
 
-extern inline void powerMode(unsigned short int mode)
+extern void powerMode(unsigned short int mode)
 {
 	switch (mode)
 	{
@@ -30,26 +30,28 @@ extern inline void powerMode(unsigned short int mode)
 			break;
 
 		default:
-			_never_executed();
+			break;
 	}
 }
 
 inline void exitPowerMode(void)
 {
 	asm("	BIC.W #0xF0, 0(SP)");
+	return;
 }
 
 inline void powerModeOff(void)
 {
 	asm("	BIC.W #0xF0, 0(SP)");
+	return;
 }
 
 extern inline void reset(void)
 {
 
-#if SERIES == 2
+#if _EM_SERIES == 2
 	WDTCTL = 0; //Cause a PUC
-#elif SERIES == 5
+#elif _EM_SERIES == 5
 	PMMCTL0 = PMMPW + PMMSWPOR;
 #else
 	return;
@@ -60,9 +62,9 @@ extern inline void reset(void)
 extern inline void shutdown(void)
 {
 
-#if SERIES == 2
+#if (_EM_SERIES == 2)
 	powerMode(4);
-#elif SERIES == 5
+#elif (_EM_SERIES == 5)
 	powerMode(4);
 #endif
 
@@ -71,7 +73,11 @@ extern inline void shutdown(void)
 extern inline void disableInterrupts(void)
 {
 	_disable_interrupts();
-	_no_operation(); /* Work around for CPU39 bug */
+	
+#ifdef _EM_CPU39_BUG
+		/* Compiler already includes the workaround. */
+		_no_operation(); /* Work around for CPU39 bug */		
+#endif
 }
 
 extern inline void enableInterrupts(void)
@@ -90,7 +96,6 @@ extern inline void swapBytes(register unsigned short int* data)
 
 }
 
-#pragma RETAIN ( delayCycles );
 extern void delayCycles(register volatile unsigned short int cycles)
 {
 

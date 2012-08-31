@@ -3,9 +3,11 @@
 nmi_isrs 
 
 */
+void (*NMIFunctionVector)(void) = NULL;
+
 #if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 
-void (*NMIFunctionVector)(void) = NULL;
+
 
 #pragma INTERRUPT(nmi_isr);
 void interrupt nmi_isr(void);
@@ -18,7 +20,7 @@ void interrupt nmi_isr(void)
 		(*NMIFunctionVector)();
 		
 		IFG1 &= ~NMIIFG; //Clear flag
-
+			
 		return;
 	}
 
@@ -28,7 +30,7 @@ void interrupt nmi_isr(void)
 			
 		if ((IFG1 & OFIFG) > 0)
 		{
-			volatile register unsigned short int count = 0;
+			register volatile unsigned short int count = 0;
 		
 			do
 			{
@@ -39,7 +41,7 @@ void interrupt nmi_isr(void)
 			if ((IFG1 & OFIFG) > 0) 
 			{
 				/* Log error */
-				_disable_Interrupts();
+				disableInterrupts();
 				_low_power_mode_4();
 			}
 			
@@ -61,7 +63,7 @@ void interrupt nmi_isr(void)
 		*/
 		
 		/* Log error */	
-		_disable_Interrupts();
+		disableInterrupts();
 		_low_power_mode_4();
 	}
 
@@ -140,7 +142,7 @@ void interrupt user_nmi_isr(void)
 			break;
 
 		case SYSUNIV_NMIIFG:
-
+				(*NMIFunctionVector)();
 			break;
 
 		case SYSUNIV_OFIFG:
@@ -148,7 +150,7 @@ void interrupt user_nmi_isr(void)
 			break;
 
 		case SYSUNIV_ACCVIFG:
-			_disable_Interrupts();
+			disableInterrupts();
 			_low_power_mode_4();
 			break;
 

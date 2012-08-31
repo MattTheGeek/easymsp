@@ -40,7 +40,7 @@ inline void setMCLK(const unsigned short int source, const unsigned short int di
 			break;
 			
 		default:
-			_never_executed();
+			break;
 	}
 	
 	switch (divider)
@@ -75,7 +75,7 @@ inline void setMCLK(const unsigned short int source, const unsigned short int di
 			break;
 			
 		default:
-			_never_executed();
+			break;
 	}
 }
 
@@ -113,7 +113,7 @@ inline void setSMCLK(const unsigned short int source, const unsigned short int d
 			break;
 			
 		default:
-			_never_executed();
+			break;
 	}
 	
 	switch (divider)
@@ -148,7 +148,7 @@ inline void setSMCLK(const unsigned short int source, const unsigned short int d
 			break;
 			
 		default:
-			_never_executed();
+			break;
 	}
 }
 
@@ -186,7 +186,7 @@ inline void setACLK(const unsigned short int source, const unsigned short int di
 			break;
 			
 		default:
-			_never_executed();
+			break;
 	}
 	
 	switch (divider)
@@ -221,6 +221,6 @@ inline void setACLK(const unsigned short int source, const unsigned short int di
 			break;
 			
 		default:
-			_never_executed();
+			break;
 	}
 }

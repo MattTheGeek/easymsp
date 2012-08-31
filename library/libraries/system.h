@@ -22,16 +22,9 @@
  system.h macros
  */
 
-static const unsigned short int delayConstants[] =
-{1, 2, 4, 8, 16, 32, 64, 128, 256, 512};
-
-#pragma FUNC_CANNOT_INLINE (delayCycles);
-#pragma FUNC_EXT_CALLED (delayCycles);
-#pragma FUNCTION_OPTIONS ( delayCycles, "--opt_level=0" );
-
 extern void delayCycles(register volatile unsigned short int cycles);
 
-extern inline void powerMode(unsigned short int);
+extern void powerMode(unsigned short int);
 extern inline void powerModeOff(void);
 
 extern inline void reset(void);

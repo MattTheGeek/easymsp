@@ -28,12 +28,12 @@
 /* Info
  *
  *	Library merge
- *		Since the library merge of the 2 series library and the newer 5 series library, the IO library is split up into three sections. The First section is for global functions
+ *		Since the library merge of the 2 _EM_SERIES library and the newer 5 _EM_SERIES library, the IO library is split up into three sections. The First section is for global functions
  *		that rely on the lower level functions below.
  *
- *		The second section is the 2 series (or just 8-bit port) library functions. and the third is currently the 5 series (16 bit port) library functions.
+ *		The second section is the 2 _EM_SERIES (or just 8-bit port) library functions. and the third is currently the 5 _EM_SERIES (16 bit port) library functions.
  *
- *		The library will issue a preprocessor error if the device series is not declared or incorrect.
+ *		The library will issue a preprocessor error if the device _EM_SERIES is not declared or incorrect.
  *
  *	Function Name Changes
  *		Most function names have been changed, as they were quite vague on what they do. A example would be readPin(), since read() could mean anything and the old input() and
@@ -55,68 +55,84 @@
  *			Goto next port block if it exists, otherwise subtract again and goto the next port block.
  *
  */
+#ifndef IO_H
+#	include "io.h"
+#endif
+ 
+#ifndef IO_C
+#define IO_C
 
+#ifdef _EM_SERIES 
+#	if (_EM_PREINIT_VECTORS == YES)
+		void (*Port1FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+		void (*Port2FunctionVector[8])(void) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+#	else
+		void (*Port1FunctionVector[8])(void);
+		void (*Port2FunctionVector[8])(void);
+#	endif /* PREINIT_VECTORS */
+#endif /* _EM_SERIES */
+	
 #if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
 
-inline void setHigh(unsigned short int pin)
+void pinHigh(unsigned short int pin)
 {
 
-#ifdef HASPORT1 /* Does the device has PORT1? */
+#ifdef _EM__EM_HASPORT1 /* Does the device has PORT1? */
 	
 	if (pin <= 7) /* If pin is equal or less than 7, then we operate on PORT1 */
 	{
 		/* We need to generate a bitmask for P1OUT, we do this by shifting 0x01 by pin. This produces a bitmask that for the desired bit and pin. */
-
-		P1OUT |= (1 << pin); /* OR the generated bit mask to PxOUT to set the bit and make the pin high */
-		
+		P1OUT |= bitmaskLookup[pin]; /* OR the generated bit mask to PxOUT to set the bit and make the pin high */
+		return;
 	}
 
-#endif /* HASPORT1 */
+#endif /* _EM__EM_HASPORT1 */
 	
 	pin = pin - 8; /* Since the value was higher than 8, subtract by 8 and later compare */
 
 	/* The next code blocks are generally the same as above. */
 
-#ifdef HASPORT2 /* Does the device has PORT2? */
+#ifdef _EM__EM_HASPORT2 /* Does the device has PORT2? */
 	
 	if (pin <= 7)
 	{
-		P2OUT |= (1 << pin);
-		
+		P2OUT |= bitmaskLookup[pin];
+		return;
 	}
 
-#endif /* HASPORT2 */
+#endif /* _EM__EM_HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef HASPORT3 /* Does the device has PORT3? */
+#ifdef _EM__EM_HASPORT3 /* Does the device has PORT3? */
 	
 	if (pin <= 7)
 	{
-		P3OUT |= (1 << pin);
-		
+		P3OUT |= bitmaskLookup[pin];
+		return;
 	}
 
-#endif /* HASPORT3 */
+#endif /* _EM__EM_HASPORT3 */
 	
-#ifdef HASPORT4 /* Does the device has PORT4? */
+#ifdef _EM__EM_HASPORT4 /* Does the device has PORT4? */
 
 	pin = pin - 8;
 
 	if (pin <= 7)
 	{
-		P4OUT |= (1 << pin);
+		P4OUT |= bitmaskLookup[pin];
+		return;
 	}
 
-#endif /* HASPORT4 */
+#endif /* _EM__EM_HASPORT4 */
 	
 	return;
 }
 
-inline void setLow(unsigned short int pin)
+void pinLow(unsigned short int pin)
 {
 
-#ifdef HASPORT1 /* Does the device has PORT1? */
+#ifdef _EM__EM_HASPORT1 /* Does the device has PORT1? */
 	
 	if (pin <= 7) /* If pin is equal or less than 7, then we operate on PORT1 */
 	{
@@ -127,13 +143,13 @@ inline void setLow(unsigned short int pin)
 		return; /* Feturn from function */
 	}
 
-#endif /* HASPORT1 */
+#endif /* _EM__EM_HASPORT1 */
 	
 	pin = pin - 8; /* Since the value was higher than 8, subtract by 8 and later compare */
 
 	/* The next code blocks are generally the same as above. */
 
-#ifdef HASPORT2  /* Does the device has PORT2? */
+#ifdef _EM__EM_HASPORT2  /* Does the device has PORT2? */
 	
 	if (pin <= 7)
 	{
@@ -142,11 +158,11 @@ inline void setLow(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORT2 */
+#endif /* _EM__EM_HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef HASPORT3  /* Does the device has PORT3? */
+#ifdef _EM__EM_HASPORT3  /* Does the device has PORT3? */
 	
 	if (pin <= 7)
 	{
@@ -155,9 +171,9 @@ inline void setLow(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORT3 */
+#endif /* _EM__EM_HASPORT3 */
 	
-#ifdef HASPORT4  /* Does the device has PORT4? */
+#ifdef _EM_HASPORT4  /* Does the device has PORT4? */
 	
 	pin = pin - 8;
 
@@ -166,12 +182,12 @@ inline void setLow(unsigned short int pin)
 		P4OUT &= ~(1 << pin);
 	}
 
-#endif /* HASPORT4 */
+#endif /* _EM_HASPORT4 */
 	
 	return; /* Return from the last function or the pin was out of range. */
 }
 
-inline void pinMode(unsigned short int pin, unsigned short int state)
+void pinMode(unsigned short int pin, unsigned short int state)
 {
 
 	if (state > 1) /* Check for invaild state */
@@ -188,7 +204,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		 */
 	}
 
-#ifdef HASPORT1 /* Does the device have PORT1? */
+#ifdef _EM_HASPORT1 /* Does the device have PORT1? */
 
 	if (pin <= 7) /* Is pin equal or lower to 7? */
 	{
@@ -208,13 +224,13 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return; /* Return */
 	}
 
-#endif /* HASPORT1 */
+#endif /* _EM_HASPORT1 */
 
 	pin = pin - 8; /* Since the pin is higher than 8, subtract by 8 and then compare again. */
 
 	/* The next blocks of code are like the above block */
 
-#ifdef HASPORT2 /* Does the device have PORT2 */
+#ifdef _EM_HASPORT2 /* Does the device have PORT2 */
 
 	if (pin <= 7)
 	{
@@ -230,11 +246,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#endif /* HASPORT2 */
+#endif /* _EM_HASPORT2 */
 
 	pin = pin - 8;
 
-#ifdef HASPORT3 /* Does the device have PORT3? */
+#ifdef _EM_HASPORT3 /* Does the device have PORT3? */
 	
 	if (pin <= 7)
 	{
@@ -250,9 +266,9 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#endif /* HASPORT3 */
+#endif /* _EM_HASPORT3 */
 
-#ifdef HASPORT4 /* Does the device has PORT4? */
+#ifdef _EM_HASPORT4 /* Does the device has PORT4? */
 	
 	pin = pin - 8;
 
@@ -270,15 +286,15 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#endif /* HASPORT4 */
+#endif /* _EM_HASPORT4 */
 
 	return;
 }
 
-inline bool readPin(unsigned short int pin)
+bool pinRead(unsigned short int pin)
 {
 
-#ifdef HASPORT1
+#ifdef _EM_HASPORT1
 	
 	if (pin <= 7) /* is pin less than or equal to 7? Then operate on PORT1 */
 	{
@@ -300,13 +316,13 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORT1 */
+#endif /* _EM_HASPORT1 */
 
 	pin = pin - 8; /* Subtract 8 from pin since pin was higher than 8 */
 
 	/* The next blocks of code are like the above block */
 
-#ifdef HASPORT2
+#ifdef _EM_HASPORT2
 	
 	if (pin <= 7)
 	{
@@ -323,11 +339,11 @@ inline bool readPin(unsigned short int pin)
 
 	}
 
-#endif /* HASPORT2 */
+#endif /* _EM_HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef HASPORT3
+#ifdef _EM_HASPORT3
 	
 	if (pin <= 7)
 	{
@@ -343,9 +359,9 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORT3 */
+#endif /* _EM_HASPORT3 */
 	
-#ifdef HASPORT4
+#ifdef _EM_HASPORT4
 	
 	pin = pin - 8;
 
@@ -363,17 +379,17 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORT4 */
+#endif /* _EM_HASPORT4 */
 
 	/* If we get here, the pin was out of range of the device. Return with the pin state as LOW. */
 
 	return (LOW);
 }
 
-inline void pinToggle(unsigned short int pin)
+void pinToggle(unsigned short int pin)
 {
 
-#ifdef HASPORT1
+#ifdef _EM_HASPORT1
 	
 	if (pin <= 7) /* Is pin less than or equal to 7? If yes, then operate on port1 */
 	{
@@ -383,13 +399,13 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORT1 */
+#endif /* _EM_HASPORT1 */
 	
 	pin = pin - 8; /* Since pin was higher than 8, subtract by 8 and compare again next block */
 
 	/* The next blocks of code are like the above block */
 
-#ifdef HASPORT2
+#ifdef _EM_HASPORT2
 	
 	if (pin <= 7)
 	{
@@ -397,11 +413,11 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORT2 */
+#endif /* _EM_HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef HASPORT3
+#ifdef _EM_HASPORT3
 	
 	if (pin <= 7)
 	{
@@ -409,9 +425,9 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORT3 */
+#endif /* _EM_HASPORT3 */
 	
-#ifdef HASPORT4
+#ifdef _EM_HASPORT4
 	
 	pin = pin - 8;
 
@@ -420,15 +436,15 @@ inline void pinToggle(unsigned short int pin)
 		P4OUT ^= (1 << pin);
 	}
 
-#endif /* HASPORT4 */
+#endif /* _EM_HASPORT4 */
 	
 	return;
 }
 
-inline void setPullUp(unsigned short int pin)
+void pinPullUp(unsigned short int pin)
 {
 
-#ifdef HASPORT1
+#ifdef _EM_HASPORT1
 
 	if (pin <= 7)
 	{
@@ -441,7 +457,7 @@ inline void setPullUp(unsigned short int pin)
 
 	pin = pin - 8;
 
-#ifdef HASPORT2
+#ifdef _EM_HASPORT2
 
 	if (pin <= 7)
 	{
@@ -454,7 +470,7 @@ inline void setPullUp(unsigned short int pin)
 
 	pin = pin - 8;
 
-#ifdef HASPORT3
+#ifdef _EM_HASPORT3
 
 	if (pin <= 7)
 	{
@@ -465,7 +481,7 @@ inline void setPullUp(unsigned short int pin)
 
 #endif
 
-#ifdef HASPORT4
+#ifdef _EM_HASPORT4
 
 	pin = pin - 8;
 
@@ -480,10 +496,10 @@ inline void setPullUp(unsigned short int pin)
 	return;
 }
 
-inline void setPullDown(unsigned short int pin)
+void pinPullDown(unsigned short int pin)
 {
 
-#ifdef HASPORT1
+#ifdef _EM_HASPORT1
 
 	if (pin <= 7)
 	{
@@ -496,7 +512,7 @@ inline void setPullDown(unsigned short int pin)
 
 	pin = pin - 8;
 
-#ifdef HASPORT2
+#ifdef _EM_HASPORT2
 
 	if (pin <= 7)
 	{
@@ -509,7 +525,7 @@ inline void setPullDown(unsigned short int pin)
 
 	pin = pin - 8;
 
-#ifdef HASPORT3
+#ifdef _EM_HASPORT3
 
 	if (pin <= 7)
 	{
@@ -520,7 +536,7 @@ inline void setPullDown(unsigned short int pin)
 
 #endif
 
-#ifdef HASPORT4
+#ifdef _EM_HASPORT4
 
 	pin = pin - 8;
 
@@ -535,10 +551,10 @@ inline void setPullDown(unsigned short int pin)
 	return;
 }
 
-inline void setPullOff(unsigned short int pin)
+void pinPullOff(unsigned short int pin)
 {
 
-#ifdef HASPORT1
+#ifdef _EM_HASPORT1
 
 	if (pin <= 7)
 	{
@@ -550,7 +566,7 @@ inline void setPullOff(unsigned short int pin)
 
 	pin = pin - 8;
 
-#ifdef HASPORT2
+#ifdef _EM_HASPORT2
 
 	if (pin <= 7)
 	{
@@ -562,7 +578,7 @@ inline void setPullOff(unsigned short int pin)
 
 	pin = pin - 8;
 
-#ifdef HASPORT3
+#ifdef _EM_HASPORT3
 
 	if (pin <= 7)
 	{
@@ -572,7 +588,7 @@ inline void setPullOff(unsigned short int pin)
 
 #endif
 
-#ifdef HASPORT4
+#ifdef _EM_HASPORT4
 
 	pin = pin - 8;
 
@@ -586,13 +602,18 @@ inline void setPullOff(unsigned short int pin)
 	return;
 }
 
-inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)(void))
+void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)(void))
 {
-	if ((unsigned short int)function <= 0x01FF) /* Do not allow a function pointer to reference Peripheral module memory */
-	{
-		return;
-	}
 
+	/*
+		todo: Need to find a proper way to check what address a function resides at.
+		
+		if ((unsigned short int)function <= 0x01FF) // Do not allow a function pointer to reference Peripheral module memory
+		{
+			return;
+		}
+	*/
+		
 	if (pin <= 7)
 	{
 		if (edge == HIGH_TO_LOW)
@@ -646,7 +667,7 @@ inline void attachInterrupt(unsigned short int pin, unsigned short int edge, voi
 	return;
 }
 
-inline void removeInterrupt(unsigned short int pin)
+void removeInterrupt(unsigned short int pin)
 {
 	if (pin <= 7) //If pin is less or equal to 7, then we need to operate on Port1
 	{
@@ -668,58 +689,56 @@ inline void removeInterrupt(unsigned short int pin)
 	}
 }
 
-#pragma INTERRUPT (port1_isr);
-#pragma vector=PORT1_VECTOR //Port 1 Interrupt Service Routine.
-interrupt void port1_isr(void)
+
+#pragma vector=PORT1_VECTOR, PORT2_VECTOR 
+
+interrupt void port_isr(void)
 {
-	volatile unsigned char count = 0;
-
-	while(count < 8)
+	register volatile unsigned char count = 0;
+	
+	if (P1IFG > 0)
 	{
-
-		if ( ((P1IFG & (1 << count) ) > 0) && ((P1IE & (1 << count) ) > 0 ))
+		while(count < 8)
 		{
-			(*Port1FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
-			P1IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
-			break;
-		}
-		else
-		{
-			count++;
+			if (((P1IFG & bitmaskLookup[count]) > 0) && ((P1IE & bitmaskLookup[count]) > 0 ))
+			{
+				(*Port1FunctionVector[count])();  /* Call a function in array. No offset is needed since this is Port 1. */
+				P1IFG &= ~(bitmaskLookup[count]); /* Clear the interrupt flag in P1IFG. */
+				break;
+			}
+			else
+			{
+				count++;
+			}
 		}
 	}
-
-	return; //Exit ISR
-}
-
-#pragma INTERRUPT (port2_isr);
-#pragma vector=PORT2_VECTOR //Port2 Interrupt Service Routine.
-interrupt void port2_isr(void)
-{
-	volatile unsigned char count = 0;
-
-	while(count < 8)
+	
+	if (P2IFG > 0)
 	{
-		if ( ((P2IFG & (1 << count) ) > 0) && ((P2IE & (1 << count) ) > 0 ))
+		while(count < 8)
 		{
-			(*Port2FunctionVector[count])(); //Call a function in array. No offset is needed since this is Port 1.
-			P2IFG &= ~(1 << count);//Clear the interrupt flag in P1IFG.
-			break;
-		}
-		else
-		{
-			count++;
+			if ( ((P2IFG & bitmaskLookup[count] ) > 0) && ((P2IE & bitmaskLookup[count] ) > 0 ))
+			{
+				(*Port2FunctionVector[count])();  /*Call a function in array. No offset is needed since this is Port 1. */
+				P2IFG &= ~(bitmaskLookup[count]); /*Clear the interrupt flag in P1IFG. */
+				break;
+			}
+			else
+			{
+				count++;
+			}
 		}
 	}
-	return; //Exit ISR
+	
+	return;
 }
 
 #elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 
-inline void setHigh(unsigned short int pin)
+void pinHigh(unsigned short int pin)
 {
 
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 	
 	if (pin <= 15)
 	{
@@ -732,7 +751,7 @@ inline void setHigh(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 	
 	if (pin <= 15)
 	{
@@ -745,7 +764,7 @@ inline void setHigh(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 	
 	if (pin <= 15)
 	{
@@ -759,7 +778,7 @@ inline void setHigh(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 	
 	if (pin <= 15)
 	{
@@ -771,7 +790,7 @@ inline void setHigh(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 	
 	if (pin <= 15)
 	{
@@ -785,7 +804,7 @@ inline void setHigh(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 	
 	if (pin <= 15)
 	{
@@ -797,7 +816,7 @@ inline void setHigh(unsigned short int pin)
 
 #endif
 	
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 	
 	if (pin <= 15)
 	{
@@ -811,10 +830,10 @@ inline void setHigh(unsigned short int pin)
 	return; /* Seems like the pin number was out of range, so just return */
 }
 
-inline void setLow(unsigned short int pin)
+void pinLow(unsigned short int pin)
 {
 
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 	
 	if (pin <= 15)
 	{
@@ -828,7 +847,7 @@ inline void setLow(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 	
 	if (pin <= 15)
 	{
@@ -842,7 +861,7 @@ inline void setLow(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 	
 	if (pin <= 15)
 	{
@@ -855,7 +874,7 @@ inline void setLow(unsigned short int pin)
 
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 	
 	if (pin <= 15)
 	{
@@ -868,7 +887,7 @@ inline void setLow(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 	
 	if (pin <= 15)
 	{
@@ -882,7 +901,7 @@ inline void setLow(unsigned short int pin)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 	
 	if (pin <= 15)
 	{
@@ -894,7 +913,7 @@ inline void setLow(unsigned short int pin)
 
 #endif
 
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 	
 	if (pin <= 15)
 	{
@@ -908,7 +927,7 @@ inline void setLow(unsigned short int pin)
 	return; /* Seems like the pin number was out of range, so just return. Also somewhat pointless if this function is inlined... */
 }
 
-inline void pinMode(unsigned short int pin, unsigned short int state)
+void pinMode(unsigned short int pin, unsigned short int state)
 {
 	/* Function flow
 
@@ -924,7 +943,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 	
 	if (pin <= 15)
 	{
@@ -940,11 +959,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#endif /* HASPORTA */
+#endif /* _EM_HASPORTA */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 	
 	if (pin <= 15)
 	{
@@ -960,11 +979,11 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 		return;
 	}
 
-#endif /*HASPORTB*/
+#endif /*_EM_HASPORTB*/
 	
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 	
 	if (pin <= 15)
 	{
@@ -984,7 +1003,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 	
 	if (pin <= 15)
 	{
@@ -1004,7 +1023,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 	
 	if (pin <= 15)
 	{
@@ -1024,7 +1043,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 	
 	if (pin <= 15)
 	{
@@ -1042,7 +1061,7 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 
 #endif
 	
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 	
 	if (pin <= 15)
 	{
@@ -1060,10 +1079,10 @@ inline void pinMode(unsigned short int pin, unsigned short int state)
 	return;
 }
 
-inline void pinToggle(unsigned short int pin)
+void pinToggle(unsigned short int pin)
 {
 
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 
 	if (pin <= 15)
 	{
@@ -1071,11 +1090,11 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTA */
+#endif /* _EM_HASPORTA */
 
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 
 	if (pin <= 15)
 	{
@@ -1083,11 +1102,11 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTB */
+#endif /* _EM_HASPORTB */
 
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 
 	if (pin <= 15)
 	{
@@ -1095,11 +1114,11 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTC */
+#endif /* _EM_HASPORTC */
 
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 
 	if (pin <= 15)
 	{
@@ -1107,11 +1126,11 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTD */
+#endif /* _EM_HASPORTD */
 
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 
 	if (pin <= 15)
 	{
@@ -1119,11 +1138,11 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTE */
+#endif /* _EM_HASPORTE */
 
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 
 	if (pin <= 15)
 	{
@@ -1131,9 +1150,9 @@ inline void pinToggle(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTF */
+#endif /* _EM_HASPORTF */
 
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 
 	if (pin <= 15)
 	{
@@ -1141,21 +1160,19 @@ inline void pinToggle(unsigned short int pin)
 
 	}
 
-#endif /* HASPORTJ */
+#endif /* _EM_HASPORTJ */
 
 	return;
 }
 
-inline bool readPin(unsigned short int pin)
+bool pinRead(unsigned short int pin)
 {
 
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 
 	if (pin <= 15)
 	{
-		auto unsigned short int result = PAIN & (1 << pin);
-
-		if (result > 0)
+		if ((PAIN & (1 << pin)) > 0)
 		{
 			return(HIGH);
 		}
@@ -1165,11 +1182,11 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORTA */
+#endif /* _EM_HASPORTA */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 	
 	if (pin <= 15)
 	{
@@ -1185,11 +1202,11 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /*HASPORTB*/
+#endif /*_EM_HASPORTB*/
 	
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 	
 	if (pin <= 15)
 	{
@@ -1205,11 +1222,11 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORTC */
+#endif /* _EM_HASPORTC */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 
 	if (pin <= 15)
 	{
@@ -1225,11 +1242,11 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORTD */
+#endif /* _EM_HASPORTD */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 
 	if (pin <= 15)
 	{
@@ -1245,11 +1262,11 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORTE */
+#endif /* _EM_HASPORTE */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 	
 	if (pin <= 15)
 	{
@@ -1265,9 +1282,9 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORTF */
+#endif /* _EM_HASPORTF */
 	
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 
 	if (pin <= 15)
 	{
@@ -1283,12 +1300,12 @@ inline bool readPin(unsigned short int pin)
 		}
 	}
 
-#endif /* HASPORTJ */
+#endif /* _EM_HASPORTJ */
 	
 	return (LOW);
 }
 
-inline void setDriveStrength(unsigned short int pin, unsigned short int level)
+void pinDriveStrength(unsigned short int pin, unsigned short int level)
 {
 
 #if (_EM_SERIES == 5) || (_EM_SERIES == 6)
@@ -1298,7 +1315,7 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 	
 	if (pin <= 15)
 	{
@@ -1314,11 +1331,11 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#endif /* HASPORTA */
+#endif /* _EM_HASPORTA */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 	
 	if (pin <= 15)
 	{
@@ -1334,11 +1351,11 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#endif /* HASPORTB */
+#endif /* _EM_HASPORTB */
 
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 
 	if (pin <= 15)
 	{
@@ -1354,11 +1371,11 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#endif /* HASPORTC */
+#endif /* _EM_HASPORTC */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 
 	if (pin <= 15)
 	{
@@ -1374,11 +1391,11 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#endif /* HASPORTD */
+#endif /* _EM_HASPORTD */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 	
 	if (pin <= 15)
 	{
@@ -1394,11 +1411,11 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#endif /* HASPORTE */
+#endif /* _EM_HASPORTE */
 	
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 	
 	if (pin <= 15)
 	{
@@ -1414,9 +1431,9 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#endif /* HASPORTF */
+#endif /* _EM_HASPORTF */
 	
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 	
 	if (pin <= 15)
 	{
@@ -1432,20 +1449,20 @@ inline void setDriveStrength(unsigned short int pin, unsigned short int level)
 		return;
 	}
 
-#endif /* HASPORTJ */
+#endif /* _EM_HASPORTJ */
 	
 	return;
 
 #else
 
-#	warning "EasyMSP: setDriveStrength() is only compatible with 5 Series devices. Unexpected results may occur."
-
+	asm("	.wmsg	\" pinDriveStrength() is not supported on this device. Error code FUNCNOTSUPPORTED \"");
+	return;
 #endif
 }
 
-inline void setPullUp(unsigned short int pin)
+void pinPullUp(unsigned short int pin)
 {
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 
 	if (pin <= 15)
 	{
@@ -1454,11 +1471,11 @@ inline void setPullUp(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTA */
+#endif /* _EM_HASPORTA */
 
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 
 	if (pin <= 15)
 	{
@@ -1467,11 +1484,11 @@ inline void setPullUp(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTB */
+#endif /* _EM_HASPORTB */
 
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 
 	if (pin <= 15)
 	{
@@ -1480,11 +1497,11 @@ inline void setPullUp(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTC */
+#endif /* _EM_HASPORTC */
 
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 
 	if (pin <= 15)
 	{
@@ -1493,11 +1510,11 @@ inline void setPullUp(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTD */
+#endif /* _EM_HASPORTD */
 
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 
 	if (pin <= 15)
 	{
@@ -1506,11 +1523,11 @@ inline void setPullUp(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTE */
+#endif /* _EM_HASPORTE */
 
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 
 	if (pin <= 15)
 	{
@@ -1519,9 +1536,9 @@ inline void setPullUp(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTF */
+#endif /* _EM_HASPORTF */
 
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 
 	if (pin <= 15)
 	{
@@ -1529,15 +1546,15 @@ inline void setPullUp(unsigned short int pin)
 		PJOUT |= (1 << pin);
 	}
 
-#endif /* HASPORTJ */
+#endif /* _EM_HASPORTJ */
 
 	return;
 
 }
 
-inline void setPullDown(unsigned short int pin)
+void pinPullDown(unsigned short int pin)
 {
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 
 	if (pin <= 15)
 	{
@@ -1546,11 +1563,11 @@ inline void setPullDown(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTA */
+#endif /* _EM_HASPORTA */
 
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 
 	if (pin <= 15)
 	{
@@ -1559,11 +1576,11 @@ inline void setPullDown(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTB */
+#endif /* _EM_HASPORTB */
 
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 
 	if (pin <= 15)
 	{
@@ -1572,11 +1589,11 @@ inline void setPullDown(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTC */
+#endif /* _EM_HASPORTC */
 
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 
 	if (pin <= 15)
 	{
@@ -1585,11 +1602,11 @@ inline void setPullDown(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTD */
+#endif /* _EM_HASPORTD */
 
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 
 	if (pin <= 15)
 	{
@@ -1598,11 +1615,11 @@ inline void setPullDown(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTE */
+#endif /* _EM_HASPORTE */
 
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 
 	if (pin <= 15)
 	{
@@ -1611,9 +1628,9 @@ inline void setPullDown(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTF */
+#endif /* _EM_HASPORTF */
 
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 
 	if (pin <= 15)
 	{
@@ -1621,14 +1638,14 @@ inline void setPullDown(unsigned short int pin)
 		PJOUT &= ~(1 << pin);
 	}
 
-#endif /* HASPORTJ */
+#endif /* _EM_HASPORTJ */
 
 	return;
 }
 
-inline void setPullOff(unsigned short int pin)
+void pinPullOff(unsigned short int pin)
 {
-#ifdef HASPORTA
+#ifdef _EM_HASPORTA
 
 	if (pin <= 15)
 	{
@@ -1636,11 +1653,11 @@ inline void setPullOff(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTA */
+#endif /* _EM_HASPORTA */
 
 	pin = pin - 16;
 
-#ifdef HASPORTB
+#ifdef _EM_HASPORTB
 
 	if (pin <= 15)
 	{
@@ -1648,11 +1665,11 @@ inline void setPullOff(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTB */
+#endif /* _EM_HASPORTB */
 
 	pin = pin - 16;
 
-#ifdef HASPORTC
+#ifdef _EM_HASPORTC
 
 	if (pin <= 15)
 	{
@@ -1660,11 +1677,11 @@ inline void setPullOff(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTC */
+#endif /* _EM_HASPORTC */
 
 	pin = pin - 16;
 
-#ifdef HASPORTD
+#ifdef _EM_HASPORTD
 
 	if (pin <= 15)
 	{
@@ -1672,11 +1689,11 @@ inline void setPullOff(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTD */
+#endif /* _EM_HASPORTD */
 
 	pin = pin - 16;
 
-#ifdef HASPORTE
+#ifdef _EM_HASPORTE
 
 	if (pin <= 15)
 	{
@@ -1684,11 +1701,11 @@ inline void setPullOff(unsigned short int pin)
 		return;
 	}
 
-#endif /*  HASPORTE */
+#endif /*  _EM_HASPORTE */
 
 	pin = pin - 16;
 
-#ifdef HASPORTF
+#ifdef _EM_HASPORTF
 
 	if (pin <= 15)
 	{
@@ -1696,21 +1713,21 @@ inline void setPullOff(unsigned short int pin)
 		return;
 	}
 
-#endif /* HASPORTF */
+#endif /* _EM_HASPORTF */
 
-#ifdef HASPORTJ
+#ifdef _EM_HASPORTJ
 
 	if (pin <= 15)
 	{
 		PJREN &= ~(1 << pin);
 	}
 
-#endif /* HASPORTJ */
+#endif /* _EM_HASPORTJ */
 
 	return;
 }
 
-inline void portWriteWord(const unsigned short int port, unsigned short int data)
+void portWriteWord(const unsigned short int port, unsigned short int data)
 {
 
 #if (_EM_SERIES == 5) || (_EM_SERIES == 6)
@@ -1718,73 +1735,74 @@ inline void portWriteWord(const unsigned short int port, unsigned short int data
 	switch (port)
 	{
 
-#	ifdef HASPORTA
+#	ifdef _EM_HASPORTA
 
 		case PORTA:
 			PAOUT = data;
 			break;
 
-#	endif /* HASPORTA */
+#	endif /* _EM_HASPORTA */
 
-#	ifdef HASPORTB
+#	ifdef _EM_HASPORTB
 
 		case PORTB:
 			PBOUT = data;
 			break;
 
-#	endif /* HASPORTB */
+#	endif /* _EM_HASPORTB */
 
-#	ifdef HASPORTC
+#	ifdef _EM_HASPORTC
 
 		case PORTC:
 			PCOUT = data;
 			break;
 
-#	endif /* HASPORTC */
+#	endif /* _EM_HASPORTC */
 
-#	ifdef HASPORTD
+#	ifdef _EM_HASPORTD
 
 		case PORTD:
 			PDOUT = data;
 			break;
 
-#	endif /* HASPORTD */
+#	endif /* _EM_HASPORTD */
 
-#	ifdef HASPORTE
+#	ifdef _EM_HASPORTE
 
 		case PORTE:
 			PEOUT = data;
 			break;
 
-#	endif /* HASPORTE */
+#	endif /* _EM_HASPORTE */
 
-#	ifdef HASPORTF
+#	ifdef _EM_HASPORTF
 
 		case PORTF:
 			PFOUT = data;
 			break;
 
-#	endif /* HASPORTF */
+#	endif /* _EM_HASPORTF */
 
-#	ifdef HASPORTJ
+#	ifdef _EM_HASPORTJ
 
 		case PORTJ:
 			PJOUT = data;
 			break;
 
-#	endif /* HASPORTJ */
+#	endif /* _EM_HASPORTJ */
 
 		default:
-			_never_executed();
+			break;
 
 	}
 
 #else
-#	warning "EasyMSP: portWriteWord() is only compatible with 5 Series devices. Unexpected results may occur."
+	asm("	.wmsg	\" portWriteWord() is not supported on this device. Error code FUNCNOTSUPPORTED \"");
+	return;
 #endif
 }
 
-inline unsigned short int portReadWord(const unsigned short int port)
+unsigned short int portReadWord(const unsigned short int port)
 {
 
 #if (_EM_SERIES == 5) || (_EM_SERIES == 6)
@@ -1792,54 +1810,54 @@ inline unsigned short int portReadWord(const unsigned short int port)
 	switch (port)
 	{
 
-#	ifdef HASPORTA
+#	ifdef _EM_HASPORTA
 
 		case PORTA:
 			return (PAIN);
 
-#	endif /* HASPORTA */
+#	endif /* _EM_HASPORTA */
 
-#	ifdef HASPORTB
+#	ifdef _EM_HASPORTB
 
 		case PORTB:
 			return (PBIN);
 
-#	endif /* HASPORTB */
+#	endif /* _EM_HASPORTB */
 
-#	ifdef HASPORTC
+#	ifdef _EM_HASPORTC
 
 		case PORTC:
 			return (PCIN);
 
-#	endif /* HASPORTC */
+#	endif /* _EM_HASPORTC */
 
-#	ifdef HASPORTD
+#	ifdef _EM_HASPORTD
 
 		case PORTD:
 			return (PDIN);
 
-#	endif /* HASPORTD */
+#	endif /* _EM_HASPORTD */
 
-#	ifdef HASPORTE
+#	ifdef _EM_HASPORTE
 
 		case PORTE:
 			return (PEIN);
 
-#	endif /* HASPORTE */
+#	endif /* _EM_HASPORTE */
 
-#	ifdef HASPORTF
+#	ifdef _EM_HASPORTF
 
 		case PORTF:
 			return (PFIN);
 
-#	endif /* HASPORTF */
+#	endif /* _EM_HASPORTF */
 
-#	ifdef HASPORTJ
+#	ifdef _EM_HASPORTJ
 
 		case PORTJ:
 			return (PJIN);
 
-#	endif /* HASPORTJ */
+#	endif /* _EM_HASPORTJ */
 
 		default:
 			return (0); /* Would love to use _never_executed() here, but we have to return something */
@@ -1848,14 +1866,14 @@ inline unsigned short int portReadWord(const unsigned short int port)
 
 #else
 
-#	warning "EasyMSP: portReadWord() is only compatible with the F5 and F6 Series devices. Unexpected results may occur."
-	return (0);
+	asm("	.wmsg	\" PortReadWord() is not supported on this device. Error code FUNCNOTSUPPORTED \"");
+	return (NULL);
 
 #endif
 
 }
 
-inline void portWriteDirWord(const unsigned short int port, unsigned short int data)
+void portWriteDirWord(const unsigned short int port, unsigned short int data)
 {
 
 #if (_EM_SERIES == 5) || (_EM_SERIES == 6)
@@ -1863,74 +1881,75 @@ inline void portWriteDirWord(const unsigned short int port, unsigned short int d
 	switch (port)
 	{
 
-#	ifdef HASPORTA
+#	ifdef _EM_HASPORTA
 
 		case PORTA:
 			PADIR = data;
 			break;
 
-#	endif /* HASPORTA */
+#	endif /* _EM_HASPORTA */
 
-#	ifdef HASPORTB
+#	ifdef _EM_HASPORTB
 
 		case PORTB:
 			PBDIR = data;
 			break;
 
-#	endif /* HASPORTB */
+#	endif /* _EM_HASPORTB */
 
-#	ifdef HASPORTC
+#	ifdef _EM_HASPORTC
 
 		case PORTC:
 			PCDIR = data;
 			break;
 
-#	endif /* HASPORTC */
+#	endif /* _EM_HASPORTC */
 
-#	ifdef HASPORTD
+#	ifdef _EM_HASPORTD
 
 		case PORTD:
 			PDDIR = data;
 			break;
-#	endif /* HASPORTD */
+#	endif /* _EM_HASPORTD */
 
-#	ifdef HASPORTE
+#	ifdef _EM_HASPORTE
 
 		case PORTE:
 			PEDIR = data;
 			break;
 
-#	endif /* HASPORTE */
+#	endif /* _EM_HASPORTE */
 
-#	ifdef HASPORTF
+#	ifdef _EM_HASPORTF
 
 		case PORTF:
 			PFDIR = data;
 			break;
 
-#	endif /* HASPORTF */
+#	endif /* _EM_HASPORTF */
 
-#	ifdef HASPORTJ
+#	ifdef _EM_HASPORTJ
 
 		case PORTJ:
 			PJDIR = data;
 			break;
 
-#	endif /* HASPORTJ */
+#	endif /* _EM_HASPORTJ */
 
 		default:
-			_never_executed();
+			break;
 
 	}
 
 #else
 
-#	warning "EasyMSP: portWriteDirWord() is only compatible with 5 Series devices. Unexpected results may occur."
+	asm("	.wmsg	\" portWriteDirWord() is not supported on this device. Error code FUNCNOTSUPPORTED \"");
+	return;
 
 #endif
 }
 
-inline void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)(void))
+void attachInterrupt(unsigned short int pin, unsigned short int edge, void (*function)(void))
 {
 	if (pin <= 7)
 	{
@@ -1985,7 +2004,7 @@ inline void attachInterrupt(unsigned short int pin, unsigned short int edge, voi
 	return;
 }
 
-inline void removeInterrupt(unsigned short int pin)
+void removeInterrupt(unsigned short int pin)
 {
 	if (pin <= 7) //If pin is less or equal to 7, then we need to operate on Port1
 	{
@@ -2006,6 +2025,26 @@ inline void removeInterrupt(unsigned short int pin)
 
 		return; //If pin does not match anything above, then return.
 	}
+}
+
+extern void portWriteWord(const unsigned short int na0, unsigned short int na1)
+{
+	return;
+}
+
+extern void portWriteDirWord(const unsigned short int na0, unsigned short int na1)
+{
+	return;
+}
+
+extern unsigned short int portReadWord(const unsigned short int na0)
+{
+	return (NULL);
+}
+
+extern void pinDriveStrength(unsigned short int na0, unsigned short int na1)
+{
+	return;
 }
 
 #pragma vector=PORT1_VECTOR
@@ -2049,7 +2088,7 @@ interrupt void port1_isr(void)
 			break;
 
 		default:
-			_never_executed();
+			break;
 
 	}
 }
@@ -2095,7 +2134,7 @@ interrupt void port2_isr(void)
 			break;
 
 		default:
-			_never_executed();
+			break;
 
 	}
 
@@ -2103,98 +2142,27 @@ interrupt void port2_isr(void)
 
 #endif 
 
+
 #ifdef _EM_SERIES
-
-inline void portInit(void)
-{
-
-#	if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
-	
-#	ifdef HASPORT1
-	P1DIR = 0xFF;
-	P1OUT = 0x00;
-	P1IE = 0x00;
-	P1IFG = 0x00;
-#	endif
-
-#	ifdef HASPORT2
-	P2DIR = 0xFF;
-	P2OUT = 0x00;
-	P2IE = 0x00;
-	P2IFG = 0x00;
-#	endif
-
-#	ifdef HASPORT3
-	P3DIR = 0xFF;
-	P3OUT = 0x00;
-#	endif 
-
-#	ifdef HASPORT4
-	P4DIR = 0xFF;
-	P4OUT = 0x00;
-#	endif
-
-#elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
-
-#	ifdef HASPORTA
-	PADIR = 0xFFFF;
-	PAOUT = 0x0000;
-	PAIE = 0x0000;
-	PAIFG = 0x0000;
-
-#	endif
-
-#	ifdef HASPORTB
-	PBDIR = 0xFFFF;
-	PBOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTC
-	PCDIR = 0xFFFF;
-	PCOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTD
-	PDDIR = 0xFFFF;
-	PDOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTE
-	PEDIR = 0xFFFF;
-	PEOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTF
-	PFDIR = 0xFFFF;
-	PEOUT = 0x0000;
-#	endif
-
-#	ifdef HASPORTJ
-	PJDIR = 0xFFFF;
-	PJOUT = 0x0000;
-#	endif
-#endif
-
-}
 
 void shiftConfig(unsigned short int order, unsigned short int pol)
 {
 	if (order == LSBFIRST)
 	{
-		shiftConfigBits |= BIT0;
+		_shiftConfigBits |= BIT0;
 	}
 	else
 	{
-		shiftConfigBits &= ~BIT0;
+		_shiftConfigBits &= ~BIT0;
 	}
 
 	if (pol)
 	{
-		shiftConfigBits |= BIT1;
+		_shiftConfigBits |= BIT1;
 	}
 	else
 	{
-		shiftConfigBits &= ~BIT1;
+		_shiftConfigBits &= ~BIT1;
 	}
 }
 
@@ -2204,15 +2172,15 @@ void shiftOut(unsigned short int sdat, unsigned short int sclk, unsigned char da
 
 	do
 	{
-		if ( (shiftConfigBits & BIT0) > 0)
+		if ( (_shiftConfigBits & BIT0) > 0)
 		{
 			if ( (data & 0x01) > 0)
 			{
-				setHigh(sdat);
+				pinHigh(sdat);
 			}
 			else
 			{
-				setLow(sdat);
+				pinLow(sdat);
 			}
 
 			data >>= 1;
@@ -2222,34 +2190,34 @@ void shiftOut(unsigned short int sdat, unsigned short int sclk, unsigned char da
 			if ( (data & 0x80) > 0)
 
 			{
-				setHigh(sdat);
+				pinHigh(sdat);
 			}
 			else
 			{
-				setLow(sdat);
+				pinLow(sdat);
 			}
 
 			data <<= 1;
 		}
 
-		if ( (shiftConfigBits & BIT1) > 0)
+		if ( (_shiftConfigBits & BIT1) > 0)
 		{
-			setLow(sclk);
+			pinLow(sclk);
 		}
 		else
 		{
-			setHigh(sclk);
+			pinHigh(sclk);
 		}
 
 		bits--;
 
-		if ( (shiftConfigBits & BIT1) > 0)
+		if ( (_shiftConfigBits & BIT1) > 0)
 		{
-			setHigh(sclk);
+			pinHigh(sclk);
 		}
 		else
 		{
-			setLow(sclk);
+			pinLow(sclk);
 		}
 	}
 	while (bits > 0);
@@ -2257,277 +2225,277 @@ void shiftOut(unsigned short int sdat, unsigned short int sclk, unsigned char da
 	return;
 }
 
-inline void portWrite(const unsigned short int port, unsigned char data)
+void portWrite(const unsigned short int port, unsigned char data)
 {
 	switch (port)
 	{
 
-#	ifdef HASPORT1
+#	ifdef _EM_HASPORT1
 
 		case PORT1:
 			P1OUT = data;
 			break;
 
-#	endif /* HASPORT1 */
+#	endif /* _EM_HASPORT1 */
 
-#	ifdef HASPORT2
+#	ifdef _EM_HASPORT2
 
 		case PORT2:
 			P2OUT = data;
 			break;
 
-#	endif /* HASPORT2 */
+#	endif /* _EM_HASPORT2 */
 
-#	ifdef HASPORT3
+#	ifdef _EM_HASPORT3
 
 		case PORT3:
 			P3OUT = data;
 			break;
 
-#	endif /* HASPORT3 */
+#	endif /* _EM_HASPORT3 */
 
-#	ifdef HASPORT4
+#	ifdef _EM_HASPORT4
 
 		case PORT4:
 			P4OUT = data;
 			break;
 
-#	endif /* HASPORT4 */
+#	endif /* _EM_HASPORT4 */
 
-#	ifdef HASPORT5
+#	ifdef _EM_HASPORT5
 
 		case PORT5:
 			P5OUT = data;
 			break;
 
-#	endif /* HASPORT5 */
+#	endif /* _EM_HASPORT5 */
 
-#	ifdef HASPORT6
+#	ifdef _EM_HASPORT6
 
 		case PORT6:
 			P6OUT = data;
 			break;
 
-#	endif /* HASPORT6 */
+#	endif /* _EM_HASPORT6 */
 
-#	ifdef HASPORT7
+#	ifdef _EM_HASPORT7
 
 		case PORT7:
 			P7OUT = data;
 			break;
 
-#	endif /* HASPORT7 */
+#	endif /* _EM_HASPORT7 */
 
-#	ifdef HASPORT8
+#	ifdef _EM_HASPORT8
 
 		case PORT8:
 			P8OUT = data;
 			break;
 
-#	endif /* HASPORT8 */
+#	endif /* _EM_HASPORT8 */
 
-#	ifdef HASPORT9
+#	ifdef _EM_HASPORT9
 
 		case PORT9:
 			P9OUT = data;
 			break;
 
-#	endif /* HASPORT9 */
+#	endif /* _EM_HASPORT9 */
 
-#	ifdef HASPORT10
+#	ifdef _EM_HASPORT10
 
 		case PORT10:
 			P10OUT = data;
 			break;
 
-#	endif /* HASPORT10 */
+#	endif /* _EM_HASPORT10 */
 
-#	ifdef HASPORT11
+#	ifdef _EM_HASPORT11
 
 		case PORT11:
 			P11OUT = data;
 			break;
 
-#	endif /* HASPORT11 */
+#	endif /* _EM_HASPORT11 */
 
 		default:
-			_never_executed();
+			break;
 	}
 }
 
-inline unsigned char portRead(const unsigned short int port)
+unsigned char portRead(const unsigned short int port)
 {
 	switch (port)
 	{
 
-#	ifdef HASPORT1
+#	ifdef _EM_HASPORT1
 
 		case PORT1:
 			return(P1IN);
 
-#	endif /* HASPORT1 */
+#	endif /* _EM_HASPORT1 */
 
-#	ifdef HASPORT2
+#	ifdef _EM_HASPORT2
 
 		case PORT2:
 			return(P2IN);
 
-#	endif /* HASPORT2 */
+#	endif /* _EM_HASPORT2 */
 
-#	ifdef HASPORT3
+#	ifdef _EM_HASPORT3
 
 		case PORT3:
 			return(P3IN);
 
-#	endif /* HASPORT3 */
+#	endif /* _EM_HASPORT3 */
 
-#	ifdef HASPORT4
+#	ifdef _EM_HASPORT4
 
 		case PORT4:
 			return(P4IN);
 
-#	endif /* HASPORT4 */
+#	endif /* _EM_HASPORT4 */
 
-#	ifdef HASPORT5
+#	ifdef _EM_HASPORT5
 
 		case PORT5:
 			return(P5IN);
 
-#	endif /* HASPORT5 */
+#	endif /* _EM_HASPORT5 */
 
-#	ifdef HASPORT6
+#	ifdef _EM_HASPORT6
 
 		case PORT6:
 			return(P6IN);
 
-#	endif /* HASPORT6 */
+#	endif /* _EM_HASPORT6 */
 
-#	ifdef HASPORT7
+#	ifdef _EM_HASPORT7
 
 		case PORT7:
 			return(P7IN);
 
-#	endif /* HASPORT7 */
+#	endif /* _EM_HASPORT7 */
 
-#	ifdef HASPORT8
+#	ifdef _EM_HASPORT8
 
 		case PORT8:
 			return(P8IN);
 
-#	endif /* HASPORT8 */
+#	endif /* _EM_HASPORT8 */
 
-#	ifdef HASPORT9
+#	ifdef _EM_HASPORT9
 
 		case PORT9:
 			return(P9IN);
 
-#	endif /* HASPORT9 */
+#	endif /* _EM_HASPORT9 */
 
-#	ifdef HASPORT10
+#	ifdef _EM_HASPORT10
 
 		case PORT10:
 			return(P10IN);
 
-#	endif /* HASPORT10 */
+#	endif /* _EM_HASPORT10 */
 
-#	ifdef HASPORT11
+#	ifdef _EM_HASPORT11
 
 		case PORT11:
 			return(P11IN);
 
-#	endif /* HASPORT11 */
+#	endif /* _EM_HASPORT11 */
 
 		default:
-			return (0);
+			return (NULL);
 
 	}
 }
 
-inline void portWriteDir(const unsigned short int port, unsigned char data)
+void portWriteDir(const unsigned short int port, unsigned char data)
 {
 	switch (port)
 	{
 
-#	ifdef HASPORT1
+#	ifdef _EM_HASPORT1
 		case PORT1:
 			P1DIR = data;
 			return;
-#	endif /* HASPORT1 */
+#	endif /* _EM_HASPORT1 */
 
-#	ifdef HASPORT2
+#	ifdef _EM_HASPORT2
 		case PORT2:
 			P2DIR = data;
 			return;
-#	endif /* HASPORT2 */
+#	endif /* _EM_HASPORT2 */
 
-#	ifdef HASPORT3
+#	ifdef _EM_HASPORT3
 		case PORT3:
 			P3DIR = data;
 			return;
-#	endif /* HASPORT3 */
+#	endif /* _EM_HASPORT3 */
 
-#	ifdef HASPORT4
+#	ifdef _EM_HASPORT4
 		case PORT4:
 			P4DIR = data;
 			return;
-#	endif /* HASPORT4 */
+#	endif /* _EM_HASPORT4 */
 
-#	ifdef HASPORT5
+#	ifdef _EM_HASPORT5
 		case PORT5:
 			P5DIR = data;
 			return;
-#	endif /* HASPORT5 */
+#	endif /* _EM_HASPORT5 */
 
-#	ifdef HASPORT6
+#	ifdef _EM_HASPORT6
 		case PORT6:
 			P6DIR = data;
 			return;
-#	endif /* HASPORT6 */
+#	endif /* _EM_HASPORT6 */
 
-#	ifdef HASPORT7
+#	ifdef _EM_HASPORT7
 		case PORT7:
 			P7DIR = data;
 			return;
-#	endif /* HASPORT7 */
+#	endif /* _EM_HASPORT7 */
 
-#	ifdef HASPORT8
+#	ifdef _EM_HASPORT8
 		case PORT8:
 			P8DIR = data;
 			return;
-#	endif /* HASPORT8 */
+#	endif /* _EM_HASPORT8 */
 
-#	ifdef HASPORT9
+#	ifdef _EM_HASPORT9
 		case PORT9:
 			P9DIR = data;
 			return;
-#	endif /* HASPORT9 */
+#	endif /* _EM_HASPORT9 */
 
-#	ifdef HASPORT10
+#	ifdef _EM_HASPORT10
 		case PORT10:
 			P10DIR = data;
 			return;
-#	endif /* HASPORT10 */
+#	endif /* _EM_HASPORT10 */
 
-#	ifdef HASPORT11
+#	ifdef _EM_HASPORT11
 		case PORT11:
 			P11DIR = data;
 			return;
-#	endif /* HASPORT11 */
+#	endif /* _EM__EM_HASPORT11 */
 
 		default:
 			return;
 	}
 }
 
-inline void digitalWrite(unsigned short int pin, unsigned short int state)
+void digitalWrite(unsigned short int pin, unsigned short int state)
 {
 	if (state == HIGH)
 	{
-		setHigh(pin);
+		pinHigh(pin);
 	}
 	else if (state == LOW)
 	{
-		setLow(pin);
+		pinLow(pin);
 	}
 	else
 	{
@@ -2536,3 +2504,5 @@ inline void digitalWrite(unsigned short int pin, unsigned short int state)
 }
 
 #endif /* End All device block */
+
+#endif /* IO_C */

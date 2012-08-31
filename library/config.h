@@ -77,3 +77,5 @@
 #		define _EM_PREINIT_VECTORS NO
 
 #		define _EM_SOFTWARE_DELAY NO
+
+#		define _EM_BITMASK_LOOKUP YES
