@@ -1,0 +1,1 @@
+The reference folder holds files that are primarly used as a reference for the developer (me). These files are not code and SHOULD NOT BE INCLUDED.

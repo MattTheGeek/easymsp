@@ -1,29 +1,35 @@
 /*
- * io.c
- * Version: 1.1.0A
- * Library for accessing ports
+ *      ___    _    ___ __   __ __  __  ___  ___ 
+ *     | __|  /_\  / __|\ \ / /|  \/  |/ __|| _ \
+ *     | _|  / _ \ \__ \ \ V / | |\/| |\__ \|  _/
+ *     |___|/_/ \_\|___/  |_|  |_|  |_||___/|_|  
+ * 
+ *	io.c
+ *	Library for high level access of GPIO ports.   
  *
- * Author: Matthew Burmeister
- * Copyright Matthew Burmeister 2010, 2011, 2012. All Rights Reserved.
+ *	Part of the EasyMSP Project
+ *	www.code.google.com/p/EasyMSP/
  *
- * Part of the EasyMSP Project.
+ *	Author: Matthew L. Burmeister
+ *	Copyright (c) 2010, 2011, 2012 All rights reserved.
  *
- */
-
-/*
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *	You can contact me at matthewburmeister@gmail.com
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *	Licence
+ *		EasyMSP is free software: you can redistribute it and/or modify
+ *		it under the terms of the GNU General Public License as published by
+ *		the Free Software Foundation, either version 3 of the License, or
+ *		(at your option) any later version.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *		EasyMSP is distributed in the hope that it will be useful,
+ *		but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *		GNU General Public License for more details.
+ *
+ *		You should have received a copy of the GNU General Public License
+ *		along with EasyMSP. If not, see <http://www.gnu.org/licenses/>.
+ *
+*/
 
 /* Info
  *
@@ -55,6 +61,7 @@
  *			Goto next port block if it exists, otherwise subtract again and goto the next port block.
  *
  */
+ 
 #ifndef IO_H
 #	include "io.h"
 #endif
@@ -71,7 +78,7 @@
 		void (*Port2FunctionVector[8])(void);
 #	endif /* PREINIT_VECTORS */
 		
-	static unsigned char _shiftConfigBits = NULL;	
+	static unsigned char _shiftConfigBits = 0;	
 #endif /* _EM_SERIES */
 	
 #if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
@@ -79,54 +86,54 @@
 void pinHigh(unsigned short int pin)
 {
 
-#ifdef _EM__EM_HASPORT1 /* Does the device has PORT1? */
+#ifdef _EM_HASPORT1 /* Does the device has PORT1? */
 	
 	if (pin <= 7) /* If pin is equal or less than 7, then we operate on PORT1 */
 	{
 		/* We need to generate a bitmask for P1OUT, we do this by shifting 0x01 by pin. This produces a bitmask that for the desired bit and pin. */
-		P1OUT |= bitmaskLookup[pin]; /* OR the generated bit mask to PxOUT to set the bit and make the pin high */
+		P1OUT |= (1 << pin); /* OR the generated bit mask to PxOUT to set the bit and make the pin high */
 		return;
 	}
 
-#endif /* _EM__EM_HASPORT1 */
+#endif /* _EM_HASPORT1 */
 	
 	pin = pin - 8; /* Since the value was higher than 8, subtract by 8 and later compare */
 
-	/* The next code blocks are generally the same as above. */
+	/* The next code blocks are generally the same as above, just operating on a different port */
 
-#ifdef _EM__EM_HASPORT2 /* Does the device has PORT2? */
+#ifdef _EM_HASPORT2 /* Does the device has PORT2? */
 	
 	if (pin <= 7)
 	{
-		P2OUT |= bitmaskLookup[pin];
+		P2OUT |= (1 << pin);
 		return;
 	}
 
-#endif /* _EM__EM_HASPORT2 */
+#endif /* _EM_HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef _EM__EM_HASPORT3 /* Does the device has PORT3? */
+#ifdef _EM_HASPORT3 /* Does the device has PORT3? */
 	
 	if (pin <= 7)
 	{
-		P3OUT |= bitmaskLookup[pin];
+		P3OUT |= (1 << pin);
 		return;
 	}
 
-#endif /* _EM__EM_HASPORT3 */
+#endif /* _EM_HASPORT3 */
 	
-#ifdef _EM__EM_HASPORT4 /* Does the device has PORT4? */
+#ifdef _EM_HASPORT4 /* Does the device has PORT4? */
 
 	pin = pin - 8;
 
 	if (pin <= 7)
 	{
-		P4OUT |= bitmaskLookup[pin];
+		P4OUT |= (1 << pin);
 		return;
 	}
 
-#endif /* _EM__EM_HASPORT4 */
+#endif /* _EM_HASPORT4 */
 	
 	return;
 }
@@ -134,7 +141,7 @@ void pinHigh(unsigned short int pin)
 void pinLow(unsigned short int pin)
 {
 
-#ifdef _EM__EM_HASPORT1 /* Does the device has PORT1? */
+#ifdef _EM_HASPORT1 /* Does the device has PORT1? */
 	
 	if (pin <= 7) /* If pin is equal or less than 7, then we operate on PORT1 */
 	{
@@ -145,13 +152,13 @@ void pinLow(unsigned short int pin)
 		return; /* Feturn from function */
 	}
 
-#endif /* _EM__EM_HASPORT1 */
+#endif /* _EM_HASPORT1 */
 	
 	pin = pin - 8; /* Since the value was higher than 8, subtract by 8 and later compare */
 
 	/* The next code blocks are generally the same as above. */
 
-#ifdef _EM__EM_HASPORT2  /* Does the device has PORT2? */
+#ifdef _EM_HASPORT2  /* Does the device has PORT2? */
 	
 	if (pin <= 7)
 	{
@@ -160,11 +167,11 @@ void pinLow(unsigned short int pin)
 		return;
 	}
 
-#endif /* _EM__EM_HASPORT2 */
+#endif /* _EM_HASPORT2 */
 	
 	pin = pin - 8;
 
-#ifdef _EM__EM_HASPORT3  /* Does the device has PORT3? */
+#ifdef _EM_HASPORT3  /* Does the device has PORT3? */
 	
 	if (pin <= 7)
 	{
@@ -173,7 +180,7 @@ void pinLow(unsigned short int pin)
 		return;
 	}
 
-#endif /* _EM__EM_HASPORT3 */
+#endif /* _EM_HASPORT3 */
 	
 #ifdef _EM_HASPORT4  /* Does the device has PORT4? */
 	
@@ -2483,7 +2490,7 @@ void portWriteDir(const unsigned short int port, unsigned char data)
 		case PORT11:
 			P11DIR = data;
 			return;
-#	endif /* _EM__EM_HASPORT11 */
+#	endif /* _EM_HASPORT11 */
 
 		default:
 			return;

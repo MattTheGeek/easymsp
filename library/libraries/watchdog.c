@@ -15,52 +15,84 @@
  *
  */
 
-extern inline void disableWatchdog(void)
+extern void watchdogState(unsigned short int operation)
 {
-	WDTCTL = WDTPW + WDTHOLD;
+	static unsigned char _watchdogStatePending;
+	static unsigned char _watchdogState;
+	
+	if (operation == RESTORE && _watchdogStatePending == YES)
+	{
+		WDTCTL = WDTPW + _watchdogState;
+		_watchdogStatePending = NO;
+		return;
+	}
+	else if (operation == STORE)
+	{
+		
+#if (_EM_SERIES == 5) || (_EM_SERIES == 6) 
+		_watchdogState = WDTCTL_L;
+#else
+		_watchdogState = (8 >> WDTCTL); /* Trim off watchdog password and save the watchdog state */
+#endif
+		WDTCTL = WDTPW + WDTHOLD;
+		_watchdogStatePending == YES;
+		return;
+	}
+	else
+	{
+		return;
+	}
 }
  
-extern inline void stopWatchdog(void)
+extern void disableWatchdog(void)
 {
 	WDTCTL = WDTPW + WDTHOLD;
+	return;
+}
+ 
+extern void stopWatchdog(void)
+{
+	WDTCTL = WDTPW + WDTHOLD;
+	return;
 }
 
-extern inline void holdWatchdog(void)
+extern void holdWatchdog(void)
 {
 
 #if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
-	WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTHOLD);
+	WDTCTL = WDTPW + ((8 >> WDTCTL) | WDTHOLD);
 #elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L | WDTHOLD);
 #endif
-
+	return;
 }
 
-extern inline void clearWatchdog(void)
+extern void clearWatchdog(void)
 {
 
 #if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
-	WDTCTL = WDTPW + ((unsigned char)WDTCTL | WDTCNTCL);
+	WDTCTL = WDTPW + ((8 >> WDTCTL) | WDTCNTCL);
 #elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L | WDTCNTCL);
 #endif
-
+	return;
 }
 
-extern inline void resumeWatchdog(void)
+extern void resumeWatchdog(void)
 {
 
 #if (_EM_SERIES == 2) || (_EM_SERIES == 'V')
-	WDTCTL = WDTPW + ((unsigned char)WDTCTL & ~WDTHOLD);
+	WDTCTL = WDTPW + ((8 >> WDTCTL) & ~WDTHOLD);
 #elif (_EM_SERIES == 5) || (_EM_SERIES == 6)
 	WDTCTL = WDTPW + (WDTCTL_L & ~WDTHOLD);
 #endif
-
+	return;
 }
 
-extern inline void resetWatchdog(void)
+extern void resetWatchdog(void)
 {
 	WDTCTL = WDTPW + WDTHOLD;
+	return;
 }
 
 extern void watchdogStart(unsigned short int source, unsigned short int interval)

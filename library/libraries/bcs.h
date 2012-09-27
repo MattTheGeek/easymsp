@@ -21,7 +21,7 @@
 ** -------------------------------------------------------------------------*/
 #ifndef BCS_H
 #define BCS_H
-
+extern void BCSState(unsigned short int);
 extern unsigned short int setMCLK(unsigned short int, unsigned short int);
 extern unsigned short int setSMCLK(unsigned short int, unsigned short int);
 extern unsigned short int setACLK(unsigned short int, unsigned short int);

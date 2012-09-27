@@ -37,6 +37,22 @@
 #	define false 0
 #endif
 
+#ifndef TRUE
+#	define TRUE true
+#endif
+
+#ifndef FALSE
+#	define FALSE false
+#endif
+
+#ifndef STORE
+#	define STORE 1
+#endif
+
+#ifndef RESTORE
+#	define RESTORE 2
+#endif
+
 #ifndef SUCCESS
 #	define SUCCESS 0
 #endif
@@ -52,7 +68,6 @@
 #ifndef BAD_ARGUMENT
 #	define BAD_ARGUMENT 2
 #endif
-
 
 /* Clock Constants */
 
