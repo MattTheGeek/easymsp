@@ -4,8 +4,8 @@
  *     | _|  / _ \ \__ \ \ V / | |\/| |\__ \|  _/
  *     |___|/_/ \_\|___/  |_|  |_|  |_||___/|_|  
  * 
- *	lookup.c
- *	Bitmask lookup table 
+ *	hd44780.h
+ *	HD44780 based LCD Driver for EasyMSP. 
  *  
  *  
  *	Part of the EasyMSP Project
@@ -39,15 +39,12 @@
  *
 */
 
-#pragma RETAIN (bitmaskLookup);
-extern const unsigned char bitmaskLookup[8] = 
-{
-		0x01,
-		0x02,
-		0x04,
-		0x08,
-		0x10,
-		0x20,
-		0x40,
-		0x80
-};
+ 
+#ifndef __EASYMSP__
+#	error "the HD44780 driver requires EasyMSP, or the stdport standalone library."
+#endif
+void lcdWrite(unsigned char, unsigned char);
+void lcdString(char*);
+void lcdSetup(void);
+void lcdClear(void);
+void lcdPower(unsigned char state);

@@ -5,7 +5,7 @@
  *     |___|/_/ \_\|___/  |_|  |_|  |_||___/|_|  
  * 
  *	io.c
- *	Library for high level access of GPIO ports.   
+ *	MSP430 GPIO library for EasyMSP.   
  *
  *	Part of the EasyMSP Project
  *	www.code.google.com/p/EasyMSP/
@@ -13,7 +13,14 @@
  *	Author: Matthew L. Burmeister
  *	Copyright (c) 2010, 2011, 2012 All rights reserved.
  *
- *	You can contact me at matthewburmeister@gmail.com
+ *	Contact
+ *		You can contact me by email at matthewburmeister@gmail.com 
+ *		or by sending mail to:
+ *
+ *		Matthew Burmeister
+ *		11593 Autunno St
+ *		Las Vegas, NV 89183
+ *		United States of America
  *
  *	Licence
  *		EasyMSP is free software: you can redistribute it and/or modify
@@ -2511,6 +2518,42 @@ void digitalWrite(unsigned short int pin, unsigned short int state)
 	{
 		return;
 	}
+}
+
+extern unsigned short int pinDebounce(unsigned short int pin, unsigned short int count)
+{
+
+	volatile unsigned short int timesHigh = 0;
+	volatile unsigned short int timesLow = 0;
+	
+	do
+	{
+		if (pinRead(pin))
+		{
+			timesHigh++;
+		}
+		else
+		{
+			timesLow++;
+		}
+
+		count--;	
+	}
+	while (count > 0);
+	
+	if (timesHigh == timesLow)
+	{
+		return (OSC);
+	}
+	else if (timesHigh > TimesLow)
+	{
+		return (HIGH);
+	}
+	else
+	{
+		return (LOW);
+	}
+
 }
 
 #endif /* End All device block */
