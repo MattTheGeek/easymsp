@@ -5,6 +5,80 @@
  *
  */
 
+#if (defined _EM_HAS_BCS)
+ 
+extern void clockState(unsigned short int state)
+{
+	static unsigned char _clockStatePending;
+	static unsigned char _clockState[4];
+	
+	
+	if (operation == RESTORE && _clockStatePending == YES)
+	{
+		DCOCTL = _clockState[0];
+		BCSCTL1 = _clockState[1];
+		BCSCTL2 = _clockState[2];
+		BCSCTL3 = _clockState[3];
+		
+		_clockStatePending = NO;
+		
+		return;
+	}
+	else if (operation == STORE)
+	{
+		_clockState[0] = DCOCTL;
+		_clockState[1] = BCSCTL1;
+		_clockState[2] = BCSCTL2;
+		_clockState[3] = BCSCTL3;
+		
+		_clockStatePending = YES;
+		
+		return;
+	}
+	else
+	{
+		return;
+	}
+}
+
+#elif (defined _EM_HAS_UCS)
+
+extern void clockState(unsigned short int state)
+{
+	static unsigned char _clockStatePending;
+	static unsigned short int _clockState[4];
+	
+	
+	if (operation == RESTORE && _clockStatePending == YES)
+	{
+		DCOCTL = _clockState[0];
+		BCSCTL1 = _clockState[1];
+		BCSCTL2 = _clockState[2];
+		BCSCTL3 = _clockState[3];
+		
+		_clockStatePending = NO;
+		
+		return;
+	}
+	else if (operation == STORE)
+	{
+		_clockState[0] = DCOCTL;
+		_clockState[1] = BCSCTL1;
+		_clockState[2] = BCSCTL2;
+		_clockState[3] = BCSCTL3;
+		
+		_clockStatePending = YES;
+		
+		return;
+	}
+	else
+	{
+		return;
+	}
+}
+
+#end
+ 
 extern void powerMode(unsigned short int mode)
 {
 	switch (mode)

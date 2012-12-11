@@ -55,16 +55,17 @@ inline void _preinit(void)
 	_portinit();
 	_clockinit();
 	
-	_enable_interrupts();
 	
 #if (defined _EM_HASDMA) /* Does the device have a DMA. If yes, configure it. */
-	_dmainit(); /* Let write/read CPU instructions finish before halting for DMA transfer */
+	_dmainit();
 #endif /* HASDMA */
 
 #if (defined _EM_IS_BOARD) /* Will EasyMSP be running on a board such as a OLIMEXINO or LaunchPad? */
 /* If yes, we call _initBoard() which should be located in the board description header in the directory board. */
 	_boardInit();
 #endif /* ISBOARD */
+
+	_enable_interrupts();
 
 	return;
 }
@@ -76,7 +77,7 @@ inline void _clockinit(void)
 
 inline void _portinit(void)
 {
-#if (_EM_SERIES == 5) || (_EM_SERIES == 6)
+#if (_EM_HAS_WORD_PORTS == YES)
 	
 #	ifdef __MSP430_HAS_PORTA_R__
 	PADIR = 0xFFFF;

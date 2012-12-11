@@ -482,6 +482,10 @@
 #ifndef FLASH_BUSY
 #	define FLASH_BUSY 6
 #endif
+
+#ifndef FLASH_FAILURE 
+#	define FLASH_FAILURE 7
+#endif
 	
 /* ADC10 constants */
 

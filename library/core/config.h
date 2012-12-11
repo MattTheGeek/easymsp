@@ -115,3 +115,5 @@
 #		define _EM_SOFTWARE_DELAY NO
 
 #		define _EM_BITMASK_LOOKUP YES
+
+#		define _EM_INIT_BOARD_GPIO YES
