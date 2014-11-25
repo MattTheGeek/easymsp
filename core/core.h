@@ -65,9 +65,12 @@
 
 #ifndef CORE_H
 #	define CORE_H
-#endif
 
 void main();
+
+#ifndef OPTION_DISABLE_STRUCT_SYSTEM
+#	include "system_struct.h"
+#endif
 
 #ifndef OPTION_DISABLE_PREINIT
 	void inline easymsp_preInit();
@@ -78,3 +81,5 @@ void main();
 #endif
 
 #include "core.c"
+
+#endif

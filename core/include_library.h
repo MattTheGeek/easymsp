@@ -21,7 +21,7 @@
  * If you have any questions or comments; Please feel free to open an issue at
  * www.code.google.com/p/easymsp/issues/entry
  *
- * If you wish to communiate privatly, feel free to send me an email to:
+ * If you wish to communicate privately, feel free to send me an email to:
  * matthewburmeister ({a}t) [gmail] (dot) com.
  *
  * Humans: Decode the email using your human skills. Remove spaces, {}, and
@@ -61,3 +61,8 @@
 /* CHANGE LOG
  *
  */
+ 
+#include "..\library\system\system.h"
+#include "..\library\flash\flash.h"
+#include "..\library\gpio\gpio.h"
+

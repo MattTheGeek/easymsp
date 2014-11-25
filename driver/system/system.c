@@ -23,7 +23,7 @@
  * If you have any questions or comments; Please feel free to open an issue at
  * www.code.google.com/p/easymsp/issues/entry
  *
- * If you wish to communiate privatly, feel free to send me an email to:
+ * If you wish to communicate privately, feel free to send me an email to:
  * matthewburmeister ({a}t) [gmail] (dot) com.
  *
  * Humans: Decode the email using your human skills. Remove spaces, {}, and
@@ -64,4 +64,69 @@
  *
  */
 
+void panic (unsigned short int * trace)
+{
+	unsigned short int release = 1;
+	
+	interruptState(OFF);
+	
+	while (release)
+	{
+		powerState(4);
+	}
+}
 
+void emergency(unsigned short int * trace)
+{
+	unsigned short int release = 1;
+	
+	interruptState(OFF);
+	
+	while (release)
+	{
+		setPowerMode(0);
+	}
+}
+
+unsigned short int getInterruptState()
+{
+	unsigned short int srtemp = _get_SR_register();
+	
+	if ((srtemp & GIE) > 0)
+	{
+		return (ON);
+	}
+	else
+	{
+		return (OFF);
+	}
+}
+
+void setInterruptState(unsigned short int state)
+{
+	switch (state)
+	{
+		case ON:
+			_enable_interrupts();
+			break;
+			
+		case OFF:
+			_disable_interrupts();
+			break;
+			
+		default:
+			break;
+	}
+	
+	return;
+}
+
+void setRegister(unsigned short int reg, unsigned short int data)
+{
+	return;
+}
+
+unsigned short int readRegister(unsigned short int reg)
+{
+	return (NULL);
+}

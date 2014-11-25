@@ -68,7 +68,7 @@
 #	define EASYMSP_H
 #endif
 
-#include "define.h"
+#include "include_base.h"
 #include "include_driver.h"
 #include "include_library.h"
 

@@ -1,4 +1,32 @@
 
+
+/*
+ * EMM430
+ *
+ * Selectable Memory Management Block Sizes:
+ * 	4W
+ * 	8W
+ * 	16W
+ * 	24W
+ * 	48W
+ * 	64W
+ *
+ * Somehow we need to figure out how much memory the system has reserved for the
+ * user program, the C subsystem, and the stack. I'm unsure how this would be
+ * done at runtime or even compile time.
+ *
+ * Perhaps reserving some the remaining space at link time could work...
+ *
+ * Block bitmap is calculated like:
+ *
+ * 	bitmapLength = blockSize / (deviceMemory - [usedMemory + stackReserved])
+ *
+ * We should reserved enough space for the stack to allow for multiple levels of
+ * calls. A mimuium of 24 bytes of space reserved should allow for 3 to 4 levels
+ * deep of nesting.
+ */
+static volatile unsigned short int memoryBitmap[ =
+
 /*
  *
  * name: fillMemory
@@ -135,4 +163,25 @@ unsigned short int detectMemory()
 
 
 	return (memptr - 0x0200);
+}
+
+
+unsigned short int memoryAllocate(unsigned short int amount)
+{
+
+}
+
+unsigned short int memoryPage(unsigned short int handle)
+{
+
+}
+
+unsigned short int memoryPageBlock(unsigned short int start, unsigned short int count)
+{
+
+}
+
+unsigned short int memoryFree(unsigned short int handle)
+{
+
 }
