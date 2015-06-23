@@ -1,2 +1,0 @@
-This version of EasyMSP 2.1 is still in the works.
-Source files are unfinished and more than likely fail to build due to syntax errors. 
